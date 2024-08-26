@@ -22,10 +22,10 @@ Plataforma de lista de tarefas com funcionalidades de Kanban e Dashboard com rel
 
 ##### Features:
 - [ ] Funcionalidades de Kanban 
-- [ ] Dashboard
+- [ ] Dashboard com gráficos
 - [ ] Arrastar e soltar (drag and drop)
 - [ ] Persistência de dados
-- [ ] Relatórios gráficos
+- [ ] Relatórios gráficos dinâmicos
 - [ ] Documentação do projeto
 
 
