@@ -54,7 +54,7 @@ const FinishColumn = () => {
                     setCounterTime(0);
                 }, 700);
             }
-        }, 50);
+        }, 15);
     };
 
     const mouseReset = () => {
@@ -79,38 +79,46 @@ const FinishColumn = () => {
 
     return (
         <div className={`flex gap-1 h-full items-center`}>
+            <div
+                style={{
+                    opacity: finish ? 1 : 0
+            }}>
+                <FaCheck className={`text-[rgb(18,172,255)]`}/>
+            </div>
+
             <Button
                 variant={'outline'}
                 style={{
                     borderWidth: `2px`,
                     borderColor: `${finish ? "rgb(18,172,255)" : `
                             ${counterTime==0 ? `` : `rgba(79,255,99,${counterTime/100})`}
-                        `}`,
-                    color: `${finish ? `rgb(18,172,255)` : ``}`
+                        `}`
                 }}
                 className={`
                     transition-all
                     flex gap-1 justify-center items-center
+                    relative
+                    z-0
+                    overflow-hidden
                     `}
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
-                onMouseLeave={mouseReset}
-            >
-                Concluir tarefas feitas
+                onMouseLeave={mouseReset}>
+                <p className={`z-10`}>Concluir tarefas feitas</p>
 
-                <CiSaveUp1 size={20} />
+                <CiSaveUp1 className={`z-10`} size={25} />
+
+                <div 
+                style={{
+                    width: `${counterTime*1.1}%`,
+                    opacity: counterTime/200,
+                    backgroundColor: finish ? "rgb(18,172,255)" : "rgb(79,255,99)"
+                }}
+                className={`left-0 pt-6 pb-6 absolute`}
+                >
+                </div>
 
             </Button>
-
-            <div
-                style={{
-                    opacity: finish ? 1 : 0
-                }}
-
-                className={``}
-            >
-                <FaCheck className={`text-[rgb(18,172,255)]`}/>
-            </div>
         </div>
     );
 };
