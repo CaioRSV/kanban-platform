@@ -66,7 +66,6 @@ SELECT * FROM KBN_NameColumns where userId=0;
 -- Update Column names
 UPDATE KBN_NameColumns SET column1 = 'Pendentes';
 
-
 ---------------------------------
 -- Populating:
 
