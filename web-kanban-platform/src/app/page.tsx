@@ -7,6 +7,7 @@ import Provider from "./Provider";
 import SetUserModal from '@/components/setUserModal';
 import TopBar from '@/components/topBar';
 import Workspace from '@/components/dragNdrop/workspace';
+import FinishColumn from '@/components/finishColumn';
 
 
 
@@ -26,6 +27,8 @@ export default function Home() {
             <div className={`w-[80%] h-full flex justify-center items-center gap-4`}>
               <Workspace/>
             </div>
+
+            <FinishColumn></FinishColumn>
 
           </div>
         
