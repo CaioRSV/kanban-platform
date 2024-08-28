@@ -6,7 +6,7 @@ export async function GET(request: Request) {
 
   const task = searchParams.get('task')?.split(',').map(Number);
 
-  const SQL = `SELECT * FROM KBN_Tasks WHERE id = ANY($1::int[])`;
+  const SQL = `SELECT * FROM KBN_Tasks WHERE id = ANY($1::int[]) AND done = FALSE`;
   
   try {
     if (!task) throw new Error('ID da Tarefa requerido');

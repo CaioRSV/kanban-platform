@@ -1,5 +1,5 @@
 CREATE TABLE KBN_Users(
-    id INTEGER PRIMARY KEY,
+    id NUMBER PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     column1 INTEGER[],
     column2 INTEGER[],

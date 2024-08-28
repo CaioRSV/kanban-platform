@@ -9,12 +9,25 @@ import FinishColumn from '@/components/finishColumn';
 
 import { useUserContext } from '@/components/contexts/userContext';
 import SaveColumns from '@/components/saveColumns';
+import { useTaskContext } from '@/components/contexts/tasksContext';
 
 
 export default function App() {
-  const {user, setUser} = useUserContext();
+  const {
+    user, setUser, id, setId, 
+    setColumn1_name, 
+    setColumn2_name, 
+    setColumn3_name,
+    setColumn1, column1,
+    setColumn2, column2,
+    setColumn3, column3
+  } = useUserContext();
+
+  const {tasksLocal, setTasksLocal} = useTaskContext();
+  
   return (
         <main style={{filter: user ? `` : `blur(3px)`}} className="min-h-screen p-12 flex flex-col transition-all duration-500">
+          <p onClick={()=>{console.log(tasksLocal);console.log([column1, column2, column3]);}} >DPSAODPSAOP</p>
           <SetUserModal/>
           <div className={`w-full h-fit flex justify-center items-center`}>
             <TopBar/>

@@ -20,17 +20,65 @@ import {
   import { ImSpinner8 } from "react-icons/im";
 
   import { useUserContext } from './contexts/userContext';
+import { useTaskContext } from './contexts/tasksContext';
+import { Task } from './dragNdrop/workspace';
 
 const SetUserModal = () => {
   const {
     user, setUser, id, setId, 
-    setColumn1_name, setColumn2_name, setColumn3_name,
-    setColumn1, setColumn2, setColumn3
+    setColumn1_name, 
+    setColumn2_name, 
+    setColumn3_name,
+    setColumn1,
+    setColumn2,
+    setColumn3
   } = useUserContext();
+
+  const { tasks, setTasks } = useTaskContext();
 
   const [tempUserName, setTempUserName] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  //
+  
+
+  async function updateInfoLocal(id: number[], col1:number[], col2:number[], col3:number[] ){
+    console.log("/api/tasks?task="+id.join(','));
+
+    const resFetch:Task[] = await fetch("/api/tasks?task="+id)
+      .then(res => res.json())
+      .then(data => data.resposta.rows);
+
+    console.log(resFetch);
+
+    if(resFetch.length>0){
+
+      console.log(resFetch.map( (item:Task) =>({
+        ...item,
+        id: Math.floor(Math.random()*10000),
+        columnId: 1,
+        name: item.name,
+        serverId: item.id
+      })))
+
+
+      setTasks(
+        resFetch.map( (item:Task) =>({
+          ...item,
+          id: Math.floor(Math.random()*10000),
+          columnId: 
+            col1.includes(item.id) ? 1 : 
+              col2.includes(item.id) ? 2 :
+                col3.includes(item.id) ? 3 :
+                0,
+          name: item.name,
+          serverId: item.id
+        })
+          )
+      );
+    }
+  }
 
   async function setUserServer(userName:string){
 
@@ -57,6 +105,23 @@ const SetUserModal = () => {
       setColumn1(userFound.column1);
       setColumn2(userFound.column2);
       setColumn3(userFound.column3);
+
+      let totalIDs:number[] = []
+
+      userFound.column1.forEach((elem:number) => {
+        totalIDs.push(elem)
+      });
+
+      userFound.column2.forEach((elem:number) => {
+        totalIDs.push(elem)
+      });
+
+      userFound.column3.forEach((elem:number) => {
+        totalIDs.push(elem)
+      });
+
+      updateInfoLocal(totalIDs, userFound.column1, userFound.column2, userFound.column3);
+
     }
     else{
       const createUserRes = await fetch("/api/user/add?name="+userName, {

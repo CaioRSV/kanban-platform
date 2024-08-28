@@ -18,6 +18,7 @@ import ColumnElement from './column';
 import { createPortal } from 'react-dom';
 import Card from './card';
 import { useUserContext } from '../contexts/userContext';
+import { useTaskContext } from '../contexts/tasksContext';
 
 type Id = string | number;
 
@@ -36,21 +37,26 @@ export interface Task {
     startDate?: Date
     endDate?: Date
     done?: boolean
+
+    serverId: number
 };
 
 
 const Workspace = () => {
     
     const {
-        user, setUser, 
-        id, setId, 
-        column1_name, setColumn1_name, 
-        column2_name, setColumn2_name, 
-        column3_name, setColumn3_name,
-        column1, setColumn1, 
-        column2, setColumn2, 
-        column3, setColumn3
-      } = useUserContext();
+        user, setUser, id, setId, 
+        setColumn1_name, column1_name,
+        setColumn2_name, column2_name,
+        setColumn3_name, column3_name,
+        setColumn1, column1,
+        setColumn2, column2,
+        setColumn3, column3,
+    
+        } = useUserContext();
+
+    const {tasks, setTasks} = useTaskContext();
+
     
     const [columns, setColumns] = useState<Column[]>([
         {
@@ -86,9 +92,25 @@ const Workspace = () => {
     
     const columnsId = useMemo(() => columns.map(col=>col.id), [columns]);
 
-    //
+    //const [tasks, setTasks] = useState<Task[]>([]);
 
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const tasksId_1 = useMemo(() => (tasks.filter(tas=>tas.columnId==1)).map(tas=>tas.id), [tasks]);
+
+    const tasksId_2 = useMemo(() => (tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.id), [tasks]);
+
+    const tasksId_3 = useMemo(() => (tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.id), [tasks]);
+
+    useEffect(()=>{
+        // console.log('=============')
+
+        // console.log(tasksId_1);
+        // console.log((tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.serverId))
+        // console.log((tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.serverId))
+
+        // setColumn1((tasks.filter(tas=>tas.columnId==1)).map(tas=>tas.serverId));
+        // setColumn2((tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.serverId));
+        // setColumn3((tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.serverId));
+    }, [tasksId_1, tasksId_2, tasksId_3])
 
     const [activeTask , setActiveTask] = useState<Task | null>();
 
@@ -149,7 +171,7 @@ const Workspace = () => {
             if(!isOverTask && isActiveTask){
                 const overID = columns.findIndex(col => col.id === overColumnID)+1;
                 const activeID = activeColumnID;
-                changeToEmptyColumn(overID, activeID);
+                changeToEmptyColumn(overID, activeID, tasks.find(item => item.id == activeID));
             }
             else if(!(activeColumnID === overColumnID)){ // Caso esteja dando over em alguma coluna diferente
                 setColumns(columns => {
@@ -198,16 +220,29 @@ const Workspace = () => {
         setColumns(newColumns);
     }
 
-    function addTask(columnId: Id){
-        
-        let newId =  Math.floor(Math.random()*10000);
-
-        const newTask: Task = {
-            id: newId,
-            name: "Nova tarefa",
-            columnId: columnId
+    async function addTask(columnId: Id, definedObject?: Task){
+        if(definedObject){
+            if(!tasks.find(item => item.serverId == definedObject.id)){
+                setTasks([...tasks, definedObject]);
+            }
         }
-        setTasks([...tasks, newTask]);
+        else{
+            let newId =  Math.floor(Math.random()*10000);
+
+            const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
+                .then(res => res.json())
+                .then(data => data.resposta.id);
+
+            const newTask: Task = {
+                id: newId,
+                name: "Nova tarefa",
+                columnId: columnId,
+                serverId: parseInt(res)
+            }
+
+            setTasks([...tasks, newTask]);
+
+        }
 
     }
 
@@ -220,14 +255,18 @@ const Workspace = () => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id){
-        
+    async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
         const newTasks = tasks.filter(task => task.id != activeTaskID);
 
         const newTask: Task = {
             id: typeof activeTaskID ==='number' ? activeTaskID : Math.floor(Math.random()*10000),
-            name: "Nova tarefa",
-            columnId: typeof overColumnID ==='number'? overColumnID : Math.floor(Math.random()*10000)
+            name: definedObject?.name ?? "Nova tarefa",
+            columnId: typeof overColumnID ==='number'? overColumnID : Math.floor(Math.random()*10000),
+            description: definedObject?.description ?? '',
+            color: definedObject?.color,
+            startDate: definedObject?.startDate,
+            endDate: definedObject?.endDate,
+            serverId: definedObject?.serverId ?? 0
         }
 
         setTasks([...newTasks, newTask]);
@@ -236,6 +275,7 @@ const Workspace = () => {
     function updateTask(id: Id, content: string){
         const newTasks = tasks.map((task) => {
             if(task.id === id && content.length>0){
+                fetch(`/api/tasks/update?description=${content}`)
                 return {...task, description:content}
             }
             else{
@@ -275,12 +315,9 @@ const Workspace = () => {
         }        
     }
 
-    // useEffect(() => {
-    //     console.log(tasks);
-    // }, [tasks]);
-
     return (
         <DndContext onDragStart={onDragStart} sensors={sensors} collisionDetection={closestCorners} onDragEnd={onDragEnd} onDragOver={onDragOver}>
+            <p onClick={()=>{console.log(tasks)}} className={`text-xs`}>[LOG: Tasks]</p>
             <SortableContext items={columnsId}>
                 {
                     columns.map(col => (
@@ -288,7 +325,7 @@ const Workspace = () => {
                             <ColumnElement column={col} 
                                 updateColumn={updateColumn} 
                                 addTask={addTask} 
-                                tasks={tasks.filter(item => item.columnId == col.id)}
+                                //tasks={tasks.filter(item => item.columnId == col.id)}
                                 deleteTask={deleteTask}
                                 updateTask={updateTask}
                                 />
@@ -307,7 +344,7 @@ const Workspace = () => {
                                 <ColumnElement column={activeColumn} 
                                         updateColumn={updateColumn} 
                                         addTask={addTask}
-                                        tasks={tasks.filter(item => item.columnId == activeColumn.id)}
+                                        //tasks={tasks.filter(item => item.columnId == activeColumn.id)}
                                         deleteTask={()=>{deleteTask(activeColumn.id)}}
                                         updateTask={updateTask}
                                         />

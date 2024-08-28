@@ -16,6 +16,7 @@ import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import FinishColumn from '../finishColumn';
 import { useUserContext } from '../contexts/userContext';
+import { useTaskContext } from '../contexts/tasksContext';
 
 
 type Id = string | number;
@@ -23,15 +24,17 @@ type Id = string | number;
 
 interface TaskColumnProps {
     column: Column;
-    tasks: Task[];
 
     updateColumn: (id: Id, title: string) => void;
-    addTask: (columnId: Id) => void;
+    addTask: (columnId: Id, definedObject?: Task) => void;
     deleteTask: (id: Id) => void;
     updateTask: (id: Id, content: string) => void;
 }
 
-const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn, addTask, deleteTask, updateTask}) => {
+const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask}) => {
+
+    const {tasks, setTasks} = useTaskContext();
+
     const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]);
 
     const [editing, setEditing] = useState<boolean>(false);
@@ -39,10 +42,15 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
     const [tempColName, setTempColName] = useState<string>(column.title);
 
     const {
-        column1_name, setColumn1_name, 
-        column2_name, setColumn2_name, 
-        column3_name, setColumn3_name,
-      } = useUserContext();
+    user, setUser, id, setId, 
+    setColumn1_name, column1_name,
+    setColumn2_name, column2_name,
+    setColumn3_name, column3_name,
+    setColumn1, column1,
+    setColumn2, column2,
+    setColumn3, column3,
+
+    } = useUserContext();
 
     useEffect(() => {
         if(column.id==1){
@@ -70,6 +78,15 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
         transition,
         transform: CSS.Transform.toString(transform)
     };
+
+    function updateLocalColumns() {
+        //tasksLocal
+    }
+
+    useEffect(()=>{
+        updateLocalColumns();
+    }, [tasks])
+
 
     // Estilo quando a coluna estiver sendo movida
     if(isDragging){
@@ -111,7 +128,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                 }
              </div>
 
-            <div className={`h-[1px] w-full bg-white opacity-50`}/>
+            <div className={`h-[1px] w-full bg-white opacity-50`} onClick={()=>{}}/>
             <SortableContext items={[]} strategy={verticalListSortingStrategy}>
                 <div className={`min-h-[300px] h-full flex flex-col`}>
 
@@ -119,7 +136,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                     <div className={`flex-1 flex flex-col gap-2 overflow-scroll`}>
                         <SortableContext items={tasksId}>
                         {
-                            tasks.map((task) => (
+                            tasks.filter(item=>(typeof item.columnId == 'number' ? item.columnId : 0) == column.id).map((task) => (
                                 <Card task={task} key={task.id} 
                                     deleteTask={deleteTask}
                                     updateTask={updateTask}
