@@ -17,6 +17,7 @@ import {
   
   
   import { RiLoginCircleLine } from "react-icons/ri";
+  import { ImSpinner8 } from "react-icons/im";
 
   import { useUserContext } from './contexts/userContext';
 
@@ -24,23 +25,66 @@ const SetUserModal = () => {
   const {user, setUser} = useUserContext();
   const [tempUserName, setTempUserName] = useState<string>("");
 
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function setUserServer(userName:string){
+
+    if(userName.length==0) return;
+
+    setLoading(true);
+
+    const userRes = await fetch("/api/user?name="+userName, {
+      method: 'GET'
+    })
+    .then(res => res.json())
+    .then(data => data.resposta.rows);
+
+    if(userRes.length>0){ setUser(userName) }
+    else{
+      const createUserRes = await fetch("/api/user/add?name="+userName, {
+        method: 'GET'
+      })
+      .then(res => res.json())
+      .then(data => data?.resposta?.rows);
+
+      if(createUserRes){
+        setUser(userName);
+      }
+    }
+
+    setLoading(false);
+  }
+
   return (
     <>
         <AlertDialog open={!user || user.length==0}>
             <AlertDialogContent>
             <AlertDialogHeader>
-                <AlertDialogTitle>Quem é você?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  <div className={`flex`}>
+                    <p>Quem é você?</p>
+                    <div className={`flex-1`}/>
+                    {
+                      loading
+                        ?
+                        <ImSpinner8 size={20} className={`animate-spin mr-1`}/>
+                        :
+                        <></>
+                    }
+                  </div>
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                 Informe seu nome de usuário para acessar sua área de trabalho
                 </AlertDialogDescription>
+
             </AlertDialogHeader>
 
             <div className={`w-full flex gap-2`}>
             
-            <Input onBlur={(e)=>{setTempUserName(e.target.value)}}/>
+            <Input onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
 
             <AlertDialogFooter>
-                <AlertDialogAction onClick={()=>{setUser(tempUserName)}}>
+                <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>
                 <RiLoginCircleLine size={28} />   
                 </AlertDialogAction>
             </AlertDialogFooter>

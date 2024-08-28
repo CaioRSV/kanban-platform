@@ -11,6 +11,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 
 import { MdDragHandle } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
 
 
 type Id = string | number;
@@ -106,7 +107,9 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                             onClick={()=>{
                                 addTask(column.id)
                             }}
-                        >+</Button>
+                        >
+                            <IoMdAdd size={20}/>
+                        </Button>
                     </div>
                 </div>
             </SortableContext>
