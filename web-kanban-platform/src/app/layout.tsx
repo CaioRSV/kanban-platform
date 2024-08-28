@@ -11,19 +11,20 @@ export const metadata: Metadata = {
   description: "by CaioRSV with Next.js",
 };
 
+// Hydration warning apenas na camada de html, server components não serão afetados por questão de depth
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-      <ThemeProvider
+        <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
-        >
-        {children}
+            defaultTheme="dark">
+          {children}
         </ThemeProvider>
         </body>  
     </html>

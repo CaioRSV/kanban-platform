@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   try {
     if (!name) throw new Error('Nome da Tarefa requerido');
       const resposta = await sql.query(SQL, [task,user,name,description]);
-      return NextResponse.json({ resposta }, { status: 200 });
+      return NextResponse.json({ resposta: {id: task} }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { SortableContext, verticalListSortingStrategy, useSortable} from '@dnd-kit/sortable';
 import Card from './card';
@@ -12,6 +14,8 @@ import { Button } from '../ui/button';
 
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
+import FinishColumn from '../finishColumn';
+import { useUserContext } from '../contexts/userContext';
 
 
 type Id = string | number;
@@ -28,10 +32,30 @@ interface TaskColumnProps {
 }
 
 const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn, addTask, deleteTask, updateTask}) => {
-
     const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]);
 
     const [editing, setEditing] = useState<boolean>(false);
+
+    const [tempColName, setTempColName] = useState<string>(column.title);
+
+    const {
+        column1_name, setColumn1_name, 
+        column2_name, setColumn2_name, 
+        column3_name, setColumn3_name,
+      } = useUserContext();
+
+    useEffect(() => {
+        if(column.id==1){
+            setTempColName(column1_name);
+        }
+        else if (column.id==2){
+            setTempColName(column2_name);
+        }
+        else if(column.id==3){
+            setTempColName(column3_name);
+        }
+    }, [column1_name, column2_name, column3_name]);
+
 
     const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
         id: column.id,
@@ -74,11 +98,14 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                         
                         :
                         <Input 
-                            value={column.title}
-                            onChange={(e => updateColumn(column.id, e.target.value))} // Alterando nome
+                            value={tempColName}
+                            onChange={(e => setTempColName(e.target.value))} // Alterando nome
                             autoFocus 
-                            onBlur={()=>{setEditing(false)}} 
-                            onKeyDown={(e)=>{e.key=='Enter'?setEditing(false):<></>}}
+                            onBlur={(e)=>{updateColumn(column.id, tempColName);setEditing(false)}} 
+                            onKeyDown={(e)=>{e.key=='Enter'?()=>{
+                                updateColumn(column.id, tempColName);
+                                setEditing(false);
+                            }:<></>}}
                             className={`outline-none`}        
                         />
                 }
@@ -102,7 +129,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                         </SortableContext>                     
                     </div>
 
-                    <div className={`w-full flex justify-center items-center`}>
+                    <div className={`w-full flex justify-center items-center gap-4`}>
                         <Button variant="outline" className={`rounded-full w-32`}
                             onClick={()=>{
                                 addTask(column.id)
@@ -110,6 +137,17 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, tasks, updateColumn,
                         >
                             <IoMdAdd size={20}/>
                         </Button>
+
+                        {
+                            column.id == 3
+                                ?
+                                <FinishColumn/>
+                                :
+                                <></>
+
+                        }
+
+
                     </div>
                 </div>
             </SortableContext>

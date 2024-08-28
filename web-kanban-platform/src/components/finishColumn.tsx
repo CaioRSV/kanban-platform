@@ -78,14 +78,7 @@ const FinishColumn = () => {
     }, []);
 
     return (
-        <div className={`flex gap-1 h-full items-center`}>
-            <div
-                style={{
-                    opacity: finish ? 1 : 0
-            }}>
-                <FaCheck className={`text-[rgb(18,172,255)]`}/>
-            </div>
-
+        <div className={`flex gap-2 h-full items-center`}>
             <Button
                 variant={'outline'}
                 style={{
@@ -100,13 +93,14 @@ const FinishColumn = () => {
                     relative
                     z-0
                     overflow-hidden
+                    rounded-full
                     `}
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
                 onMouseLeave={mouseReset}>
                 <p className={`z-10`}>Concluir tarefas feitas</p>
 
-                <CiSaveUp1 className={`z-10`} size={25} />
+                <CiSaveUp1 className={`z-10 ml-[1px]`} size={25} />
 
                 <div 
                 style={{
@@ -119,6 +113,13 @@ const FinishColumn = () => {
                 </div>
 
             </Button>
+
+            <div
+                style={{
+                    opacity: finish ? 1 : 0
+            }}>
+                <FaCheck className={`text-[rgb(18,172,255)]`}/>
+            </div>
         </div>
     );
 };

@@ -22,7 +22,12 @@ import {
   import { useUserContext } from './contexts/userContext';
 
 const SetUserModal = () => {
-  const {user, setUser} = useUserContext();
+  const {
+    user, setUser, id, setId, 
+    setColumn1_name, setColumn2_name, setColumn3_name,
+    setColumn1, setColumn2, setColumn3
+  } = useUserContext();
+
   const [tempUserName, setTempUserName] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,20 +39,35 @@ const SetUserModal = () => {
     setLoading(true);
 
     const userRes = await fetch("/api/user?name="+userName, {
-      method: 'GET'
-    })
-    .then(res => res.json())
-    .then(data => data.resposta.rows);
+        method: 'GET'
+      })
+      .then(res => res.json())
+      .then(data => data.resposta.rows);
 
-    if(userRes.length>0){ setUser(userName) }
+    if(userRes.length>0){ // Fetch no banco (existente)
+      const userFound = userRes[0];
+
+      setUser(userName);
+      setId(userFound.id);
+
+      if(userFound.column1_name !== null) setColumn1_name(userFound.column1_name);
+      if(userFound.column2_name !== null) setColumn2_name(userFound.column2_name);
+      if(userFound.column3_name !== null) setColumn3_name(userFound.column3_name);
+
+      setColumn1(userFound.column1);
+      setColumn2(userFound.column2);
+      setColumn3(userFound.column3);
+    }
     else{
       const createUserRes = await fetch("/api/user/add?name="+userName, {
         method: 'GET'
       })
       .then(res => res.json())
-      .then(data => data?.resposta?.rows);
+      .then(data => {
+        return data.resposta.id
+      });
 
-      if(createUserRes){
+      if(createUserRes != undefined){
         setUser(userName);
       }
     }
