@@ -40,7 +40,6 @@ export default function App() {
             </div>
 
             <div className={`w-[80%] h-full flex justify-center items-center gap-4`}>
-
               <Workspace/>
             </div>
 

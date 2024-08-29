@@ -6,9 +6,9 @@ export async function GET(request: Request) {
 
   const id = searchParams.get('id');
   
-  const column1 = searchParams.get('column1')?.split(',').map(Number);
-  const column2 = searchParams.get('column2')?.split(',').map(Number);
-  const column3 = searchParams.get('column3')?.split(',').map(Number);
+  const column1 = searchParams.get('column1')?.split(',').map(Number) || [];
+  const column2 = searchParams.get('column2')?.split(',').map(Number) || [];
+  const column3 = searchParams.get('column3')?.split(',').map(Number) || [];
   
   const column1_name = searchParams.get('column1_name');
   const column2_name = searchParams.get('column2_name');
@@ -19,20 +19,19 @@ export async function GET(request: Request) {
   let refValues:any[] = [id]
   
   //
-  if (column1) {
+
     setCombo.push(`column1=$${setCombo.length+2}`);
     refValues.push(column1);
-  }
+//
 
-  if (column2) {
     setCombo.push(`column2=$${setCombo.length+2}`);
     refValues.push(column2);
-  }
 
-  if (column3) {
+    //
+
     setCombo.push(`column3=$${setCombo.length+2}`);
     refValues.push(column3);
-  }
+
   //
   if (column1_name) {
     setCombo.push(`column1_name=$${setCombo.length+2}`);

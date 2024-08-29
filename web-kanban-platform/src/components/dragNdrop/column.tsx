@@ -28,7 +28,7 @@ interface TaskColumnProps {
     updateColumn: (id: Id, title: string) => void;
     addTask: (columnId: Id, definedObject?: Task) => void;
     deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string) => void;
+    updateTask: (id: Id, content: string, attribute?: string) => void;
 }
 
 const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask}) => {
@@ -85,6 +85,17 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
 
     useEffect(()=>{
         updateLocalColumns();
+        setColumn1(
+            (tasks.filter(item => item.columnId==1)).map(elem => elem.serverId)
+        )
+
+        setColumn2(
+            (tasks.filter(item => item.columnId==2)).map(elem => elem.serverId)
+        )
+
+        setColumn3(
+            (tasks.filter(item => item.columnId==3)).map(elem => elem.serverId)
+        )
     }, [tasks])
 
 
@@ -99,7 +110,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
     return (
         <div ref={setNodeRef}
             style={style}
-            className="p-4 rounded-md w-full h-full flex flex-col gap-2 bg-[var(--background)] border border-[var(--foreground)]"
+            className="p-4 rounded-md max-w-full h-full flex flex-col gap-2 bg-[var(--background)] border border-[var(--foreground)]"
         >
             <div
             {...attributes} {...listeners} onClick={()=>{setEditing(true)}}
@@ -129,6 +140,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
              </div>
 
             <div className={`h-[1px] w-full bg-white opacity-50`} onClick={()=>{}}/>
+
             <SortableContext items={[]} strategy={verticalListSortingStrategy}>
                 <div className={`min-h-[300px] h-full flex flex-col`}>
 

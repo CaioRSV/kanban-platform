@@ -134,10 +134,7 @@ const Workspace = () => {
                 distance: 100 // Distância de ativação do drag, tem que puxar uma quantidade pixels pra ele sair do lugar
             }
         }),
-        useSensor(TouchSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates
-        })
+        useSensor(TouchSensor)
     )
 
     function onDragStart(event: DragStartEvent){
@@ -272,11 +269,25 @@ const Workspace = () => {
         setTasks([...newTasks, newTask]);
     }
 
-    function updateTask(id: Id, content: string){
+    function updateTask(localId: Id, content: string, attribute?: string){
+
+        const serverId_chosen = tasks.find(item => item.id==localId)?.serverId
+
         const newTasks = tasks.map((task) => {
-            if(task.id === id && content.length>0){
-                fetch(`/api/tasks/update?description=${content}`)
-                return {...task, description:content}
+            if(task.id === localId && content.length>0){
+                //console.log(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content);
+                //console.log(content);
+                fetch(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content)
+                
+                if (attribute == 'name'){
+                    return {...task, name:content}
+                }
+                else if (attribute == 'color'){
+                    return {...task, color:content}
+                }
+                else{
+                    return {...task, description:content}
+                }
             }
             else{
                 return task;
@@ -297,8 +308,6 @@ const Workspace = () => {
             const isActiveTask = active.data.current?.type == 'Task';
             const isOverTask = over.data.current?.type == 'Task';
             
-            // TODO: Ajeitar BUG envolvendo dropar em colunas vazias
-
             if(isActiveTask && isOverTask){ // Ta dropando em outra task
                 setTasks(tasks => {
                     const activeIndex = tasks.findIndex(item => item.id === activeID);
@@ -317,7 +326,8 @@ const Workspace = () => {
 
     return (
         <DndContext onDragStart={onDragStart} sensors={sensors} collisionDetection={closestCorners} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-            <p onClick={()=>{console.log(tasks)}} className={`text-xs`}>[LOG: Tasks]</p>
+            {/* <p onClick={()=>{console.log(tasks);console.log(column1);console.log(column2);console.log(column3);}} className={`text-xs`}>[LOG: Tasks]</p> */}
+            
             <SortableContext items={columnsId}>
                 {
                     columns.map(col => (
@@ -325,7 +335,6 @@ const Workspace = () => {
                             <ColumnElement column={col} 
                                 updateColumn={updateColumn} 
                                 addTask={addTask} 
-                                //tasks={tasks.filter(item => item.columnId == col.id)}
                                 deleteTask={deleteTask}
                                 updateTask={updateTask}
                                 />
@@ -333,6 +342,7 @@ const Workspace = () => {
                     ))
                 }
             </SortableContext>
+            
 
             {
                 (typeof window === 'object')
@@ -344,7 +354,6 @@ const Workspace = () => {
                                 <ColumnElement column={activeColumn} 
                                         updateColumn={updateColumn} 
                                         addTask={addTask}
-                                        //tasks={tasks.filter(item => item.columnId == activeColumn.id)}
                                         deleteTask={()=>{deleteTask(activeColumn.id)}}
                                         updateTask={updateTask}
                                         />
@@ -366,8 +375,6 @@ const Workspace = () => {
                     :
                     <></>
             }
-            
-
         </DndContext>
     )
 }

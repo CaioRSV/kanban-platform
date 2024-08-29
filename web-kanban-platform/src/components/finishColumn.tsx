@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 
 import { FaCheck } from "react-icons/fa6";
 import { CiSaveUp1 } from "react-icons/ci";
+import { useUserContext } from './contexts/userContext';
+import { useTaskContext } from './contexts/tasksContext';
 
 
 const FinishColumn = () => { 
@@ -13,6 +15,19 @@ const FinishColumn = () => {
     const [counterTime, setCounterTime] = useState<number>(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const {
+        user, setUser, id, setId, 
+        setColumn1_name, column1_name,
+        setColumn2_name, column2_name,
+        setColumn3_name, column3_name,
+        setColumn1, column1,
+        setColumn2, column2,
+        setColumn3, column3,
+    
+        } = useUserContext();
+
+    const {tasks, setTasks} = useTaskContext();
 
     const delay = 2000;
 
@@ -53,6 +68,13 @@ const FinishColumn = () => {
                     setFinish(false);
                     setCounterTime(0);
                 }, 700);
+
+                setTasks(prev => prev.filter(item => item.columnId!=3));
+
+                column3.forEach(item => {
+                    fetch(`/api/tasks/update?id=${item}&done=TRUE`)
+                });
+                
             }
         }, 15);
     };

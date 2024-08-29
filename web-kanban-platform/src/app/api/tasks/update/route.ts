@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   const done = searchParams.get('done');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
+  const color = searchParams.get('color');
 
   let setCombo:string[] = [];
   let refValues:any[] = [id]
@@ -36,6 +37,11 @@ export async function GET(request: Request) {
   if (endDate) {
     setCombo.push(`endDate=$${setCombo.length+2}`);
     refValues.push(endDate);
+  }
+
+  if (color) {
+    setCombo.push(`color=$${setCombo.length+2}`);
+    refValues.push(color);
   }
   
   const SQL = `
