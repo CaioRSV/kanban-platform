@@ -38,7 +38,7 @@ export default function App() {
               <SaveColumns/>
             </div>
 
-            <div className={`w-[80%] h-full flex justify-center items-center gap-4`}>
+            <div className={`w-[80%] h-full lg:flex justify-center items-center gap-4`}>
               <Workspace/>
             </div>
 

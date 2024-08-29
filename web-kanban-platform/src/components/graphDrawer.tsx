@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, {useState} from 'react'
 
 import {
     Drawer,
@@ -12,39 +12,136 @@ import {
     DrawerTrigger,
   } from "@/components/ui/drawer"
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
 import { Button } from "@/components/ui/button";
 
 import RatioGraph from "@/components/ratioGraph";
 
 import { useUserContext } from './contexts/userContext';
 
+import { TbChartInfographic } from "react-icons/tb";
+import DoneLineGraph from './doneLineGraph';
+
+import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { useTheme } from 'next-themes';
+
 
 const GraphDrawer = () => {
+
+  const {theme} = useTheme();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   const {
+    id,
     column1, column1_name,
     column2, column2_name,
     column3, column3_name
   } = useUserContext();
+
+
+  const [doneRange, setDoneRange] = useState<number>(7);
+
+  const [doneLabels, setDoneLabels] = useState<string[]>();
+  const [doneSeries, setDoneSeries] = useState<number[]>();
+
+  async function updateDoneLine(){
+
+    setLoading(true);
+
+    const newLabels:string[] = [];
+
+    const newSeries:number[] = [];
+
+    if(doneRange){
+      for(let i=doneRange; i>0;i--){
+        const currentDate = new Date(Date.now()); 
+        const previousDate = new Date(currentDate); 
+        previousDate.setDate(currentDate.getDate() - i + 1);
+        const formattedDate = previousDate.toLocaleDateString('en-GB');
+        
+        newLabels.push(formattedDate);
+
+        // console.log(`api/tasks/done?user=${id}&doneTime=${i}&referenceTime=${i-1}`);
+
+        const numberOfTasks = await fetch(`api/tasks/done?user=${id}&doneTime=${i}&referenceTime=${i-1}`)
+          .then(res => res.json())
+          .then(data => data.resposta.rows.length)
+
+        newSeries.push(numberOfTasks);
+      }
+    }
+    setDoneLabels(newLabels);
+    setDoneSeries(newSeries);
+    
+    setLoading(false);
+  }
   
   return (
-    <div>
-
+    <div className={`w-full flex justify-center`}>
     <Drawer>
-    <DrawerTrigger>Open</DrawerTrigger>
+    <DrawerTrigger onClick={()=>{updateDoneLine()}}>
+    <div className={`w-[300px] p-2 border rounded-full flex justify-center items-center`}>
+      <TbChartInfographic size={26} />
+    </div>
+    </DrawerTrigger>
     <DrawerContent className={`h-[95vh]`}>
         <DrawerHeader>
-        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-        <DrawerDescription>This action cannot be undone.</DrawerDescription>
+        <DrawerTitle>
+          <p className={`w-full flex justify-center`}>Relatórios</p>
+        </DrawerTitle>
+        <DrawerDescription>
+          <p className={`w-full flex justify-center`}>Informações sobre suas atividades no aplicativo.</p>
+          </DrawerDescription>
         </DrawerHeader>
-        <div className={`w-full h-full flex justify-center`}>
-            <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} />
+        <div className={`w-full h-full flex flex-col items-center`}>
+            <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
+            {
+              loading
+                ?
+                <div className={`w-full h-full flex justify-center items-center`}>
+                  <CgSpinnerTwoAlt size={26} className={`animate-spin`} />
+                </div>
+                :
+                <>
+                  <p className={`w-full flex justify-center p-2`}>Distribuição de suas tarefas por coluna.</p>
+                  <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} theme={theme ?? 'light'} />
+      
+                  <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
+                  <p className={`w-full flex justify-center p-2`}>Tarefas concluídas ao longo do tempo.</p>
+                  <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <p className={`transition-all p-2 border rounded-md hover:bg-slate-700 bg-opacity-15`}>{`Últimos: ${doneRange} dias`}</p>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Data inicial</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={()=>{}}>1 semana</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{}}>2 semanas</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{}}>30 dias</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                </>
+            }
+        
         </div>
         <DrawerClose>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">Voltar</Button>
         </DrawerClose>
     </DrawerContent>
     </Drawer>
-
     </div>
   )
 }

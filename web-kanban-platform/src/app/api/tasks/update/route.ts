@@ -16,31 +16,39 @@ export async function GET(request: Request) {
   let refValues:any[] = [id]
   
   if (name) {
-    setCombo.push(`name=$${setCombo.length+2}`);
+    setCombo.push(`name=$${setCombo.length+1}`);
     refValues.push(name);
   }
   
   if (description) {
-    setCombo.push(`description=$${setCombo.length+2}`);
+    setCombo.push(`description=$${setCombo.length+1}`);
     refValues.push(description);
   }
   
   if (done) {
     setCombo.push(`done = TRUE`);
+
+    setCombo.push(`endDate=$${setCombo.length+1}`);
+
+    const todayte = Date.now();
+    const sqlTimestamp = new Date(todayte).toISOString().slice(0, 19).replace('T', ' ');
+
+    refValues.push(sqlTimestamp); 
+
   }
   
   if (startDate) {
-    setCombo.push(`startDate=$${setCombo.length+2}`);
+    setCombo.push(`startDate=$${setCombo.length+1}`);
     refValues.push(startDate);
   }
   
   if (endDate) {
-    setCombo.push(`endDate=$${setCombo.length+2}`);
+    setCombo.push(`endDate=$${setCombo.length+1}`);
     refValues.push(endDate);
   }
 
   if (color) {
-    setCombo.push(`color=$${setCombo.length+2}`);
+    setCombo.push(`color=$${setCombo.length+1}`);
     refValues.push(color);
   }
   
