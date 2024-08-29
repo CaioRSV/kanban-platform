@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import {
     AlertDialog,
@@ -139,6 +139,17 @@ const SetUserModal = () => {
       }
     }
 
+
+    const userRes_2 = await fetch("/api/user?name="+userName, {
+      method: 'GET'
+    })
+    .then(res => res.json())
+    .then(data => data.resposta.rows);
+
+    const userFound_2 = userRes_2[0];
+
+    setId(userFound_2.id);
+
     setLoading(false);
   }
 
@@ -168,7 +179,7 @@ const SetUserModal = () => {
 
             <div className={`w-full flex gap-2`}>
             
-            <Input onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
+            <Input autoFocus onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
 
             <AlertDialogFooter>
                 <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>

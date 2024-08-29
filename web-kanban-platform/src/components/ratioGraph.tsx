@@ -15,8 +15,6 @@ class RatioGraph extends Component<RatioGraphProps> {
       <div className="donut">
         <Chart options={{
             labels: labels,
-            series: {series},
-            options: {}
           }}
           series={series}
           
