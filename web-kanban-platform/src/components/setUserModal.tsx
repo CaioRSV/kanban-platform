@@ -31,7 +31,8 @@ const SetUserModal = () => {
     setColumn3_name,
     setColumn1,
     setColumn2,
-    setColumn3
+    setColumn3,
+    setLoadingTasks
   } = useUserContext();
 
   const { tasks, setTasks } = useTaskContext();
@@ -44,13 +45,11 @@ const SetUserModal = () => {
   
 
   async function updateInfoLocal(id: number[], col1:number[], col2:number[], col3:number[] ){
-    console.log("/api/tasks?task="+id.join(','));
+    setLoadingTasks(true); // Loading nas colunas
 
     const resFetch:Task[] = await fetch("/api/tasks?task="+id)
       .then(res => res.json())
       .then(data => data.resposta.rows);
-
-    console.log(resFetch);
 
     if(resFetch.length>0){
 
@@ -77,6 +76,9 @@ const SetUserModal = () => {
         })
           )
       );
+
+      setLoadingTasks(false);
+
     }
   }
 

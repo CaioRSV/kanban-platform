@@ -14,6 +14,9 @@ import { Button } from '../ui/button';
 
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
+
+
 import FinishColumn from '../finishColumn';
 import { useUserContext } from '../contexts/userContext';
 import { useTaskContext } from '../contexts/tasksContext';
@@ -49,7 +52,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
     setColumn1, column1,
     setColumn2, column2,
     setColumn3, column3,
-
+    loadingTasks,
     } = useUserContext();
 
     useEffect(() => {
@@ -146,16 +149,24 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
 
 
                     <div className={`flex-1 flex flex-col gap-2 overflow-scroll`}>
-                        <SortableContext items={tasksId}>
                         {
-                            tasks.filter(item=>(typeof item.columnId == 'number' ? item.columnId : 0) == column.id).map((task) => (
-                                <Card task={task} key={task.id} 
-                                    deleteTask={deleteTask}
-                                    updateTask={updateTask}
-                                ></Card>
-                            ))   
-                        }
-                        </SortableContext>                     
+                            loadingTasks
+                                ?
+                                <div className={`w-full h-full flex justify-center items-center`}>
+                                    <CgSpinnerTwoAlt size={26} className={`animate-spin`} />
+                                </div>
+                                :
+                                <SortableContext items={tasksId}>
+                                    {
+                                        tasks.filter(item=>(typeof item.columnId == 'number' ? item.columnId : 0) == column.id).map((task) => (
+                                            <Card task={task} key={task.id} 
+                                                deleteTask={deleteTask}
+                                                updateTask={updateTask}
+                                            ></Card>
+                                        ))   
+                                    }
+                                </SortableContext> 
+                        }                 
                     </div>
 
                     <div className={`w-full flex justify-center items-center gap-4`}>

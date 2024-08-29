@@ -21,7 +21,10 @@ interface UserInterface {
     column2: number[];
     setColumn2: React.Dispatch<React.SetStateAction<number[]>>
     column3: number[];
-    setColumn3: React.Dispatch<React.SetStateAction<number[]>>
+    setColumn3: React.Dispatch<React.SetStateAction<number[]>>;
+
+    loadingTasks: boolean;
+    setLoadingTasks: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PlaceholderUser : UserInterface = {
@@ -45,6 +48,9 @@ const PlaceholderUser : UserInterface = {
 
     column3: [],
     setColumn3: () => {},
+
+    loadingTasks: false,
+    setLoadingTasks: () => {}
 };
 
 const userContext = createContext<UserInterface>(PlaceholderUser);
@@ -71,6 +77,8 @@ export const ProviderUserContext: React.FC<ProviderProps> = ({ children }) => {
     const [column2, setColumn2] = useState<number[]>([]); // In-Progress
     const [column3, setColumn3] = useState<number[]>([]); // Done
 
+    const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
+
     return (
         <userContext.Provider value={{ 
             user, setUser, 
@@ -80,7 +88,8 @@ export const ProviderUserContext: React.FC<ProviderProps> = ({ children }) => {
             column3_name, setColumn3_name,
             column1, setColumn1,
             column2, setColumn2,
-            column3, setColumn3
+            column3, setColumn3,
+            loadingTasks, setLoadingTasks
             }}>
             {children}
         </userContext.Provider>

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import SetUserModal from '@/components/setUserModal';
 import TopBar from '@/components/topBar';
 import Workspace from '@/components/dragNdrop/workspace';
-import FinishColumn from '@/components/finishColumn';
+import GraphDrawer from '@/components/graphDrawer';
 
 import { useUserContext } from '@/components/contexts/userContext';
 import SaveColumns from '@/components/saveColumns';
@@ -42,10 +42,9 @@ export default function App() {
               <Workspace/>
             </div>
 
-            {/* <div className={`flex w-[80%] justify-end pt-4 pb-4`}>
-              <FinishColumn/>
-            </div> */}
-
+            <div className={`flex w-[80%] justify-center pt-4 pb-4`}>
+              <GraphDrawer/>
+            </div>
             
 
           </div>

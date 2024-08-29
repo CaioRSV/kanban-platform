@@ -4,6 +4,7 @@ import { MdDragIndicator } from "react-icons/md";
 import { IoRemove } from "react-icons/io5";
 import { MdCircle } from "react-icons/md";
 import { TbTextPlus } from "react-icons/tb";
+import { GoTrash } from "react-icons/go";
 
 import {
     DropdownMenu,
@@ -14,6 +15,13 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
 
 import { useSortable } from '@dnd-kit/sortable';
 
@@ -22,7 +30,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { Task } from './workspace';
 import { Input } from '../ui/input';
 
-//<MdDragIndicator size={28} className={`text-[var(--background)]`} />
 type Id = string | number;
 
 interface TaskCardProps{
@@ -69,7 +76,6 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
             style={style}
             className={`flex-col w-full rounded-md p-3 border`}
             >
-
                 <div className={`w-full flex items-center`}>
                     <div>
                         <textarea
@@ -96,9 +102,11 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
         className={`overflow-y-scroll flex flex-col items-center justify-center rounded-md p-3 border ${isDragging ? `opacity-50` : ``}`}
         >
 
-        <div className={`w-full flex items-center`}>
-            <div className={`h-full flex flex-col justify-center mr-2`}>
+        <ContextMenu>
+        <ContextMenuTrigger className={`w-full flex items-center`}> {/* Aqui antes era o div */}
 
+            <div className={`h-full flex flex-col justify-center mr-2`}>
+            
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <MdCircle size={12} style={{color: task.color}}/>
@@ -144,10 +152,28 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                         <TbTextPlus onClick={()=>{switchEditing()}} size={26} className={`p-1`}/>
 
                 }
+                
             </div>
             <div className={`flex-1`}></div>
+            
             <MdDragIndicator size={28} className={`text-[var(--background)]`} />
-        </div>
+
+        
+        </ContextMenuTrigger> {/* Aqui antes era o /div */}
+
+        
+
+
+        <ContextMenuContent>
+            <ContextMenuItem onClick={()=>{deleteTask(task.id)}}>
+                <div className={`flex gap-2`}>
+                    <p>Excluir tarefa</p>
+                    <GoTrash size={16} />
+                </div>
+            </ContextMenuItem>
+        </ContextMenuContent>
+        </ContextMenu>
+
 
 
     </div>
