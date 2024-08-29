@@ -23,7 +23,7 @@ export default function App() {
     setColumn3, column3
   } = useUserContext();
 
-  const {tasksLocal, setTasksLocal} = useTaskContext();
+  const {tasks, setTasks} = useTaskContext();
   
   return (
         <main style={{filter: user ? `` : `blur(3px)`}} className="min-h-screen p-12 flex flex-col transition-all duration-500">
