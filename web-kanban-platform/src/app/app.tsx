@@ -27,7 +27,6 @@ export default function App() {
   
   return (
         <main style={{filter: user ? `` : `blur(3px)`}} className="min-h-screen p-12 flex flex-col transition-all duration-500">
-          <p onClick={()=>{console.log(tasksLocal);console.log([column1, column2, column3]);}} >DPSAODPSAOP</p>
           <SetUserModal/>
           <div className={`w-full h-fit flex justify-center items-center`}>
             <TopBar/>
