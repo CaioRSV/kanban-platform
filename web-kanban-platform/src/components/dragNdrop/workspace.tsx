@@ -165,10 +165,17 @@ const Workspace = () => {
             const isActiveTask = active.data.current?.type == 'Task';
             const isOverTask = over.data.current?.type == 'Task';
 
+            console.log({
+                active:{task: isActiveTask, id: activeColumnID},
+                over: {task: isOverTask, id: overColumnID}
+            });
+
             if(!isOverTask && isActiveTask){
-                const overID = columns.findIndex(col => col.id === overColumnID)+1;
+                const overID = columns.find(col => col.id === overColumnID)?.id;
                 const activeID = activeColumnID;
-                changeToEmptyColumn(overID, activeID, tasks.find(item => item.id == activeID));
+                if(overID){
+                    changeToEmptyColumn(overID, activeID, tasks.find(item => item.id == activeID));
+                }
             }
             else if(!(activeColumnID === overColumnID)){ // Caso esteja dando over em alguma coluna diferente
                 setColumns(columns => {
@@ -250,11 +257,10 @@ const Workspace = () => {
         setTasks(newTasks);
     }
 
-    function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
+        console.log(overColumnID);
+        console.log(activeTaskID);
+        console.log(columns)
         const newTasks = tasks.filter(task => task.id != activeTaskID);
 
         const newTask: Task = {
