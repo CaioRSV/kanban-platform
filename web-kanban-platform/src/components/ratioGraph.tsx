@@ -15,9 +15,14 @@ class RatioGraph extends Component<RatioGraphProps> {
       <div className="donut">
         <Chart options={{
             labels: labels,
+            colors:['#ebb400', '#00eb2f', '#0066eb'],
+            legend: {
+              labels: {
+                colors: theme=='dark' ? Array(labels.length).fill('#f8f8f8') : []
+              }
+            }
           }}
           series={series}
-          dataLabels
           type="donut" width="380" />
       </div>
     );

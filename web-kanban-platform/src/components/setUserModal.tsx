@@ -76,10 +76,9 @@ const SetUserModal = () => {
         })
           )
       );
-
-      setLoadingTasks(false);
-
     }
+
+    setLoadingTasks(false);
   }
 
   async function setUserServer(userName:string){
@@ -137,20 +136,21 @@ const SetUserModal = () => {
       if(createUserRes != undefined){
         setUser(userName);
       }
+
+      const userRes_2 = await fetch("/api/user?name="+userName, {
+        method: 'GET'
+      })
+      .then(res => res.json())
+      .then(data => data.resposta.rows);
+  
+      const userFound_2 = userRes_2[0];
+  
+      setId(userFound_2.id);
+
     }
 
-
-    const userRes_2 = await fetch("/api/user?name="+userName, {
-      method: 'GET'
-    })
-    .then(res => res.json())
-    .then(data => data.resposta.rows);
-
-    const userFound_2 = userRes_2[0];
-
-    setId(userFound_2.id);
-
     setLoading(false);
+
   }
 
   return (

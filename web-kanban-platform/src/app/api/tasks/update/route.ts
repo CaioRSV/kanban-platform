@@ -13,22 +13,22 @@ export async function GET(request: Request) {
   const color = searchParams.get('color');
 
   let setCombo:string[] = [];
-  let refValues:any[] = [id]
+  let refValues:any[] = [id] 
   
   if (name) {
-    setCombo.push(`name=$${setCombo.length+1}`);
+    setCombo.push(`name=$${setCombo.length+2}`);
     refValues.push(name);
   }
   
   if (description) {
-    setCombo.push(`description=$${setCombo.length+1}`);
+    setCombo.push(`description=$${setCombo.length+2}`);
     refValues.push(description);
   }
   
   if (done) {
-    setCombo.push(`done = TRUE`);
+    setCombo.push(`endDate=$${setCombo.length+2}`);
 
-    setCombo.push(`endDate=$${setCombo.length+1}`);
+    setCombo.push(`done = TRUE`);
 
     const todayte = Date.now();
     const sqlTimestamp = new Date(todayte).toISOString().slice(0, 19).replace('T', ' ');
@@ -38,17 +38,17 @@ export async function GET(request: Request) {
   }
   
   if (startDate) {
-    setCombo.push(`startDate=$${setCombo.length+1}`);
+    setCombo.push(`startDate=$${setCombo.length+2}`);
     refValues.push(startDate);
   }
   
   if (endDate) {
-    setCombo.push(`endDate=$${setCombo.length+1}`);
+    setCombo.push(`endDate=$${setCombo.length+2}`);
     refValues.push(endDate);
   }
 
   if (color) {
-    setCombo.push(`color=$${setCombo.length+1}`);
+    setCombo.push(`color=$${setCombo.length+2}`);
     refValues.push(color);
   }
   
@@ -56,6 +56,9 @@ export async function GET(request: Request) {
     UPDATE KBN_Tasks 
     SET ${setCombo.join(', ')}
     WHERE id=$1`;
+
+    console.log(setCombo);
+    console.log(SQL);
   
   try {
     if (!id) throw new Error('ID requerido');

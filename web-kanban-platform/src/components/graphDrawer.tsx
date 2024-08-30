@@ -103,7 +103,7 @@ const GraphDrawer = () => {
           <p className={`w-full flex justify-center`}>Informações sobre suas atividades no aplicativo.</p>
           </DrawerDescription>
         </DrawerHeader>
-        <div className={`w-full h-full flex flex-col items-center`}>
+        <div className={`w-full h-full flex flex-col items-center overflow-y-scroll`}>
             <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
             {
               loading
@@ -114,24 +114,31 @@ const GraphDrawer = () => {
                 :
                 <>
                   <p className={`w-full flex justify-center p-2`}>Distribuição de suas tarefas por coluna.</p>
-                  <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} theme={theme ?? 'light'} />
-      
+                  {
+                    (column1.length>0 || column2.length>0 || column3.length>0)
+                      ?
+                      <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} theme={theme ?? 'light'} />
+                      :
+                      <p className={`p-4 bg-[rgba(141,164,195,0.05)] rounded-md`}>Não existem tarefas presentes no momento. Crie algumas para visualizar este gráfico!</p>
+                  }
+
                   <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
                   <p className={`w-full flex justify-center p-2`}>Tarefas concluídas ao longo do tempo.</p>
                   <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
+                  
 
-                  <DropdownMenu>
+                  {/* <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <p className={`transition-all p-2 border rounded-md hover:bg-slate-700 bg-opacity-15`}>{`Últimos: ${doneRange} dias`}</p>
+                        <p className={`transition-all p-2 border rounded-md hover:bg-slate-500 bg-opacity-15`}>{`Últimos: ${doneRange} dias`}</p>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuLabel>Data inicial</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>{}}>1 semana</DropdownMenuItem>
-                        <DropdownMenuItem onClick={()=>{}}>2 semanas</DropdownMenuItem>
-                        <DropdownMenuItem onClick={()=>{}}>30 dias</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{setDoneRange(7);updateDoneLine();}}>1 semana</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{setDoneRange(15);updateDoneLine();}}>2 semanas</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{setDoneRange(15);updateDoneLine();}}>30 dias</DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
 
                 </>
             }

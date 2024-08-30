@@ -203,6 +203,8 @@ const Workspace = () => {
     }
 
     function updateColumn(id: Id, title: string){
+        if(!title || title.length==0) return;
+
         const newColumns = columns.map(col => {
             if(col.id !== id){ // Não muda as que não são as referidas
                 return col
@@ -275,8 +277,6 @@ const Workspace = () => {
 
         const newTasks = tasks.map((task) => {
             if(task.id === localId && content.length>0){
-                //console.log(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content);
-                //console.log(content);
                 fetch(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content)
                 
                 if (attribute == 'name'){
@@ -345,8 +345,7 @@ const Workspace = () => {
             
 
             {
-                (typeof window === 'object')
-                    ?
+                typeof window === 'object' && 
                     createPortal(
                         <DragOverlay>
                             {activeColumn
@@ -372,8 +371,6 @@ const Workspace = () => {
                             }
                         </DragOverlay>, document.body
                     )
-                    :
-                    <></>
             }
         </DndContext>
     )

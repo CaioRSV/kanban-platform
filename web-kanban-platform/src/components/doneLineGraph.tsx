@@ -9,9 +9,6 @@ interface DoneLineGraphProps{
 }
 
 class DoneLineGraph extends Component<DoneLineGraphProps> {
-
-  
-  
   render() {
     const { series, labels, theme} = this.props;
     return (
@@ -31,15 +28,13 @@ class DoneLineGraph extends Component<DoneLineGraphProps> {
                       }
                     }
                 },
-                subtitle: {
-                  style:{
-                    color: '#45ff00'
-                  }
+                tooltip: {
+                  theme: 'dark'
                 }
               }}
               series={[
                 {
-                    name: "series-1",
+                    name: "quantitativo",
                     data: series
                 }
               ]}
