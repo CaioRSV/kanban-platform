@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Chart from 'react-apexcharts'
+import dynamic from 'next/dynamic'
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface RatioGraphProps {
   series: number[];
@@ -13,7 +15,8 @@ class RatioGraph extends Component<RatioGraphProps> {
 
     return (
       <div className="donut">
-        <Chart options={{
+        {(typeof window !== 'undefined') &&
+          <Chart options={{
             labels: labels,
             colors:['#ebb400', '#00eb2f', '#0066eb'],
             legend: {
@@ -24,6 +27,8 @@ class RatioGraph extends Component<RatioGraphProps> {
           }}
           series={series}
           type="donut" width="380" />
+        }
+
       </div>
     );
   }
