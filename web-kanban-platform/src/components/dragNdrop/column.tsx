@@ -169,7 +169,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                         }                 
                     </div>
 
-                    <div className={`w-full flex justify-center items-center gap-4`}>
+                    <div className={`w-full flex justify-center items-center gap-4 overflow-x-scroll`}>
                         <Button variant="outline" className={`rounded-full w-32`}
                             onClick={()=>{
                                 addTask(column.id)

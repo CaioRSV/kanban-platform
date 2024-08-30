@@ -125,6 +125,8 @@ const GraphDrawer = () => {
                   <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
                   <p className={`w-full flex justify-center p-2`}>Tarefas concluídas ao longo do tempo.</p>
                   <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
+
+                  <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
                   
 
                   {/* <DropdownMenu>
@@ -145,7 +147,7 @@ const GraphDrawer = () => {
         
         </div>
         <DrawerClose>
-            <Button variant="outline">Voltar</Button>
+            <Button variant="outline" className={`my-2`}>Voltar</Button>
         </DrawerClose>
     </DrawerContent>
     </Drawer>
