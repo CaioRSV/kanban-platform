@@ -142,12 +142,12 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                             }}
                         />
                         :
-                        <p onClick={()=>{setEditingName(true)}}>{task.name}</p>
+                        <p className={`select-none font-medium`} onClick={()=>{setEditingName(true)}}>{task.name}</p>
                 }
                 {
                      task.description && task.description.length>0
                         ?
-                        <p onClick={switchEditing}>{task.description ? task.description.length>18 ? task.description.slice(0,15)+"..." : task.description : ''}</p>
+                        <p className={`select-none`} onClick={switchEditing}>{task.description ? task.description.length>18 ? task.description.slice(0,15)+"..." : task.description : ''}</p>
                         :
                         <TbTextPlus onClick={()=>{switchEditing()}} size={26} className={`p-1`}/>
 

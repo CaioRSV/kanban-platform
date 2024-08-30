@@ -120,7 +120,7 @@ const FinishColumn = () => {
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
                 onMouseLeave={mouseReset}>
-                <p className={`z-10`}>Concluir tarefas feitas</p>
+                <p className={`z-10`}>Confirmar conclusão</p>
 
                 <CiSaveUp1 className={`z-10 ml-[1px]`} size={25} />
 

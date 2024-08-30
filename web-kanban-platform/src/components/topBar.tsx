@@ -44,9 +44,9 @@ const TopBar = () => {
       setColumn1([]);
       setColumn2([]);
       setColumn3([]);
-      setColumn1_name("To-Do");
-      setColumn2_name("In progress");
-      setColumn3_name("Done");
+      setColumn1_name("A fazer");
+      setColumn2_name("Em progresso");
+      setColumn3_name("Concluídas");
       setTasks([]);
     }
 

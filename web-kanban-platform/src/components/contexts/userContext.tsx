@@ -33,11 +33,11 @@ const PlaceholderUser : UserInterface = {
     id: -1,
     setId: () => {},
 
-    column1_name: "To-Do",
+    column1_name: "A fazer",
     setColumn1_name: () => {},
-    column2_name: "In progress",
+    column2_name: "Em progresso",
     setColumn2_name: () => {},
-    column3_name: "Done",
+    column3_name: "Concluídas",
     setColumn3_name: () => {},
 
     column1: [],
