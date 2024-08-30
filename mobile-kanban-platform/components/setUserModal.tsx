@@ -161,11 +161,11 @@ const SetUserModal = () => {
         transparent={true}
         animationType="fade"
         visible={!user || user.length==0}>
-            <View className={`w-full h-full flex justify-center bg-[rgba(0 0 0 0.5)] p-4`}>
+            <View className={`w-full h-full flex justify-center p-4`} style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
                 <View className={`bg-white p-4 flex gap-2 rounded-md`}>
                     <Text className={`text-lg font-semibold`}>Quem é você?</Text>
                     <Text className={`mb-2`}>Informe seu nome de usuário para acessar sua área de trabalho</Text>
-                    <TextInput onChangeText={(e)=>{setTempUserName(e)}} className={`border m-2 text-lg p-2`}></TextInput>
+                    <TextInput onChangeText={(e)=>{setTempUserName(e)}} className={`border m-2 text-lg p-2 rounded-md`}></TextInput>
                     <TouchableOpacity className={`flex flex-row justify-center border rounded-full p-3 gap-2 items-center`} onPress={()=>{setUser(tempUserName)}}>
                         <AntDesign name="login" size={32} color="black" />
                     </TouchableOpacity>

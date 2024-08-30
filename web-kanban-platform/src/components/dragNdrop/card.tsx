@@ -99,7 +99,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
         {...attributes} 
         {...listeners} 
         style={style}
-        className={`flex flex-col items-center justify-center rounded-md p-3 border ${isDragging ? `opacity-50` : ``}`}
+        className={`flex flex-col items-center justify-center rounded-md p-3 border ${isDragging ? `opacity-50 border-2` : ``}`}
         >
 
         <ContextMenu>
