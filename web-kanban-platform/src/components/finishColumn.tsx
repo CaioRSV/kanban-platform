@@ -5,8 +5,18 @@ import { Button } from "@/components/ui/button";
 
 import { FaCheck } from "react-icons/fa6";
 import { CiSaveUp1 } from "react-icons/ci";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+
 import { useUserContext } from './contexts/userContext';
 import { useTaskContext } from './contexts/tasksContext';
+
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip"
+
 
 
 const FinishColumn = () => { 
@@ -15,6 +25,10 @@ const FinishColumn = () => {
     const [counterTime, setCounterTime] = useState<number>(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const [historyPressTime, SetHistoryPressTime] = useState<number[]>([]);
+
+    const [notifyIcon, setNotifyIcon] = useState<boolean>(false);
 
     const {
         user, setUser, id, setId, 
@@ -46,6 +60,8 @@ const FinishColumn = () => {
     };
 
     const mouseDown = () => {
+        setNotifyIcon(false);
+        
         if (finish) {
             setFinish(false);
         }
@@ -89,6 +105,8 @@ const FinishColumn = () => {
         clearExistingInterval();
         clearExistingTimeout();
         setFinish(false);
+        if((historyPressTime.slice(historyPressTime.length-3).reduce((a, b) => a + b, 0)/3)<50 && counterTime<50) setNotifyIcon(true);
+        SetHistoryPressTime([...historyPressTime, counterTime]);
         setCounterTime(0);
     };
 
@@ -101,6 +119,18 @@ const FinishColumn = () => {
 
     return (
         <div className={`flex gap-2 h-full items-center`}>
+
+        <TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger onClick={()=>{ console.log(historyPressTime.slice(historyPressTime.length-3)) }} onMouseEnter={()=>{setNotifyIcon(false)}}>
+                <IoIosInformationCircleOutline style={{color: notifyIcon ? 'rgba(0, 135, 255, 0.8)' : ''}} size={23} className={`transition-all`} />
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Para que as tarefas sejam consideradas como concluídas, clique e segure no botão ao lado.</p>
+            </TooltipContent>
+        </Tooltip>
+        </TooltipProvider>
+
             <Button
                 variant={'outline'}
                 style={{

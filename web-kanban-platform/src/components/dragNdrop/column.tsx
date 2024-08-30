@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 
 
 import FinishColumn from '../finishColumn';
@@ -177,11 +178,12 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                         >
                             <IoMdAdd size={20}/>
                         </Button>
-
                         {
                             column.id == 3
-                                ?
+                                ?<>
                                 <FinishColumn/>
+                                </>
+                                
                                 :
                                 <></>
 

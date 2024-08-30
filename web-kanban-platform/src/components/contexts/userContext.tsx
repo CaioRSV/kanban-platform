@@ -37,7 +37,7 @@ const PlaceholderUser : UserInterface = {
     setColumn1_name: () => {},
     column2_name: "Em progresso",
     setColumn2_name: () => {},
-    column3_name: "Concluídas",
+    column3_name: "Finalizadas",
     setColumn3_name: () => {},
 
     column1: [],

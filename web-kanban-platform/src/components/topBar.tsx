@@ -46,7 +46,7 @@ const TopBar = () => {
       setColumn3([]);
       setColumn1_name("A fazer");
       setColumn2_name("Em progresso");
-      setColumn3_name("Concluídas");
+      setColumn3_name("Finalizadas");
       setTasks([]);
     }
 
