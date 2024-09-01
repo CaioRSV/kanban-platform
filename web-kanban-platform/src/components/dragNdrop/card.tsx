@@ -103,7 +103,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
         >
 
         <ContextMenu>
-        <ContextMenuTrigger className={`w-full flex items-center`}> {/* Aqui antes era o div */}
+        <ContextMenuTrigger className={`w-full flex items-center`}>
 
             <div className={`h-full flex flex-col justify-center mr-2`}>
             
@@ -142,7 +142,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                             }}
                         />
                         :
-                        <p className={`select-none font-medium`} onClick={()=>{setEditingName(true)}}>{task.name}</p>
+                        <p className={`select-none font-medium`} onClick={()=>{setEditingName(true)}}>{task.name.length<48 ? task.name : task.name.slice(0,45)+"..."}</p>
                 }
                 {
                      task.description && task.description.length>0

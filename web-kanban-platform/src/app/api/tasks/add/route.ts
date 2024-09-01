@@ -9,11 +9,20 @@ export async function GET(request: Request) {
   const user = searchParams.get('user');
   const name = searchParams.get('name');
   const description = searchParams.get('description');
+  const color = searchParams.get('color');
 
   const SQL = `INSERT INTO KBN_Tasks(id, userId, name, description, done) VALUES ($1,$2,$3,$4, FALSE)`;
+
+  const SQL_2 = `INSERT INTO KBN_Tasks(id, userId, name, description, done, color) VALUES ($1,$2,$3,$4, FALSE, $5)`;
+
   try {
     if (!name) throw new Error('Nome da Tarefa requerido');
-      const resposta = await sql.query(SQL, [task,user,name,description]);
+      if(color){
+        const resposta = await sql.query(SQL_2, [task,user,name,description, color]);
+      }
+      else{
+        const resposta = await sql.query(SQL, [task,user,name,description]);
+      }
       return NextResponse.json({ resposta: {id: task} }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });

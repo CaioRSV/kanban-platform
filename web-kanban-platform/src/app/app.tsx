@@ -10,7 +10,7 @@ import GraphDrawer from '@/components/graphDrawer';
 import { useUserContext } from '@/components/contexts/userContext';
 import SaveColumns from '@/components/saveColumns';
 import { useTaskContext } from '@/components/contexts/tasksContext';
-
+import GraphQlMocker from '@/components/graphQlMocker';
 
 export default function App() {
   const {
@@ -20,7 +20,8 @@ export default function App() {
     setColumn3_name,
     setColumn1, column1,
     setColumn2, column2,
-    setColumn3, column3
+    setColumn3, column3,
+    loadingTasks
   } = useUserContext();
 
   const {tasks, setTasks} = useTaskContext();
@@ -33,8 +34,9 @@ export default function App() {
           </div>
           <div className="flex-1 flex-col w-full h-full flex justify-center items-center">
 
-
-            <div className={`flex w-[80%] justify-end pt-4 pb-4`}>
+            <div className={`flex w-[80%] pt-4 pb-4`}>
+              <GraphQlMocker active={tasks.length==0 && !loadingTasks}/>
+              <div className={`flex-1`}/>
               <SaveColumns/>
             </div>
 

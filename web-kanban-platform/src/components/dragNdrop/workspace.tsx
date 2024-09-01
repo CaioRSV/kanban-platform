@@ -165,10 +165,10 @@ const Workspace = () => {
             const isActiveTask = active.data.current?.type == 'Task';
             const isOverTask = over.data.current?.type == 'Task';
 
-            console.log({
-                active:{task: isActiveTask, id: activeColumnID},
-                over: {task: isOverTask, id: overColumnID}
-            });
+            // console.log({
+            //     active:{task: isActiveTask, id: activeColumnID},
+            //     over: {task: isOverTask, id: overColumnID}
+            // });
 
             if(!isOverTask && isActiveTask){
                 const overID = columns.find(col => col.id === overColumnID)?.id;
@@ -258,9 +258,9 @@ const Workspace = () => {
     }
 
     async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
-        console.log(overColumnID);
-        console.log(activeTaskID);
-        console.log(columns)
+        // console.log(overColumnID);
+        // console.log(activeTaskID);
+        // console.log(columns)
         const newTasks = tasks.filter(task => task.id != activeTaskID);
 
         const newTask: Task = {
