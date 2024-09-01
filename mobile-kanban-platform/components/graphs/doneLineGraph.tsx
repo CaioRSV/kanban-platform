@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 
@@ -12,33 +12,39 @@ import {Dimensions} from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+interface DoneLineGraphProps{
+  labels: string[];
+  series: number[];
+  theme: string;
+}
 
-const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
+const DoneLineGraph = (props: DoneLineGraphProps) => {
+
+  const data = {
+    labels: props.labels ?? ["Fall", "Back"],
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2 // optional
+        data: props.series ?? [1, 3],
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+        strokeWidth: 2 
       }
     ],
-    legend: ["Rainy Days"] // optional
+    legend: ["Tarefas feitas ao longo do tempo"]
   };
 
 
-const DoneLineGraph = ({theme}) => {
   return (
-    <View>
+    <TouchableOpacity onPress={()=>{}}>
         <LineChart
         data={data}
         width={windowWidth-20}
-        height={220}
+        height={windowHeight/3}
         chartConfig={{
-            backgroundGradientFrom: theme=='dark' ? 'rgba(0,0,0,0)' : '#ffffff',
-            backgroundGradientTo: theme=='dark' ? '#000000' : '#ffffff',
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
-            labelColor: theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
+            backgroundGradientFrom: props.theme=='dark' ? 'rgba(0,0,0,0)' : '#ffffff',
+            backgroundGradientTo: props.theme=='dark' ? '#000000' : '#ffffff',
+            decimalPlaces: 2,
+            color: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
+            labelColor: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
             style: {
             borderRadius: 16
             },
@@ -49,7 +55,7 @@ const DoneLineGraph = ({theme}) => {
             }
         }}
         />
-    </View>
+    </TouchableOpacity>
   )
 }
 

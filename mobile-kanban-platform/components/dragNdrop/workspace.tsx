@@ -1,72 +1,73 @@
 "use client";
-import { DndProvider, DndProviderProps, Draggable, Droppable } from "@mgcrea/react-native-dnd";
-import type { FunctionComponent } from "react";
-import {useState, useEffect} from 'react';
-import { SafeAreaView, StyleSheet, Text, Button } from "react-native";
-import { GestureHandlerRootView, State } from "react-native-gesture-handler";
 
-export type Id = number;
+import React, { useState, useCallback, useRef } from "react";
+import { View, TouchableOpacity, Text } from "react-native";
+import Column from "./column";
+import { useUserContext } from "../contexts/userContext";
 
-
-export interface Column {
-    id: Id;
-    title: string;
+interface WorkspaceProps{
+  theme: string;
 }
 
-export interface Task {
-    id: number
-    name: string
-    columnId: Id,
-    description?: string
-    color?: string
-    startDate?: Date
-    endDate?: Date
-    done?: boolean
+const Workspace = (props: WorkspaceProps) => {
 
-    serverId: number
-};
-
-
-export const Workspace: FunctionComponent = () => {
-  const [teste, setTeste] = useState<any>();
-
-  const handleDragEnd: DndProviderProps["onDragEnd"] = ({ active, over }) => {
-    "worklet";
-    if (over) {
-      console.log("onDragEnd", { active, over });
-      if(active.data){
-        console.log(active.data.value)
-        setTeste(active.data.value);
-      }
-    }
-  };
-
-  const handleBegin: DndProviderProps["onBegin"] = () => {
-    "worklet";
-    console.log("onBegin");
-  };
-
-  const handleFinalize: DndProviderProps["onFinalize"] = ({ state }) => {
-    "worklet";
-    console.log("onFinalize");
-    if (state !== State.FAILED) {
-      console.log("onFinalize");
-    }
-  };
+  const {
+    user, setUser, id, setId, 
+    setSelectedColumn, selectedColumn,
+    setColumn1_name, column1_name,
+    setColumn2_name, column2_name,
+    setColumn3_name,column3_name,
+    setColumn1, column1,
+    setColumn2, column2,
+    setColumn3, column3
+  } = useUserContext();
 
   return (
-    <SafeAreaView>
-      <GestureHandlerRootView>
-        <Button title="TSSS" onPress={()=>{console.log(teste)}}></Button>
-        <DndProvider onBegin={handleBegin} onFinalize={handleFinalize} onDragEnd={handleDragEnd}>
-          <Droppable id="drop">
-            <Text>DROP</Text>
-          </Droppable>
-          <Draggable id="drag">
-            <Text>DRAG</Text>
-          </Draggable>
-        </DndProvider>
-      </GestureHandlerRootView>
-    </SafeAreaView>
-  );
-};
+    <View>
+    
+    {
+      selectedColumn=="column1" && 
+      <Column name={column1_name} idServer={1} isDone={false} theme={props.theme}/>
+    }
+
+    {
+      selectedColumn=="column2" && 
+      <Column name={column2_name}  idServer={2} isDone={false} theme={props.theme}/>
+    }
+
+    {
+      selectedColumn=="column3" && 
+      <Column name={column3_name}  idServer={3} isDone={true} theme={props.theme}/>
+    }
+
+    <View style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{
+        marginTop: 10,
+        width: '80%',
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: "gray",
+        padding: 2,
+        flexDirection: 'row',
+        height: 40
+      }}>
+        <TouchableOpacity onPress={()=>{setSelectedColumn('column1')}} style={{backgroundColor: selectedColumn=='column1' ? 'rgba(125,125,125,0.2)' : 'rgba(0,0,0,0)',  flex: 1, borderRightWidth: 1, borderColor: 'gray', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{color: props.theme=='dark' ? 'white' : 'black'}}>1</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>{setSelectedColumn('column2')}} style={{backgroundColor: selectedColumn=='column2' ? 'rgba(125,125,125,0.2)': 'rgba(0,0,0,0)',flex: 1, borderLeftWidth: 1, borderRightWidth: 1, borderColor: 'gray', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{color: props.theme=='dark' ? 'white' : 'black'}}>2</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>{setSelectedColumn('column3')}} style={{backgroundColor: selectedColumn=='column3' ? 'rgba(125,125,125,0.2)': 'rgba(0,0,0,0)',flex: 1, borderLeftWidth: 1, borderColor: 'gray', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{color: props.theme=='dark' ? 'white' : 'black'}}>3</Text>
+        </TouchableOpacity>
+
+      </View>
+    </View>
+
+    </View>
+  )
+}
+
+export default Workspace

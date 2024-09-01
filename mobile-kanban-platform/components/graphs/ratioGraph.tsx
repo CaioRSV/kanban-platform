@@ -12,45 +12,45 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-const data = [
+
+
+interface RatioGraphProps{
+  column1: number[];
+  column1_name: string;
+
+  column2: number[];
+  column2_name: string;
+
+  column3: number[];
+  column3_name: string;
+}
+
+const RatioGraph = (props: RatioGraphProps) => {
+
+  const data = [
     {
-      name: "Seoul",
-      population: 21500000,
-      color: "rgba(131, 167, 234, 1)",
+      name: props.column1_name,
+      quantity: props.column1.length,
+      color: "rgba(235, 180, 0, 0.8)",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15
     },
     {
-      name: "Toronto",
-      population: 2800000,
-      color: "#F00",
+      name: props.column2_name,
+      quantity: props.column2.length,
+      color: "rgba(0, 235, 47, 0.8)",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15
     },
     {
-      name: "Beijing",
-      population: 527612,
-      color: "red",
+      name: props.column3_name,
+      quantity: props.column3.length,
+      color: "rgba(0, 102, 235, 0.8)",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15
     },
-    {
-      name: "New York",
-      population: 8538000,
-      color: "#ffffff",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    },
-    {
-      name: "Moscow",
-      population: 11920000,
-      color: "rgb(0, 0, 255)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    }
   ];
 
-const RatioGraph = () => {
   return (
         <PieChart
             data={data}
@@ -72,7 +72,7 @@ const RatioGraph = () => {
                 stroke: "#ffa726"
                 }
             }}
-            accessor={"population"}
+            accessor={"quantity"}
             backgroundColor={"transparent"}
             paddingLeft={"0"}
             center={[20, 0]}

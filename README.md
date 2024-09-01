@@ -16,7 +16,6 @@ Plataforma de lista de tarefas com funcionalidades de Kanban e Dashboard com rel
 - Shadcnui
 - Radix
 - GraphQL
-- Express
 
 ---
 

@@ -12,6 +12,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@intechnity/react-native-kanban-board": "^0.1.0",
     "@mgcrea/react-native-dnd": "^2.2.0",
+    "@react-native-picker/picker": "2.7.5",
     "@react-navigation/native": "^6.1.18",
     "@types/react": "~18.2.79",
     "expo": "~51.0.28",
@@ -20,9 +21,11 @@
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-chart-kit": "^6.12.0",
+    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-haptic-feedback": "^2.3.1",
-    "react-native-reanimated": "^3.10.1",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-virtualized-view": "^1.0.0",
     "typescript": "~5.3.3"
   },
   "devDependencies": {

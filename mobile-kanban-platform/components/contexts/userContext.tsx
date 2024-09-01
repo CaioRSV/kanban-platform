@@ -8,6 +8,9 @@ interface UserInterface {
     setUser : React.Dispatch<React.SetStateAction<string>>
     id: number,
     setId : React.Dispatch<React.SetStateAction<number>>,
+
+    selectedColumn: string,
+    setSelectedColumn: React.Dispatch<React.SetStateAction<string>>
     
     column1_name: string;
     setColumn1_name: React.Dispatch<React.SetStateAction<string>>
@@ -32,6 +35,9 @@ const PlaceholderUser : UserInterface = {
     setUser : () => {},
     id: -1,
     setId: () => {},
+
+    selectedColumn: 'column1',
+    setSelectedColumn: () => {},
 
     column1_name: "A fazer",
     setColumn1_name: () => {},
@@ -69,6 +75,8 @@ export const ProviderUserContext: React.FC<ProviderProps> = ({ children }) => {
     const [user, setUser] = useState<string>("");
     const [id, setId] = useState<number>(-1);
 
+    const [selectedColumn, setSelectedColumn] = useState<string>("column1");
+
     const [column1_name, setColumn1_name] = useState<string>("To Do");
     const [column2_name, setColumn2_name] = useState<string>("In Progress");
     const [column3_name, setColumn3_name] = useState<string>("Done");
@@ -83,6 +91,7 @@ export const ProviderUserContext: React.FC<ProviderProps> = ({ children }) => {
         <userContext.Provider value={{ 
             user, setUser, 
             id, setId,
+            selectedColumn, setSelectedColumn,
             column1_name, setColumn1_name, 
             column2_name, setColumn2_name,
             column3_name, setColumn3_name,

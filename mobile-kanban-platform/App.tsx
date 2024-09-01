@@ -5,10 +5,15 @@ import Provider from "./components/Provider";
 
 import Main from './components/Main';
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+
 export default function Home() {
   return (
       <Provider>
-        <Main/>
+        <GestureHandlerRootView>
+          <Main/>
+        </GestureHandlerRootView>
       </Provider>
   );
 }
