@@ -34,7 +34,7 @@ const DoneLineGraph = (props: DoneLineGraphProps) => {
 
 
   return (
-    <TouchableOpacity onPress={()=>{}}>
+    <View>
         <LineChart
         data={data}
         width={windowWidth-20}
@@ -55,7 +55,7 @@ const DoneLineGraph = (props: DoneLineGraphProps) => {
             }
         }}
         />
-    </TouchableOpacity>
+    </View>
   )
 }
 
