@@ -16,6 +16,7 @@ Plataforma de lista de tarefas com funcionalidades de Kanban e Dashboard com rel
 - Shadcnui
 - Radix
 - GraphQL
+- PostgreSQL (Vercel Serverless)
 
 ---
 
@@ -60,25 +61,25 @@ https://kanban-platform.vercel.app/
 Informe o seu nome de usuário para criar ou acessar sua área de trabalho. 
 - Obs: Todas as áreas de trabalho são públicas (até então)
 
-![image](https://github.com/user-attachments/assets/c6538e25-6059-4723-b9f2-f158c2bed9b8)
+![image1](https://github.com/user-attachments/assets/c6538e25-6059-4723-b9f2-f158c2bed9b8)
 
 ---
 
-![image](https://github.com/user-attachments/assets/fd719ee1-db5c-4d24-99fa-8e148bb8ae05)
+![image2](https://github.com/user-attachments/assets/fd719ee1-db5c-4d24-99fa-8e148bb8ae05)
 
-- **A**: Nome do usuário (Botão direito para mudar de usuário)
+- **A)** Nome do usuário (Botão direito para mudar de usuário)
 
-- **B**: Carregar templates de tarefas, fazendo fetch de uma base GraphQL mockada (Disponível apenas caso não existam tarefas em sua área de trabalho)
+- **B)** Carregar templates de tarefas, fazendo fetch de uma base GraphQL mockada (Disponível apenas caso não existam tarefas em sua área de trabalho)
 
-- **C**: Colunas kanban que podem ser trocadas de lugar entre si, e que também podem ter seus nomes personalizados para cada usuário
+- **C)** Colunas kanban que podem ser trocadas de lugar entre si, e que também podem ter seus nomes personalizados para cada usuário
 
-- **D**: Salvar suas alterações na área de trabalho
+- **D)** Salvar suas alterações na área de trabalho
 
-- **E**: Adicionar uma nova tarefa à uma coluna
+- **E)** Adicionar uma nova tarefa à uma coluna
 
-- **F**: Visualizar relatórios em formato de gráficos sobre sua área de trabalho e tarefas concluídas anteriormente
+- **F)** Visualizar relatórios em formato de gráficos sobre sua área de trabalho e tarefas concluídas anteriormente
 
-- **G**: Botão long-hold que marca as tarefas na coluna como concluídas e as libera da área de trabalho (necessário segurá-lo por alguns segundos para executar a ação)
+- **G)** Botão long-hold que marca as tarefas na coluna como concluídas e as libera da área de trabalho (necessário segurá-lo por alguns segundos para executar a ação)
 
 ---
 
@@ -90,7 +91,7 @@ Para cada tarefa individual, se tem um "card", que permite a edição dos dados 
 - Tarefa pode ser arrastada (arrastar e soltar) para reordenar na coluna de origem ou em outras colunas
 - Tarefa pode ser excluída (botão direito para a opção aparecer)
 
-![image](https://github.com/user-attachments/assets/f7679896-97bf-4d63-a834-e6d1d7261bca)
+![image3](https://github.com/user-attachments/assets/f7679896-97bf-4d63-a834-e6d1d7261bca)
 
-![image](https://github.com/user-attachments/assets/d1415096-40fa-4e5d-805e-3753ab69d1e2)
+![image4](https://github.com/user-attachments/assets/d1415096-40fa-4e5d-805e-3753ab69d1e2)
 
