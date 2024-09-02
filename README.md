@@ -34,6 +34,25 @@ Plataforma de lista de tarefas com funcionalidades de Kanban e Dashboard com rel
 
 ---
 
+### Como rodar
+
+Para se rodar localmente as versões de de desenvolvimento, devem se seguir os seguintes passos:
+
+Para a aplicação web:
+```
+cd web-kanban-platform
+
+npm run dev
+```
+
+Para a aplicação mobile:
+```
+cd mobile-kanban-platform
+
+npx expo start
+```
+---
+
 ### Como utilizar a plataforma
 
 https://kanban-platform.vercel.app/
