@@ -85,7 +85,7 @@ Informe o seu nome de usuário para criar ou acessar sua área de trabalho.
 Para cada tarefa individual, se tem um "card", que permite a edição dos dados dessas tarefas e também que elas sejam movidas de posição entre colunas ou na coluna de origem.
 
 - Nome pode ser editado (Se habilita a edição clicando no texto de nome)
-- Descrição pode ser editada (Se habilita a edição clicando no texto de nome)
+- Descrição pode ser editada (Se habilita a edição clicando no texto de descrição)
 - Prioridade/Cor da tarefa pode ser modificada (Clicando no elemento circular colorido à esquerda)
 - Tarefa pode ser arrastada (arrastar e soltar) para reordenar na coluna de origem ou em outras colunas
 - Tarefa pode ser excluída (botão direito para a opção aparecer)
