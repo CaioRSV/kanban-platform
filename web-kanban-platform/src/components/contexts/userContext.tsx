@@ -69,13 +69,13 @@ export const ProviderUserContext: React.FC<ProviderProps> = ({ children }) => {
     const [user, setUser] = useState<string>("");
     const [id, setId] = useState<number>(-1);
 
-    const [column1_name, setColumn1_name] = useState<string>("To Do");
-    const [column2_name, setColumn2_name] = useState<string>("In Progress");
-    const [column3_name, setColumn3_name] = useState<string>("Done");
+    const [column1_name, setColumn1_name] = useState<string>("A fazer");
+    const [column2_name, setColumn2_name] = useState<string>("Em progresso");
+    const [column3_name, setColumn3_name] = useState<string>("Finalizadas");
 
-    const [column1, setColumn1] = useState<number[]>([]); // To-do
-    const [column2, setColumn2] = useState<number[]>([]); // In-Progress
-    const [column3, setColumn3] = useState<number[]>([]); // Done
+    const [column1, setColumn1] = useState<number[]>([]);
+    const [column2, setColumn2] = useState<number[]>([]);
+    const [column3, setColumn3] = useState<number[]>([]);
 
     const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
 

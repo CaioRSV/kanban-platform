@@ -56,7 +56,6 @@ const Workspace = () => {
         } = useUserContext();
 
     const {tasks, setTasks} = useTaskContext();
-
     
     const [columns, setColumns] = useState<Column[]>([
         {
@@ -205,6 +204,10 @@ const Workspace = () => {
             setColumn3_name(title);
             paramStack += `&column3_name=${title}`
         }
+
+        paramStack += `${column1.length> 0 ? `&column1=${column1.join(',')}` : ``}`;
+        paramStack += `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
+        paramStack += `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
 
         fetch("/api/user/update"+paramStack);
     }

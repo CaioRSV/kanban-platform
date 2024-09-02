@@ -71,7 +71,7 @@ const SetUserModal = (props: SetUserModalProps) => {
           name: item.name,
           serverId: item.id
         })
-          )
+          ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
       );
     }
 

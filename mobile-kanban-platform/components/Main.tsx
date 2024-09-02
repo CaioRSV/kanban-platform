@@ -35,12 +35,13 @@ const windowHeight = Dimensions.get('window').height;
 
 const Main = () => {
 
+
   async function saveColumns() {
     const col1_params = `${column1.length> 0 ? `&column1=${column1.join(',')}` : ``}`;
     const col2_params = `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
     const col3_params = `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
-
-    await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`)
+    
+    await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`);
 }
 
   const [graphModal, setGraphModal] = useState<boolean>(false);
@@ -164,14 +165,14 @@ const Main = () => {
               animationType="slide"
               transparent={true}
               >
-                <View className={`w-full h-full flex justify-center`} style={{backgroundColor: colorScheme=='dark'?'black':'white'}}>
+                <View className={`w-full h-full flex justify-center`} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
                   <TouchableOpacity onPress={()=>{setGraphModal(false)}} className={`w-full flex items-center rounded-t-full p-2 border-t border-l border-r`} style={{backgroundColor: colorScheme=='dark'?'black':'white', borderColor: colorScheme=='dark'?'white':'black'}}>
                     <View className={`h-[3px] bg-slate-300 mt-2 w-[25%] rounded-full opacity-50 mb-3`} />
                     <Text className={`text-lg`} style={{color: colorScheme=='dark'?'white':'black'}}>Relatórios</Text>
                     <Text className={`text-slate-500`}>Informações sobre suas atividades no aplicativo.</Text>
                   </TouchableOpacity>
 
-                  <View className={`flex-1 h-32 border-l border-r flex items-center`} style={{borderColor: colorScheme=='dark'?'white':'black'}}>
+                  <View className={`flex-1 h-32 border-l border-r flex items-center`} style={{backgroundColor: colorScheme=='dark'?'black':'white', borderColor: colorScheme=='dark'?'white':'black'}}>
                     {
                       loadingTasks
                         ?
