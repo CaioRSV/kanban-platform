@@ -186,7 +186,9 @@ const Column = (props: ColumnProps) => {
                     })
             });
 
-            setColumn3([]);
+            setColumn3([]); // Para evitar concluídos fantasmas
+
+            
         }
         catch(err){
             throw err
