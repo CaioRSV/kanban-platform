@@ -56,12 +56,11 @@ npx expo start
 
 ### Como utilizar a plataforma
 
-Usuário para visualização: `demo`
-
 https://kanban-platform.vercel.app/
 
 Informe o seu nome de usuário para criar ou acessar sua área de trabalho. 
 - Obs: Todas as áreas de trabalho são públicas (até então)
+  - Usuário para visualização: `demo`
 
 ![image1](https://github.com/user-attachments/assets/c6538e25-6059-4723-b9f2-f158c2bed9b8)
 
