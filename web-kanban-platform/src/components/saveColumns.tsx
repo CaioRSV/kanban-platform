@@ -53,7 +53,7 @@ const SaveColumns = () => {
     }, [])
 
     return (
-        <div className={`flex gap-2 h-full items-center`}>
+        <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0) ? 'none': 'all' }} className={`flex gap-2 h-full items-center`}>
             <div style={{opacity: confirmed ? 1 : 0}} className={`transition-opacity`}>
                 <FaCheck className={``}/>
             </div>

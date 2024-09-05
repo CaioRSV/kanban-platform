@@ -6,21 +6,10 @@ import {
     DrawerClose,
     DrawerContent,
     DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
   } from "@/components/ui/drawer"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
 
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +29,8 @@ const GraphDrawer = () => {
   const {theme} = useTheme();
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const {user} = useUserContext();
 
   const {
     id,
@@ -71,8 +62,6 @@ const GraphDrawer = () => {
         
         newLabels.push(formattedDate);
 
-        // console.log(`api/tasks/done?user=${id}&doneTime=${i}&referenceTime=${i-1}`);
-
         const numberOfTasks = await fetch(`api/tasks/done?user=${id}&doneTime=${i}&referenceTime=${i-1}`)
           .then(res => res.json())
           .then(data => data.resposta.rows.length)
@@ -87,55 +76,55 @@ const GraphDrawer = () => {
   }
   
   return (
-    <div className={`w-full flex justify-center`}>
+    <div className={`w-full flex justify-center`} style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0) ? 'none': 'all' }}>
     <Drawer>
-    <DrawerTrigger onClick={()=>{updateDoneLine()}}>
-    <div className={`w-[300px] p-2 border rounded-full flex justify-center items-center`}>
-      <TbChartInfographic size={26} />
-    </div>
-    </DrawerTrigger>
-    <DrawerContent className={`h-[95vh]`}>
-        <DrawerHeader>
-        <DrawerTitle>
-          <p className={`w-full flex justify-center`}>Relatórios</p>
-        </DrawerTitle>
-        <DrawerDescription>
-          <p className={`w-full flex justify-center`}>Informações sobre suas atividades no aplicativo.</p>
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className={`w-full h-full flex flex-col items-center overflow-y-scroll`}>
-            <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
-            {
-              loading
-                ?
-                <div className={`w-full h-full flex justify-center items-center`}>
-                  <CgSpinnerTwoAlt size={26} className={`animate-spin`} />
-                </div>
-                :
-                <>
-                  <p className={`w-full flex justify-center p-2`}>Distribuição de suas tarefas por coluna.</p>
-                  {
-                    (column1.length>0 || column2.length>0 || column3.length>0)
-                      ?
-                      <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} theme={theme ?? 'light'} />
-                      :
-                      <p className={`p-4 bg-[rgba(141,164,195,0.05)] rounded-md`}>Não existem tarefas presentes no momento. Crie algumas para visualizar este gráfico!</p>
-                  }
+      <DrawerTrigger onClick={()=>{updateDoneLine()}}>
+      <div className={`w-[300px] p-2 border rounded-full flex justify-center items-center`}>
+        <TbChartInfographic size={26} />
+      </div>
+      </DrawerTrigger>
+      <DrawerContent className={`h-[95vh]`}>
+          <DrawerHeader>
+            <DrawerTitle>
+              <p className={`w-full flex justify-center`}>Relatórios</p>
+            </DrawerTitle>
+            <DrawerDescription>
+              <p className={`w-full flex justify-center`}>Informações sobre suas atividades no aplicativo.</p>
+              </DrawerDescription>
+          </DrawerHeader>
+          <div className={`w-full h-full flex flex-col items-center overflow-y-scroll`}>
+              <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
+              {
+                loading
+                  ?
+                  <div className={`w-full h-full flex justify-center items-center`}>
+                    <CgSpinnerTwoAlt size={26} className={`animate-spin`} />
+                  </div>
+                  :
+                  <>
+                    <p className={`w-full flex justify-center p-2`}>Distribuição de suas tarefas por coluna.</p>
+                    {
+                      (column1.length>0 || column2.length>0 || column3.length>0)
+                        ?
+                        <RatioGraph series={[column1.length, column2.length, column3.length]} labels={[column1_name, column2_name, column3_name]} theme={theme ?? 'light'} />
+                        :
+                        <p className={`p-4 bg-[rgba(141,164,195,0.05)] rounded-md`}>Não existem tarefas presentes no momento. Crie algumas para visualizar este gráfico!</p>
+                    }
 
-                  <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
-                  <p className={`w-full flex justify-center p-2`}>Tarefas concluídas ao longo do tempo.</p>
-                  <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
+                    <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
+                    <p className={`w-full flex justify-center p-2`}>Tarefas concluídas ao longo do tempo.</p>
+                    <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
 
-                  <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
-                
-                </>
-            }
-        
-        </div>
-        <DrawerClose>
-            <Button variant="outline" className={`my-2`}>Voltar</Button>
-        </DrawerClose>
-    </DrawerContent>
+                    <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
+                  
+                  </>
+              }
+          
+          </div>
+          <DrawerClose>
+              <Button variant="outline" className={`my-2`}>Voltar</Button>
+          </DrawerClose>
+      </DrawerContent>
     </Drawer>
     </div>
   )

@@ -80,9 +80,9 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
 
     const style = {
         transition,
-        transform: CSS.Transform.toString(transform)
+        transform: CSS.Transform.toString(transform),
+        filter: (!user || user.length==0) ? 'blur(3px)' : ''
     };
-
     function updateLocalColumns() {
         //tasksLocal
     }

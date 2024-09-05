@@ -100,16 +100,12 @@ const schemaWithMocks = addMocksToSchema({
   },
 });
 
-interface MockerProps{
-  active: boolean
-}
-
-export default function GraphQlMocker(props: MockerProps) {
+export default function GraphQlMocker() {
   const [todo, setTodo] = useState<Todo[]>([]);
 
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const {tasks, setTasks} = useTaskContext();
-  const {id, setLoadingTasks} = useUserContext();
+  const {user, id, loadingTasks, setLoadingTasks} = useUserContext();
 
   const fetchTodo = (chosenTemplate: number) => {
     graphql({
@@ -234,7 +230,7 @@ export default function GraphQlMocker(props: MockerProps) {
   }
 
   return (
-    <div className={`${!props.active ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0 || tasks.length!=0) ? 'none': 'all' }} className={`${!(tasks.length==0 && !loadingTasks) ? 'opacity-50 pointer-events-none' : ''}`}>
       <DropdownMenu>
         <DropdownMenuTrigger className={`p-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground`}>
             <GrGraphQl size={23} />          
