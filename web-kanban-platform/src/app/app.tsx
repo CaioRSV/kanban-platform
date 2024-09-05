@@ -1,9 +1,9 @@
 import React from 'react';
 
 import SetUserModal from '@/components/setUserModal';
-import TopBar from '@/components/topBar';
+import TopBar from '@/components/topBar/topBar';
 import Workspace from '@/components/dragNdrop/workspace';
-import GraphDrawer from '@/components/graphDrawer';
+import GraphDrawer from '@/components/graphBar/graphDrawer';
 
 import SaveColumns from '@/components/saveColumns';
 import GraphQlMocker from '@/components/graphQlMocker';

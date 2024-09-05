@@ -8,8 +8,8 @@ import { CgArrowsExchangeAlt } from "react-icons/cg";
 import { useUserContext } from '@/components/contexts/userContext';
 import { ProviderUserContext } from '@/components/contexts/userContext';
 
-import GithubHandle from '@/components/githubHandle';
-import ThemeSwitch from '@/components/themeSwitch';
+import GithubHandle from '@/components/topBar/githubHandle';
+import ThemeSwitch from '@/components/topBar/themeSwitch';
 
 import {
   ContextMenu,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/context-menu"
 
 import { useTheme } from 'next-themes';
-import { useTaskContext } from './contexts/tasksContext';
+import { useTaskContext } from '../contexts/tasksContext';
 
 
 const UserHandle = () => {

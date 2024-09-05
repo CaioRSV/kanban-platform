@@ -13,9 +13,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import RatioGraph from "@/components/ratioGraph";
+import RatioGraph from "@/components/graphBar/ratioGraph";
 
-import { useUserContext } from './contexts/userContext';
+import { useUserContext } from '../contexts/userContext';
 
 import { TbChartInfographic } from "react-icons/tb";
 import DoneLineGraph from './doneLineGraph';

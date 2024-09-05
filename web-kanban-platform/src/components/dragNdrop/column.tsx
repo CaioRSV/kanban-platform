@@ -18,7 +18,7 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 
 
-import FinishColumn from '../finishColumn';
+import FinishColumn from './finishColumn';
 import { useUserContext } from '../contexts/userContext';
 import { useTaskContext } from '../contexts/tasksContext';
 

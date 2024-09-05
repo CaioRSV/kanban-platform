@@ -7,8 +7,8 @@ import { FaCheck } from "react-icons/fa6";
 import { CiSaveUp1 } from "react-icons/ci";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 
-import { useUserContext } from './contexts/userContext';
-import { useTaskContext } from './contexts/tasksContext';
+import { useUserContext } from '../contexts/userContext';
+import { useTaskContext } from '../contexts/tasksContext';
 
 import {
     Tooltip,

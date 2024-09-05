@@ -1,6 +1,6 @@
 import React from 'react'
-import GithubHandle from '@/components/githubHandle';
-import ThemeSwitch from '@/components/themeSwitch';
+import GithubHandle from '@/components/topBar/githubHandle';
+import ThemeSwitch from '@/components/topBar/themeSwitch';
 import UserHandle from './userHandle';
 
 const TopBar = () => {
