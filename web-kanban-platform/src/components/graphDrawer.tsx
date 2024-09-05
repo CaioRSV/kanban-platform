@@ -127,21 +127,7 @@ const GraphDrawer = () => {
                   <DoneLineGraph series={doneSeries ?? []} labels={doneLabels ?? []} theme={theme ?? 'light'}/>
 
                   <div className={`h-[1px] w-[95%] m-2 bg-slate-400 bg-opacity-75`}/>
-                  
-
-                  {/* <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <p className={`transition-all p-2 border rounded-md hover:bg-slate-500 bg-opacity-15`}>{`Últimos: ${doneRange} dias`}</p>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Data inicial</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>{setDoneRange(7);updateDoneLine();}}>1 semana</DropdownMenuItem>
-                        <DropdownMenuItem onClick={()=>{setDoneRange(15);updateDoneLine();}}>2 semanas</DropdownMenuItem>
-                        <DropdownMenuItem onClick={()=>{setDoneRange(15);updateDoneLine();}}>30 dias</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu> */}
-
+                
                 </>
             }
         

@@ -193,11 +193,6 @@ const Main = () => {
                     }
 
                   </View>
-                  {/* <View className={`w-full px-2 h-20 justify-center items-center border-x`} style={{borderColor: colorScheme=='dark'?'white':'black'}}>
-                    <TouchableOpacity onPress={()=>{setGraphModal(false)}} className={`p-5 rounded-md border`} style={{borderColor: colorScheme=='dark'?'white':'gray'}}>
-                      <Text style={{color: colorScheme=='dark'?'white':'black'}} className={`text-md`}>Voltar</Text>
-                    </TouchableOpacity>
-                  </View> */}
                 </View>
               
 

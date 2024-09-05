@@ -8,10 +8,6 @@ import { Switch } from "@/components/ui/switch"
 
 import { FaRegDotCircle } from "react-icons/fa";
 
-function sleep(ms:number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 const ThemeSwitch = () => {
   const {resolvedTheme, theme, setTheme} = useTheme();
 

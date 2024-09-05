@@ -5,7 +5,7 @@ const epoch2038_limit = 2147483647;
  
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const task = Math.floor(Date.now()/1000) % epoch2038_limit; // Kkkkkkk só de sacanagem
+  const task = Math.floor(Date.now()/1000) % epoch2038_limit;  // Tratamento de possível limitação de geração de IDs (Epoch 2038)
   const user = searchParams.get('user');
   const name = searchParams.get('name');
   const description = searchParams.get('description');

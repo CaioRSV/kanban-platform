@@ -6,7 +6,6 @@ import { DndContext, closestCorners,
     useSensor, useSensors, 
     PointerSensor, 
     TouchSensor, 
-    KeyboardSensor,
     DragStartEvent,
     DragOverlay,
     DragEndEvent,
@@ -99,18 +98,6 @@ const Workspace = () => {
 
     const tasksId_3 = useMemo(() => (tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.id), [tasks]);
 
-    useEffect(()=>{
-        // console.log('=============')
-
-        // console.log(tasksId_1);
-        // console.log((tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.serverId))
-        // console.log((tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.serverId))
-
-        // setColumn1((tasks.filter(tas=>tas.columnId==1)).map(tas=>tas.serverId));
-        // setColumn2((tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.serverId));
-        // setColumn3((tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.serverId));
-    }, [tasksId_1, tasksId_2, tasksId_3])
-
     const [activeTask , setActiveTask] = useState<Task | null>();
 
     //
@@ -163,11 +150,6 @@ const Workspace = () => {
 
             const isActiveTask = active.data.current?.type == 'Task';
             const isOverTask = over.data.current?.type == 'Task';
-
-            // console.log({
-            //     active:{task: isActiveTask, id: activeColumnID},
-            //     over: {task: isOverTask, id: overColumnID}
-            // });
 
             if(!isOverTask && isActiveTask){
                 const overID = columns.find(col => col.id === overColumnID)?.id;
@@ -261,9 +243,6 @@ const Workspace = () => {
     }
 
     async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
-        // console.log(overColumnID);
-        // console.log(activeTaskID);
-        // console.log(columns)
         const newTasks = tasks.filter(task => task.id != activeTaskID);
 
         const newTask: Task = {
@@ -317,7 +296,7 @@ const Workspace = () => {
             const isActiveTask = active.data.current?.type == 'Task';
             const isOverTask = over.data.current?.type == 'Task';
             
-            if(isActiveTask && isOverTask){ // Ta dropando em outra task
+            if(isActiveTask && isOverTask){ // Está sendo "dropado" em outra task
                 setTasks(tasks => {
                     const activeIndex = tasks.findIndex(item => item.id === activeID);
                     const overIndex = tasks.findIndex(item => item.id === overID);

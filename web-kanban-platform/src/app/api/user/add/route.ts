@@ -6,7 +6,7 @@ const epoch2038_limit = 2147483647;
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const id = Math.floor(Date.now()/1000) % epoch2038_limit; // Kkkkkkk só de sacanagem
+  const id = Math.floor(Date.now()/1000) % epoch2038_limit;  // Tratamento de possível limitação de geração de IDs (Epoch 2038)
   const name = searchParams.get('name');
 
   const SQL = `INSERT INTO KBN_Users(id, name, column1, column2, column3) VALUES ($1, $2, ARRAY[]::INTEGER[], ARRAY[]::INTEGER[], ARRAY[]::INTEGER[])`

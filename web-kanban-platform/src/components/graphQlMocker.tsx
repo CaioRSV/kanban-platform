@@ -95,7 +95,6 @@ const schemaWithMocks = addMocksToSchema({
         },
       ];
 
-      // Return a random template for each request
       return templates[Math.floor(Math.random() * templates.length)];
     },
   },

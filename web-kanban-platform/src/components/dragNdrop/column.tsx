@@ -75,7 +75,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
             type: "Column",
             column
         },
-        disabled: editing // Desativa quando tiver editando o nome
+        disabled: editing // Desativa quando estiver editando o nome
     })
 
     const style = {
