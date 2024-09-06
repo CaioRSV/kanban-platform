@@ -1,15 +1,8 @@
 "use client"
 import React from 'react'
 
-import { FaRegLightbulb } from "react-icons/fa"; // Hollow
-import { FaLightbulb } from "react-icons/fa"; // Full
 import { CgArrowsExchangeAlt } from "react-icons/cg";
-
 import { useUserContext } from '@/components/contexts/userContext';
-import { ProviderUserContext } from '@/components/contexts/userContext';
-
-import GithubHandle from '@/components/topBar/githubHandle';
-import ThemeSwitch from '@/components/topBar/themeSwitch';
 
 import {
   ContextMenu,
@@ -18,23 +11,19 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 
-import { useTheme } from 'next-themes';
 import { useTaskContext } from '../contexts/tasksContext';
 
-
 const UserHandle = () => {
-
     const {setTasks} = useTaskContext();
-
     const {
         user, setUser, 
-        id, setId, 
-        column1_name, setColumn1_name, 
-        column2_name, setColumn2_name, 
-        column3_name, setColumn3_name,
-        column1, setColumn1, 
-        column2, setColumn2, 
-        column3, setColumn3
+        setId, 
+        setColumn1_name, 
+        setColumn2_name, 
+        setColumn3_name,
+        setColumn1, 
+        setColumn2, 
+        setColumn3
       } = useUserContext();
 
     function logout(){

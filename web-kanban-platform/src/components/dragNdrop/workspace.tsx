@@ -1,25 +1,32 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react'
+import { createPortal } from 'react-dom';
+
+import { useUserContext } from '../contexts/userContext';
+import { useTaskContext } from '../contexts/tasksContext';
+
+import ColumnElement from './column';
+import Card from './card';
+
 
 import { DndContext, closestCorners, 
     useSensor, useSensors, 
     PointerSensor, 
     TouchSensor, 
-    DragStartEvent,
     DragOverlay,
-    DragEndEvent,
-    DragOverEvent
 } from '@dnd-kit/core';
 
-import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import ColumnElement from './column';
-import { createPortal } from 'react-dom';
-import Card from './card';
-import { useUserContext } from '../contexts/userContext';
-import { useTaskContext } from '../contexts/tasksContext';
+import { SortableContext } from '@dnd-kit/sortable';
 
-type Id = string | number;
+// Importando funções DND utilizadas
+import { onDragStart } from './functions/dnd_functions';
+import { onDragEnd } from './functions/dnd_functions';
+import { onDragOver } from './functions/dnd_functions';
+
+// Types
+
+export type Id = string | number;
 
 
 export interface Column {
@@ -40,21 +47,23 @@ export interface Task {
     serverId: number
 };
 
+//
 
 const Workspace = () => {
-    
+    // Contextos
     const {
-        user, setUser, id, setId, 
+        id,
         setColumn1_name, column1_name,
         setColumn2_name, column2_name,
         setColumn3_name, column3_name,
-        setColumn1, column1,
-        setColumn2, column2,
-        setColumn3, column3,
-    
-        } = useUserContext();
+        column1,
+        column2,
+        column3,
+    } = useUserContext();
 
     const {tasks, setTasks} = useTaskContext();
+
+    // Colunas (locais)
     
     const [columns, setColumns] = useState<Column[]>([
         {
@@ -70,6 +79,8 @@ const Workspace = () => {
             title: column3_name
         }
     ]);
+
+    // Populando colunas com nomes recebidos do back on mount
 
     useEffect(()=>{
         setColumns([
@@ -88,32 +99,14 @@ const Workspace = () => {
         ]);
     }, [column1_name, column2_name, column3_name])
     
-    const columnsId = useMemo(() => columns.map(col=>col.id), [columns]);
-
-    //const [tasks, setTasks] = useState<Task[]>([]);
-
-    const tasksId_1 = useMemo(() => (tasks.filter(tas=>tas.columnId==1)).map(tas=>tas.id), [tasks]);
-
-    const tasksId_2 = useMemo(() => (tasks.filter(tas=>tas.columnId==2)).map(tas=>tas.id), [tasks]);
-
-    const tasksId_3 = useMemo(() => (tasks.filter(tas=>tas.columnId==3)).map(tas=>tas.id), [tasks]);
-
-    const [activeTask , setActiveTask] = useState<Task | null>();
-
-    //
-
-    const [activeColumn , setActiveColumn] = useState<Column | null>();
+    const columnsId = useMemo(() => columns.map(col=>col.id), [columns]); // Mapeando cada ID de colunas
 
 
-    function createNewColumn() {
-        const columnToAdd: Column = {   
-            id: Math.floor(Math.random()*10000),
-            title: `Column ${columns.length+1}`
-        };
+    const [activeTask , setActiveTask] = useState<Task | null>(); // Info task de interação atual
+    const [activeColumn , setActiveColumn] = useState<Column | null>(); // Info coluna de interação atual
 
-        setColumns([...columns, columnToAdd]);
-    }
 
+    // Delimitando comportamentos de sensores do dnd-kit
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -123,54 +116,6 @@ const Workspace = () => {
         useSensor(TouchSensor)
     )
 
-    function onDragStart(event: DragStartEvent){
-        if(event.active.data.current?.type=="Column"){
-            setActiveColumn(event.active.data.current.column)
-            return;
-        }
-
-        if(event.active.data.current?.type=="Task"){
-            setActiveTask(event.active.data.current.task)
-            return;
-        }
-
-    }
-
-    function onDragEnd(event: DragEndEvent){
-
-        setActiveColumn(null);
-        setActiveTask(null);
-
-        const {active, over} = event;
-
-        // Verifica se está dando over em alguma coluna
-        if (over){
-            const activeColumnID = active.id;
-            const overColumnID = over.id;
-
-            const isActiveTask = active.data.current?.type == 'Task';
-            const isOverTask = over.data.current?.type == 'Task';
-
-            if(!isOverTask && isActiveTask){
-                const overID = columns.find(col => col.id === overColumnID)?.id;
-                const activeID = activeColumnID;
-                if(overID){
-                    changeToEmptyColumn(overID, activeID, tasks.find(item => item.id == activeID));
-                }
-            }
-            else if(!(activeColumnID === overColumnID)){ // Caso esteja dando over em alguma coluna diferente
-                setColumns(columns => {
-                    const activeColumnIndex = columns.findIndex(col => col.id === activeColumnID);
-
-                    const overColumnIndex = columns.findIndex(col => col.id === overColumnID);
-
-                    return arrayMove(columns, activeColumnIndex, overColumnIndex)
-                })
-            }
-            
-            
-        }
-    }
 
     function updateColumn_Server(columnId: Id, title:string){
         let paramStack = `?id=${id}`
@@ -285,37 +230,13 @@ const Workspace = () => {
         setTasks(newTasks);  
     }
 
-    function onDragOver(event: DragOverEvent){
-        const {active, over} = event;
-
-        // Verifica se está dando over em alguma coluna
-        if (over){
-            const activeID = active.id;
-            const overID = over.id;
-
-            const isActiveTask = active.data.current?.type == 'Task';
-            const isOverTask = over.data.current?.type == 'Task';
-            
-            if(isActiveTask && isOverTask){ // Está sendo "dropado" em outra task
-                setTasks(tasks => {
-                    const activeIndex = tasks.findIndex(item => item.id === activeID);
-                    const overIndex = tasks.findIndex(item => item.id === overID);
-
-                    if(tasks[activeIndex].columnId !== tasks[overIndex].columnId){
-                        tasks[activeIndex].columnId = tasks[overIndex].columnId
-                    }
-
-                    return arrayMove(tasks, activeIndex, overIndex);
-                })
-            }
-            
-        }        
-    }
-
     return (
-        <DndContext onDragStart={onDragStart} sensors={sensors} collisionDetection={closestCorners} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-            {/* <p onClick={()=>{console.log(tasks);console.log(column1);console.log(column2);console.log(column3);}} className={`text-xs`}>[LOG: Tasks]</p> */}
-            
+        <DndContext 
+            onDragStart={(e)=>{onDragStart(e,setActiveColumn, setActiveTask)}} 
+            onDragEnd={(e)=>{onDragEnd(e, setActiveColumn, setActiveTask, columns, setColumns, tasks, changeToEmptyColumn)}}
+            onDragOver={(e)=>{onDragOver(e, tasks, setTasks)}}
+            sensors={sensors} collisionDetection={closestCorners}
+        >
             <SortableContext items={columnsId}>
                 {
                     columns.map(col => (

@@ -1,34 +1,26 @@
 "use client"
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useUserContext } from '../contexts/userContext';
+import { useTaskContext } from '../contexts/tasksContext';
+
 import { SortableContext, verticalListSortingStrategy, useSortable} from '@dnd-kit/sortable';
-import Card from './card';
-
-import { Task } from './workspace';
-
 import {CSS} from "@dnd-kit/utilities";
 
-import { Column } from './workspace';
+import { Id, Task, Column } from './workspace';
+
+import Card from './card';
+import FinishColumn from './finishColumn';
+
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
-import { IoIosInformationCircleOutline } from "react-icons/io";
-
-
-import FinishColumn from './finishColumn';
-import { useUserContext } from '../contexts/userContext';
-import { useTaskContext } from '../contexts/tasksContext';
-
-
-type Id = string | number;
-
 
 interface TaskColumnProps {
     column: Column;
-
     updateColumn: (id: Id, title: string) => void;
     addTask: (columnId: Id, definedObject?: Task) => void;
     deleteTask: (id: Id) => void;
@@ -37,25 +29,24 @@ interface TaskColumnProps {
 
 const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask}) => {
 
-    const {tasks, setTasks} = useTaskContext();
-
-    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]);
+    const {tasks} = useTaskContext();
+    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
 
     const [editing, setEditing] = useState<boolean>(false);
-
     const [tempColName, setTempColName] = useState<string>(column.title);
 
     const {
-    user, setUser, id, setId, 
-    setColumn1_name, column1_name,
-    setColumn2_name, column2_name,
-    setColumn3_name, column3_name,
-    setColumn1, column1,
-    setColumn2, column2,
-    setColumn3, column3,
-    loadingTasks,
+        user,
+        column1_name,
+        column2_name,
+        column3_name,
+        setColumn1,
+        setColumn2,
+        setColumn3,
+        loadingTasks,
     } = useUserContext();
 
+    // Preenche o editável baseado em qual coluna seja
     useEffect(() => {
         if(column.id==1){
             setTempColName(column1_name);
@@ -69,6 +60,8 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
     }, [column1_name, column2_name, column3_name]);
 
 
+    // Sortable configs
+
     const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
         id: column.id,
         data: {
@@ -81,14 +74,10 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
-        filter: (!user || user.length==0) ? 'blur(3px)' : ''
+        filter: (!user || user.length==0) ? 'blur(3px)' : '' // Add blur enquanto não dá mount
     };
-    function updateLocalColumns() {
-        //tasksLocal
-    }
 
     useEffect(()=>{
-        updateLocalColumns();
         setColumn1(
             (tasks.filter(item => item.columnId==1)).map(elem => elem.serverId)
         )
@@ -118,7 +107,8 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         >
             <div
             {...attributes} {...listeners} onClick={()=>{setEditing(true)}}
-                className={`font-semibold`}>
+                className={`font-semibold`}
+            >
                 {
                     !editing
                         ?
@@ -179,14 +169,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                             <IoMdAdd size={20}/>
                         </Button>
                         {
-                            column.id == 3
-                                ?<>
-                                <FinishColumn/>
-                                </>
-                                
-                                :
-                                <></>
-
+                            column.id == 3 && <FinishColumn/>
                         }
 
 

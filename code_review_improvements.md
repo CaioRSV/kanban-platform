@@ -5,6 +5,7 @@ Pontos citados na revisão do código do projeto:
 - Componentização
 - Comentários não ideais
 - Código com exemplo "Hello World"
+- Utilização não necessária de client components na versão web
 - Utilização desnecessária de "use client" na versão mobile
 - Identação e organização
 - Fluxo confuso de confirmar conclusão de tarefas
@@ -29,6 +30,11 @@ Seguem abaixo as medidas tomadas para cada um dos pontos e esclarecimentos adici
 
 ---
 ##### Código com exemplo "Hello World"
+
+...
+
+---
+##### Utilização não necessária de client components na versão web
 
 ...
 
