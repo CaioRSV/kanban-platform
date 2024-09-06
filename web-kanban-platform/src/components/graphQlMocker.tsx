@@ -256,7 +256,6 @@ export default function GraphQlMocker() {
 
           <DropdownMenuItem onClick={()=>{populateTasks(1)}}>Tarefas casuais</DropdownMenuItem>
           <DropdownMenuItem onClick={()=>{populateTasks(2)}}>Tarefas profissionais</DropdownMenuItem>
-
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -23,7 +23,6 @@ import DoneLineGraph from './doneLineGraph';
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useTheme } from 'next-themes';
 
-
 const GraphDrawer = () => {
 
   // Contextos e variáveis de estado

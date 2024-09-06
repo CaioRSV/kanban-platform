@@ -7,7 +7,6 @@ import { FaCheck } from "react-icons/fa6";
 import { FaRegSave } from "react-icons/fa";
 import { useUserContext } from './contexts/userContext';
 
-
 const SaveColumns = () => {
     const {
         user, id,
