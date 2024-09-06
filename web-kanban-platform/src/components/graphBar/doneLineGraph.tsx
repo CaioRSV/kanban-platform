@@ -1,4 +1,3 @@
-import { useTheme } from "next-themes";
 import React, { Component } from "react";
 
 import dynamic from 'next/dynamic'

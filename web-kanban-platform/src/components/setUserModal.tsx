@@ -1,31 +1,33 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
+
+import { useUserContext } from './contexts/userContext';
+import { useTaskContext } from './contexts/tasksContext';
+
+import { Task } from './dragNdrop/workspace';
 
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog_v2"
-  
-  import { Input } from "@/components/ui/input"
-  
-  
-  import { RiLoginCircleLine } from "react-icons/ri";
-  import { ImSpinner8 } from "react-icons/im";
 
-  import { useUserContext } from './contexts/userContext';
-import { useTaskContext } from './contexts/tasksContext';
-import { Task } from './dragNdrop/workspace';
+import { Input } from "@/components/ui/input"
+  
+import { RiLoginCircleLine } from "react-icons/ri";
+import { ImSpinner8 } from "react-icons/im";
+
 
 const SetUserModal = () => {
+
+  // Contextos
+
   const {
-    user, setUser, id, setId, 
+    user, setUser, setId, 
     setColumn1_name, 
     setColumn2_name, 
     setColumn3_name,
@@ -35,15 +37,16 @@ const SetUserModal = () => {
     setLoadingTasks
   } = useUserContext();
 
-  const { tasks, setTasks } = useTaskContext();
+  const { setTasks } = useTaskContext();
 
+  // Variáveis de estado locais
   const [tempUserName, setTempUserName] = useState<string>("");
-
   const [loading, setLoading] = useState<boolean>(false);
-
   //
   
 
+  // Funções que atualizam informações dos contextos
+    // Atualizando contexto de tasks
   async function updateInfoLocal(id: number[], col1:number[], col2:number[], col3:number[] ){
     setLoadingTasks(true); // Loading nas colunas
 
@@ -52,16 +55,6 @@ const SetUserModal = () => {
       .then(data => data.resposta.rows);
 
     if(resFetch.length>0){
-
-      console.log(resFetch.map( (item:Task) =>({
-        ...item,
-        id: Math.floor(Math.random()*10000),
-        columnId: 1,
-        name: item.name,
-        serverId: item.id
-      })))
-
-
       setTasks(
         resFetch.map( (item:Task) =>({
           ...item,
@@ -81,6 +74,7 @@ const SetUserModal = () => {
     setLoadingTasks(false);
   }
 
+  // Atualizando contexto de user
   async function setUserServer(userName:string){
 
     if(userName.length==0) return;
@@ -93,7 +87,7 @@ const SetUserModal = () => {
       .then(res => res.json())
       .then(data => data.resposta.rows);
 
-    if(userRes.length>0){ // Fetch no banco (existente)
+    if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
       setUser(userName);
@@ -124,7 +118,7 @@ const SetUserModal = () => {
       updateInfoLocal(totalIDs, userFound.column1, userFound.column2, userFound.column3);
 
     }
-    else{
+    else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
       const createUserRes = await fetch("/api/user/add?name="+userName, {
         method: 'GET'
       })
@@ -157,39 +151,37 @@ const SetUserModal = () => {
     <>
         <AlertDialog open={!user || user.length==0}>
             <AlertDialogContent>
-            <AlertDialogHeader>
-                <AlertDialogTitle>
-                  <div className={`flex`}>
-                    <p>Quem é você?</p>
-                    <div className={`flex-1`}/>
-                    {
-                      loading
-                        ?
-                        <ImSpinner8 size={20} className={`animate-spin mr-1`}/>
-                        :
-                        <></>
-                    }
-                  </div>
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                Informe seu nome de usuário para acessar sua área de trabalho
-                </AlertDialogDescription>
+              <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    <div className={`flex`}>
+                      <p>Quem é você?</p>
+                      <div className={`flex-1`}/>
+                      {
+                        loading
+                          ?
+                          <ImSpinner8 size={20} className={`animate-spin mr-1`}/>
+                          :
+                          <></>
+                      }
+                    </div>
+                  </AlertDialogTitle>
 
-            </AlertDialogHeader>
+                  <AlertDialogDescription>
+                  Informe seu nome de usuário para acessar sua área de trabalho
+                  </AlertDialogDescription>
 
-            <div className={`w-full flex gap-2`}>
-            
-            <Input autoFocus onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
+              </AlertDialogHeader>
 
-            <AlertDialogFooter>
-                <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>
-                <RiLoginCircleLine size={28} />   
-                </AlertDialogAction>
-            </AlertDialogFooter>
-
-            </div>
-            
-
+              <div className={`w-full flex gap-2`}>  
+                <Input autoFocus onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
+                
+                <AlertDialogFooter>
+                    <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>
+                    <RiLoginCircleLine size={28} />   
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+              </div>
+          
             </AlertDialogContent>
         </AlertDialog>
     </>

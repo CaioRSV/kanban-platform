@@ -28,7 +28,6 @@ class RatioGraph extends Component<RatioGraphProps> {
           series={series}
           type="donut" width="380" />
         }
-
       </div>
     );
   }

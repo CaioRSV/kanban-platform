@@ -5,6 +5,8 @@ import { createContext, useContext, useState, ReactNode } from 'react'
 
 import { Task } from '../dragNdrop/workspace';
 
+// Contexto que armazena novas e antigas tasks (fetch da área de trabalho do cliente caso existam)
+
 interface TaskInterface {
     tasks: Task[],
     setTasks : React.Dispatch<React.SetStateAction<Task[]>>

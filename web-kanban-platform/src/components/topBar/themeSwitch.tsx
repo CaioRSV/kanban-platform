@@ -7,13 +7,10 @@ import { useTheme } from 'next-themes';
 import { Switch } from "@/components/ui/switch"
 
 import { FaRegDotCircle } from "react-icons/fa";
-
-function sleep(ms:number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { FaRegLightbulb } from "react-icons/fa";
 
 const ThemeSwitch = () => {
-  const {resolvedTheme, theme, setTheme} = useTheme();
+  const {theme, setTheme} = useTheme();
 
   const [mounted, setMounted] = useState(false);
 
@@ -21,15 +18,18 @@ const ThemeSwitch = () => {
     setMounted(true);
   }, []);
 
+
+  // Caso ainda não tenha terminado o mount, mostra uma animação indicativa disso
   if (!mounted) {
     return <>
-        <FaRegDotCircle size={30} className={`animate-ping`} />
+        <FaRegDotCircle size={30} className={`animate-ping`} /> 
       </>;
   }
 
 
   return (
-    <div>
+    <div className={`flex gap-2`} >
+        <FaRegLightbulb size={20} className={`text-slate-600`} onChange={()=>{setTheme('dark')}}/>
         <Switch checked={theme=='light'} onCheckedChange={()=>{setTheme(theme=='light'?'dark':'light')}}/>
     </div>
   )

@@ -1,5 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+
+// Update tasks
  
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -31,7 +33,7 @@ export async function GET(request: Request) {
     setCombo.push(`done = TRUE`);
 
     const todayte = Date.now();
-    const sqlTimestamp = new Date(todayte).toISOString().slice(0, 19).replace('T', ' ');
+    const sqlTimestamp = new Date(todayte).toISOString().slice(0, 19).replace('T', ' '); // Atualiza a data de conclusão para a do momento atual do request
 
     refValues.push(sqlTimestamp); 
 

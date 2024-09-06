@@ -1,10 +1,7 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 
-
-import {
-    LineChart
-  } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 
 import {Dimensions} from 'react-native';
 
@@ -36,24 +33,24 @@ const DoneLineGraph = (props: DoneLineGraphProps) => {
   return (
     <View>
         <LineChart
-        data={data}
-        width={windowWidth-20}
-        height={windowHeight/3}
-        chartConfig={{
-            backgroundGradientFrom: props.theme=='dark' ? 'rgba(0,0,0,0)' : '#ffffff',
-            backgroundGradientTo: props.theme=='dark' ? '#000000' : '#ffffff',
-            decimalPlaces: 2,
-            color: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
-            labelColor: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
-            style: {
-            borderRadius: 16
-            },
-            propsForDots: {
-            r: "6",
-            strokeWidth: "2",
-            stroke: "#ffa726"
-            }
-        }}
+          data={data}
+          width={windowWidth-20}
+          height={windowHeight/3}
+          chartConfig={{
+              backgroundGradientFrom: props.theme=='dark' ? 'rgba(0,0,0,0)' : '#ffffff',
+              backgroundGradientTo: props.theme=='dark' ? '#000000' : '#ffffff',
+              decimalPlaces: 2,
+              color: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
+              labelColor: props.theme=='dark' ? ((opacity = 1) => `rgba(255, 255, 255, ${opacity})`) : ((opacity = 1) => `rgba(0, 0, 0, ${opacity})`),
+              style: {
+              borderRadius: 16
+              },
+              propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              stroke: "#ffa726"
+              }
+          }}
         />
     </View>
   )

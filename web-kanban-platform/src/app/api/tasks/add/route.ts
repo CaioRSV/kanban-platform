@@ -1,11 +1,14 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
-const epoch2038_limit = 2147483647;
+
+// Add nova task
+
+const epoch2038_limit = 2147483647; // Limitação em ms do datatype int
  
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const task = Math.floor(Date.now()/1000) % epoch2038_limit; // Kkkkkkk só de sacanagem
+  const task = Math.floor(Date.now()/1000) % epoch2038_limit;  // Tratamento de possível limitação de geração de IDs (Epoch 2038)
   const user = searchParams.get('user');
   const name = searchParams.get('name');
   const description = searchParams.get('description');
@@ -18,10 +21,10 @@ export async function GET(request: Request) {
   try {
     if (!name) throw new Error('Nome da Tarefa requerido');
       if(color){
-        const resposta = await sql.query(SQL_2, [task,user,name,description, color]);
+        await sql.query(SQL_2, [task,user,name,description, color]);
       }
       else{
-        const resposta = await sql.query(SQL, [task,user,name,description]);
+        await sql.query(SQL, [task,user,name,description]);
       }
       return NextResponse.json({ resposta: {id: task} }, { status: 200 });
   } catch (error) {

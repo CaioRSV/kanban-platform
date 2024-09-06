@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@graphql-tools/mock": "^9.0.4",
+    "@graphql-tools/schema": "^10.0.6",
     "@intechnity/react-native-kanban-board": "^0.1.0",
     "@mgcrea/react-native-dnd": "^2.2.0",
     "@react-native-picker/picker": "2.7.5",
@@ -17,6 +19,7 @@
     "@types/react": "~18.2.79",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
+    "graphql": "^15.8.0",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.74.5",
