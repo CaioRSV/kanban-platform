@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { graphql, ExecutionResult } from 'graphql';
-import { addMocksToSchema } from '@graphql-tools/mock';
-import { makeExecutableSchema } from '@graphql-tools/schema';
+
 
 import {
   DropdownMenu,
@@ -20,20 +18,21 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import { GrGraphQl } from "react-icons/gr";
-import { Button } from './ui/button';
 import { useTaskContext } from './contexts/tasksContext';
 import { Task } from './dragNdrop/workspace';
-import { Description } from '@radix-ui/react-dialog';
 import { useUserContext } from './contexts/userContext';
 
+// Fazendo lógica de mock de um schema GraphQL
+import { graphql, ExecutionResult } from 'graphql';
+import { addMocksToSchema } from '@graphql-tools/mock';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
+// Schema a ser mockado
 const schemaString = `
   type Template {
     id: ID!
@@ -53,6 +52,8 @@ const schemaString = `
   }
 `;
 
+// Interfaces correspondentes aos tipos
+
 interface Todo {
   id: string;
   title: string;
@@ -66,8 +67,10 @@ interface TemplateData {
   tasks: Todo[];
 }
 
-const schema = makeExecutableSchema({ typeDefs: schemaString });
+const schema = makeExecutableSchema({ typeDefs: schemaString }); // Criando instância de schema mockado
 
+
+// Populando schema com dados (que serão alvos da query mais abaixo)
 const schemaWithMocks = addMocksToSchema({
   schema,
   mocks: {
@@ -101,12 +104,16 @@ const schemaWithMocks = addMocksToSchema({
 });
 
 export default function GraphQlMocker() {
-  const [todo, setTodo] = useState<Todo[]>([]);
-
-  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  // Contextos
   const {tasks, setTasks} = useTaskContext();
   const {user, id, loadingTasks, setLoadingTasks} = useUserContext();
 
+  // Variáveis de estado locais
+  const [todo, setTodo] = useState<Todo[]>([]); // Lista a ser enviada e transformada em tasks
+  const [alertOpen, setAlertOpen] = useState<boolean>(false); // Alert de confirmação de importação de templates
+
+
+  // Função de query
   const fetchTodo = (chosenTemplate: number) => {
     graphql({
       schema: schemaWithMocks,
@@ -140,16 +147,20 @@ export default function GraphQlMocker() {
       return [];
   };
 
+  // Função para exibir alerta de confirmação 
   const populateTasks = (chosenNumber: number) => {
     fetchTodo(chosenNumber);
     setAlertOpen(true)
   }
 
+
+  // Para cada uma das tasks em ToDo, elas serão "traduzidas" no formato ideal para adição à área de trabalho
   async function addTask(columnId: number, definedObject: Task){
+
+        // Utils para traduzir prioridade em cor no sistema
         interface priorityColorObjectInterface{
           [key: string]: string
         }
-
         const priorityColorObject:priorityColorObjectInterface = {
           '1': 'rgb(254,240,138)',
           '2': 'rgb(134,239,172)',
@@ -158,10 +169,11 @@ export default function GraphQlMocker() {
           '5': 'rgb(239,68,68)'
         }
 
-        let newId =  Math.floor(Math.random()*10000);
-        
-        const clr = definedObject.color ?? '1'
+        // 
 
+        let newId =  Math.floor(Math.random()*10000);
+        const clr = definedObject.color ?? '1'
+        
         const res = await fetch(`/api/tasks/add?user=${id}&name=${definedObject.name}&description=${definedObject.description}&color=${Object.keys(priorityColorObject).includes(clr) ? priorityColorObject[clr] : 'white'}`)
             .then(res => {
               if(!res.ok){
@@ -195,6 +207,7 @@ export default function GraphQlMocker() {
         }
     }
 
+  // Traduz as tarefas de todo em tasks usuais e popula o contexto de tasks locais com as novas tarefas
   const updateLocal = async () => { 
     if(todo){
       setLoadingTasks(true);
@@ -223,7 +236,6 @@ export default function GraphQlMocker() {
       await processTasks(newTasks);
 
       setTasks([...tasks, ...newTaskList])
-
       setLoadingTasks(false);
 
     }
@@ -235,11 +247,12 @@ export default function GraphQlMocker() {
         <DropdownMenuTrigger className={`p-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground`}>
             <GrGraphQl size={23} />          
         </DropdownMenuTrigger>
+
         <DropdownMenuContent>
           <DropdownMenuLabel>
-          Escolha um pacote template de tarefas
+            Escolha um pacote template de tarefas
           </DropdownMenuLabel>
-          <DropdownMenuSeparator></DropdownMenuSeparator>
+          <DropdownMenuSeparator/>
 
           <DropdownMenuItem onClick={()=>{populateTasks(1)}}>Tarefas casuais</DropdownMenuItem>
           <DropdownMenuItem onClick={()=>{populateTasks(2)}}>Tarefas profissionais</DropdownMenuItem>
@@ -247,17 +260,18 @@ export default function GraphQlMocker() {
         </DropdownMenuContent>
       </DropdownMenu>
 
+
       <AlertDialog open={alertOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Deseja importar as tarefas do template?</AlertDialogTitle>
-          <AlertDialogDescription>Assim como todas as mudanças às colunas, alterações apenas serão armazenadas caso salve elas.</AlertDialogDescription>
-        </AlertDialogHeader>
-          <AlertDialogAction onClick={()=>{updateLocal();setAlertOpen(false);}}>Prosseguir</AlertDialogAction>
-          <AlertDialogCancel onClick={()=>{setAlertOpen(false);}}>Voltar</AlertDialogCancel>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja importar as tarefas do template?</AlertDialogTitle>
+            <AlertDialogDescription>Assim como todas as mudanças às colunas, alterações apenas serão armazenadas caso salve elas.</AlertDialogDescription>
+          </AlertDialogHeader>
+
+            <AlertDialogAction onClick={()=>{updateLocal();setAlertOpen(false);}}>Prosseguir</AlertDialogAction>
+            <AlertDialogCancel onClick={()=>{setAlertOpen(false);}}>Voltar</AlertDialogCancel>
         </AlertDialogContent>
       </AlertDialog>
-
     </div>
   );
 }

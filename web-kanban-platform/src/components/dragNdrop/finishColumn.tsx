@@ -1,12 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Button } from "@/components/ui/button";
-
-import { FaCheck } from "react-icons/fa6";
-import { CiSaveUp1 } from "react-icons/ci";
-import { IoIosInformationCircleOutline } from "react-icons/io";
-
 import { useUserContext } from '../contexts/userContext';
 import { useTaskContext } from '../contexts/tasksContext';
 
@@ -17,6 +11,11 @@ import {
     TooltipTrigger,
   } from "@/components/ui/tooltip"
 
+import { Button } from "@/components/ui/button";
+
+import { IoIosInformationCircleOutline } from "react-icons/io";
+import { FaCheck } from "react-icons/fa6";
+import { CiSaveUp1 } from "react-icons/ci";
 
 
 const FinishColumn = () => { 
@@ -30,18 +29,9 @@ const FinishColumn = () => {
 
     const [notifyIcon, setNotifyIcon] = useState<boolean>(false);
 
-    const {
-        user, setUser, id, setId, 
-        setColumn1_name, column1_name,
-        setColumn2_name, column2_name,
-        setColumn3_name, column3_name,
-        setColumn1, column1,
-        setColumn2, column2,
-        setColumn3, column3,
-    
-        } = useUserContext();
+    const { column3 } = useUserContext();
 
-    const {tasks, setTasks} = useTaskContext();
+    const {setTasks} = useTaskContext();
 
     const delay = 2000;
 

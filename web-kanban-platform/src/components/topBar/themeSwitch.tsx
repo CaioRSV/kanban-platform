@@ -7,11 +7,10 @@ import { useTheme } from 'next-themes';
 import { Switch } from "@/components/ui/switch"
 
 import { FaRegDotCircle } from "react-icons/fa";
-
-import { FaRegLightbulb } from "react-icons/fa"; // Hollow
+import { FaRegLightbulb } from "react-icons/fa";
 
 const ThemeSwitch = () => {
-  const {resolvedTheme, theme, setTheme} = useTheme();
+  const {theme, setTheme} = useTheme();
 
   const [mounted, setMounted] = useState(false);
 
@@ -19,9 +18,11 @@ const ThemeSwitch = () => {
     setMounted(true);
   }, []);
 
+
+  // Caso ainda não tenha terminado o mount, mostra uma animação indicativa disso
   if (!mounted) {
     return <>
-        <FaRegDotCircle size={30} className={`animate-ping`} />
+        <FaRegDotCircle size={30} className={`animate-ping`} /> 
       </>;
   }
 

@@ -3,6 +3,8 @@ import React from 'react'
 
 import { createContext, useContext, useState, ReactNode } from 'react'
 
+// Contexto que armazena informações do usuário presentes no servidor após sua entrada na plataforma
+
 interface UserInterface {
     user: string,
     setUser : React.Dispatch<React.SetStateAction<string>>
