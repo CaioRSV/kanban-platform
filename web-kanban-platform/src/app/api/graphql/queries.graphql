@@ -1,0 +1,24 @@
+query tasksForUser {
+        user(name: "Caio") {
+          id
+          name
+          column1
+          column1_name
+					column2
+					column2_name
+					column3
+					column3_name
+  }
+}
+
+//--------------------------------------------
+
+query AllTasks {
+        tasks(done: true){
+		id,
+		name,
+		description,
+		color,
+		done,
+	}
+}
