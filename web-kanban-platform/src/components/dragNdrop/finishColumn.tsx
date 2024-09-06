@@ -23,6 +23,9 @@ import { FaCheck } from "react-icons/fa6";
 import { CiSaveUp1 } from "react-icons/ci";
 
 
+// Outline style pego do Button do shadcn
+const buttonOutline_style = `inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2`
+
 const FinishColumn = () => { 
 
     // Contextos
@@ -72,27 +75,10 @@ const FinishColumn = () => {
     return (
         <div className={`flex gap-2 h-full items-center`}>
             <AlertDialog>
-                <AlertDialogTrigger>
-                    <Button
-                        variant={'outline'}
-                        style={{
-                            borderWidth: `1px`,
-                            borderColor: `${finish ? "rgba(18,172,255, 0.5)" : ``}`
-                        }}
-                        className={`
-                            transition-all
-                            flex gap-1 justify-center items-center
-                            relative
-                            z-0
-                            overflow-hidden
-                            rounded-full
-                            `}
-                    >
+                {/* Aplicando abaixo variant="outline" sem hydration error de button on button, e style equivalente a "rounded-full" */}
+                <AlertDialogTrigger className={buttonOutline_style} style={{borderRadius: '9999px'}}> 
                         <p className={`z-10`}>Confirmar conclusão</p>
-
                         <CiSaveUp1 className={`z-10 ml-[1px]`} size={25} />
-                    </Button>
-                    
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
