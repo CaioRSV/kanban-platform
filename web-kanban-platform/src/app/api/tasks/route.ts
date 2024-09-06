@@ -1,12 +1,14 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
+// Fetch tasks
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const task = searchParams.get('task')?.split(',').map(Number);
 
-  const SQL = `SELECT * FROM KBN_Tasks WHERE id = ANY($1::int[]) AND done = FALSE`;
+  const SQL = `SELECT * FROM KBN_Tasks WHERE id = ANY($1::int[]) AND done = FALSE`; // Tasks não ainda concluídas definitivamente
   
   try {
     if (!task) throw new Error('ID da Tarefa requerido');

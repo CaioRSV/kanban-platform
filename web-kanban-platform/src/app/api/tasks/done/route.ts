@@ -1,11 +1,13 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+
+// Fetch de tasks confirmadas de forma definitiva no sistema
  
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userID = searchParams.get('user');
-  const doneTime = searchParams.get('doneTime');
-  const referenceTime = searchParams.get('referenceTime');
+  const doneTime = searchParams.get('doneTime'); // Lower limit do fetch (Ex: No máximo 7 dias atrás)
+  const referenceTime = searchParams.get('referenceTime'); // Upper limit do fetch (Ex: no mínimo 3 dias atrás)
 
   if(doneTime && doneTime.length>0){
     if(!referenceTime || referenceTime.length==0){

@@ -1,5 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+
+// Atualizando tasks presentes nas colunas de algum usuário
  
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
