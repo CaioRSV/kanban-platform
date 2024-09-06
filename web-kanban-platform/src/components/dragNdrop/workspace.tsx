@@ -28,7 +28,6 @@ import { onDragOver } from './functions/dnd_functions';
 
 export type Id = string | number;
 
-
 export interface Column {
     id: Id;
     title: string;
@@ -48,6 +47,10 @@ export interface Task {
 };
 
 //
+
+const getDateID = () => {
+    return Date.now()/10
+}
 
 const Workspace = () => {
     // Contextos
@@ -116,7 +119,6 @@ const Workspace = () => {
         useSensor(TouchSensor)
     )
 
-
     function updateColumn_Server(columnId: Id, title:string){
         let paramStack = `?id=${id}`
         if(columnId==1){
@@ -149,7 +151,6 @@ const Workspace = () => {
             else{ // Alterando a especificada
                 updateColumn_Server(id, title);
                 return {...col, title};
-
             }
         })
 
@@ -163,7 +164,7 @@ const Workspace = () => {
             }
         }
         else{
-            let newId =  Math.floor(Math.random()*10000);
+            let newId =  Math.floor(getDateID());
 
             const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
                 .then(res => res.json())
@@ -191,9 +192,9 @@ const Workspace = () => {
         const newTasks = tasks.filter(task => task.id != activeTaskID);
 
         const newTask: Task = {
-            id: typeof activeTaskID ==='number' ? activeTaskID : Math.floor(Math.random()*10000),
+            id: typeof activeTaskID ==='number' ? activeTaskID : Math.floor(getDateID()),
             name: definedObject?.name ?? "Nova tarefa",
-            columnId: typeof overColumnID ==='number'? overColumnID : Math.floor(Math.random()*10000),
+            columnId: typeof overColumnID ==='number'? overColumnID : Math.floor(getDateID()),
             description: definedObject?.description ?? '',
             color: definedObject?.color,
             startDate: definedObject?.startDate,
@@ -257,26 +258,19 @@ const Workspace = () => {
                 typeof window === 'object' && 
                     createPortal(
                         <DragOverlay>
-                            {activeColumn
-                                ?
-                                <ColumnElement column={activeColumn} 
-                                        updateColumn={updateColumn} 
-                                        addTask={addTask}
-                                        deleteTask={()=>{deleteTask(activeColumn.id)}}
-                                        updateTask={updateTask}
-                                        />
-                                :
-                                <></>
-                            }
                             {
-                                activeTask
-                                    ?
-                                    <Card task={activeTask}
-                                        deleteTask={deleteTask}
-                                        updateTask={updateTask}
-                                        />
-                                    :
-                                    <></>
+                            activeColumn
+                                &&
+                                <ColumnElement column={activeColumn} 
+                                    updateColumn={updateColumn} 
+                                    addTask={addTask}
+                                    deleteTask={()=>{deleteTask(activeColumn.id)}}
+                                    updateTask={updateTask}
+                                />
+                            }
+
+                            {
+                                activeTask && <Card task={activeTask} deleteTask={deleteTask} updateTask={updateTask}/>
                             }
                         </DragOverlay>, document.body
                     )
