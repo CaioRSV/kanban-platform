@@ -1,5 +1,3 @@
-"use client";
-
 import { View, Text, TouchableOpacity, Linking, Switch } from 'react-native'
 import React from 'react'
 import { AntDesign, Ionicons, Octicons } from '@expo/vector-icons';

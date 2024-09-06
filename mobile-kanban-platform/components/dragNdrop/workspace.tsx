@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useCallback, useRef } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import Column from "./column";

@@ -1,5 +1,3 @@
-"use client";
-
 import { View, Text, Modal, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native'
 
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -157,7 +155,7 @@ const SetUserModal = (props: SetUserModalProps) => {
         transparent={true}
         animationType="fade"
         visible={!user || user.length==0}>
-            <View className={`w-full h-full flex justify-center p-4`} style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            <View className={`w-full h-full flex justify-center p-4 bg-[rgba(0,0,0,0.5)]`}>
                 <View className={`${props.theme=='dark'?'bg-black':'bg-white'} p-4 flex gap-2 rounded-md`}>
                     <Text className={`text-lg font-semibold ${props.theme=='dark'?'text-white':'text-black'}`}>Quem é você?</Text>
                     <Text className={`mb-2 ${props.theme=='dark'?'text-white':'text-black'}`}>Informe seu nome de usuário para acessar sua área de trabalho</Text>

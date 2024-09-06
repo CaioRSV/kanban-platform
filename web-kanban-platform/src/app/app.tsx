@@ -12,6 +12,7 @@ import GraphQlMocker from '@/components/graphQlMocker';
 // TopBar: Elementos do topo da página
 // GraphQlMocker: Botão para importação de templates (query utilizando GraphQL Tools - Mock)
 // SaveColumns: Botão que salva modificações na área de trabalho
+// Workspace: Área Kanban
 // GraphDrawer: Botão que apresenta o Drawer com relatórios em formato de gráfico
 
 export default function App() {

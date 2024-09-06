@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 
 import {
@@ -7,12 +6,8 @@ import {
 
 import {Dimensions} from 'react-native';
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-
-
 
 interface RatioGraphProps{
   column1: number[];

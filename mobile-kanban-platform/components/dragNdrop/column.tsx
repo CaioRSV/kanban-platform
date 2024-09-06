@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { View, TouchableOpacity, Text, Modal, TextInput, Alert, ActivityIndicator} from "react-native";
 import DraggableFlatList, {

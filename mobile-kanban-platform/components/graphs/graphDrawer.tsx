@@ -71,7 +71,7 @@ const GraphDrawer = () => {
         setLoadingTasks(false);
       }
 
-      const { colorScheme, toggleColorScheme } = useColorScheme();
+      const { colorScheme } = useColorScheme();
 
 
       const openGraphDrawer = () => {
@@ -112,14 +112,14 @@ const GraphDrawer = () => {
                         </View>
                         :
                         <>
-                        <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'black'}}/>
-                        <Text style={{color: colorScheme=='dark'?'white':'black'}}>Distribuição de suas tarefas por coluna</Text>
-                        <RatioGraph column1_name={column1_name ?? 'A fazer'} column1={column1 ?? []} column2_name={column2_name ?? 'Em progresso'} column2={column2 ?? []} column3_name={column3_name ?? 'Finalizadas'} column3={column3 ?? []}/>
+                          <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'black'}}/>
+                          <Text style={{color: colorScheme=='dark'?'white':'black'}}>Distribuição de suas tarefas por coluna</Text>
+                          <RatioGraph column1_name={column1_name ?? 'A fazer'} column1={column1 ?? []} column2_name={column2_name ?? 'Em progresso'} column2={column2 ?? []} column3_name={column3_name ?? 'Finalizadas'} column3={column3 ?? []}/>
 
-                        <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'gray'}}/>
-                        <Text style={{color: colorScheme=='dark'?'white':'black'}}>Tarefas realizadas por período de tempo</Text>
-                        <DoneLineGraph theme={colorScheme=='dark'?'dark':'light'} labels={doneLabels} series={doneSeries} />
-                        <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'gray'}}/>
+                          <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'gray'}}/>
+                          <Text style={{color: colorScheme=='dark'?'white':'black'}}>Tarefas realizadas por período de tempo</Text>
+                          <DoneLineGraph theme={colorScheme=='dark'?'dark':'light'} labels={doneLabels} series={doneSeries} />
+                          <View className={`w-[80%] h-[1px] mb-2`} style={{backgroundColor: colorScheme=='dark' ?'white':'gray'}}/>
                         </>
                     }
 
