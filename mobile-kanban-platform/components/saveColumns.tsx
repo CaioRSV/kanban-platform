@@ -1,13 +1,12 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { FontAwesome5 } from '@expo/vector-icons'
 
 import { useColorScheme } from 'nativewind';
 import { useUserContext } from './contexts/userContext';
 
-
 const SaveColumns = () => {
-    const { colorScheme, toggleColorScheme } = useColorScheme();
+    const { colorScheme } = useColorScheme();
 
     const {
         id,
@@ -15,7 +14,6 @@ const SaveColumns = () => {
         column2,
         column3,
       } = useUserContext();
-
 
     async function saveColumns() {
         const col1_params = `${column1.length> 0 ? `&column1=${column1.join(',')}` : ``}`;

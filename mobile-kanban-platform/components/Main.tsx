@@ -23,7 +23,6 @@ const Main = () => {
 
   return (
     <View style={{overflow: 'scroll'}} className={`h-full w-full dark:bg-black p-8 relative`}>
-
         <SetUserModal theme={colorScheme=='dark'?'dark':'light'}/> 
 
         <TopBar/>
