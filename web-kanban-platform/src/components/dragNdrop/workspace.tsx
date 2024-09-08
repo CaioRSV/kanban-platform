@@ -23,6 +23,8 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { onDragStart } from './functions/dnd_functions';
 import { onDragEnd } from './functions/dnd_functions';
 import { onDragOver } from './functions/dnd_functions';
+import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
+import { User } from '@/app/schemaWrapper';
 
 // Types
 
@@ -52,7 +54,16 @@ const getDateID = () => {
     return Date.now()/10
 }
 
-const Workspace = () => {
+
+//
+
+interface WorkspaceProps{
+    schema?: GraphQLSchema
+    users_schema?: Record<string, User>
+    tasks_schema?: Record<string, Task>
+  }
+
+const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     // Contextos
     const {
         id,
@@ -231,6 +242,56 @@ const Workspace = () => {
         setTasks(newTasks);  
     }
 
+    //
+
+
+    const getUserFunction = async () =>{
+        if(schema){
+          const query = `
+        query getUser {
+        user(name: "Caio") {
+          id
+          name
+          column1
+          column1_name
+          column2
+          column2_name
+          column3
+          column3_name
+      }
+      }
+        `
+    const result: ExecutionResult = await graphql({
+        schema,
+        source: query
+    })
+    console.log(result);
+    }
+    }
+
+    //
+
+    const getTasksFunction = async () =>{
+        if(schema){
+            const query = `query AllTasks {
+                tasks(done: true){
+                id,
+                name,
+                description,
+                color,
+                done,
+            }
+        }`
+                const result: ExecutionResult = await graphql({
+                    schema,
+                    source: query
+                })
+                console.log(result);
+        }
+    }
+
+      
+
     return (
         <DndContext 
             onDragStart={(e)=>{onDragStart(e,setActiveColumn, setActiveTask)}} 
@@ -238,6 +299,8 @@ const Workspace = () => {
             onDragOver={(e)=>{onDragOver(e, tasks, setTasks)}}
             sensors={sensors} collisionDetection={closestCorners}
         >
+        <p className={`p-2 bg-emerald-300 m-2`} onClick={()=>{console.log(id)}}>SHOW USER</p>
+        <p className={`p-2 bg-emerald-500 m-2`} onClick={()=>{console.log(tasks)}}>SHOW TASKS</p>
             <SortableContext items={columnsId}>
                 {
                     columns.map(col => (

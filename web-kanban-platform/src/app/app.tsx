@@ -7,6 +7,8 @@ import GraphDrawer from '@/components/graphBar/graphDrawer';
 
 import SaveColumns from '@/components/saveColumns';
 import GraphQlMocker from '@/components/graphQlMocker';
+import { GraphQLSchema } from 'graphql';
+import SchemaWrapper from './schemaWrapper';
 
 // SetUserModal: Pop up/alerta de definição de usuário/área de trabalho 
 // TopBar: Elementos do topo da página
@@ -15,11 +17,12 @@ import GraphQlMocker from '@/components/graphQlMocker';
 // Workspace: Área Kanban
 // GraphDrawer: Botão que apresenta o Drawer com relatórios em formato de gráfico
 
+
 export default function App() {
   return (
+    <SchemaWrapper>
         <main className="min-h-screen p-12 flex flex-col transition-all duration-500">
-          <SetUserModal/>
-
+            <SetUserModal/> 
           <div className={`w-full h-fit flex justify-center items-center`}>
             <TopBar/>
           </div>
@@ -42,5 +45,6 @@ export default function App() {
 
           </div>
         </main>
+    </SchemaWrapper>
   );
 }

@@ -1,4 +1,4 @@
-query tasksForUser {
+query getUser {
         user(name: "Caio") {
           id
           name

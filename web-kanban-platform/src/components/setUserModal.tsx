@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 import { useUserContext } from './contexts/userContext';
 import { useTaskContext } from './contexts/tasksContext';
 
-import { Task } from './dragNdrop/workspace';
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,9 +19,18 @@ import { Input } from "@/components/ui/input"
 import { RiLoginCircleLine } from "react-icons/ri";
 import { ImSpinner8 } from "react-icons/im";
 
+//---
 
-const SetUserModal = () => {
+import { User, Task } from '@/app/schemaWrapper';
+import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 
+interface SetUserModalProps{
+  schema?: GraphQLSchema
+  users_schema?: Record<string, User>
+  tasks_schema?: Record<string, Task>
+}
+
+const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps ) => {
   // Contextos
 
   const {
@@ -77,10 +84,11 @@ const SetUserModal = () => {
   // Atualizando contexto de user
   async function setUserServer(userName:string){
 
-    if(userName.length==0) return;
+    if(userName.length==0 || !schema) return;
 
     setLoading(true);
 
+    // Parte REST apenas para verificação se usuário existe ou não (simplicidade)
     const userRes = await fetch("/api/user?name="+userName, {
         method: 'GET'
       })
@@ -90,32 +98,31 @@ const SetUserModal = () => {
     if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
-      setUser(userName);
-      setId(userFound.id);
+      const res = await loginFunction(userName, parseInt(userFound.id))
+      
+      const resUser = await getUserFunction(userName);
+      const resTasks = await getTasksFunction();
 
-      if(userFound.column1_name !== null) setColumn1_name(userFound.column1_name);
-      if(userFound.column2_name !== null) setColumn2_name(userFound.column2_name);
-      if(userFound.column3_name !== null) setColumn3_name(userFound.column3_name);
+      console.log(resUser);
+      console.log("---");
+      console.log(resTasks);
 
-      setColumn1(userFound.column1);
-      setColumn2(userFound.column2);
-      setColumn3(userFound.column3);
+      if(resUser){
+        setUser(resUser.name);
+        setId(parseInt(resUser.id));
 
-      let totalIDs:number[] = []
+        if(resUser.column1_name !== null && resUser.column1_name !==undefined) setColumn1_name(resUser.column1_name);
+        if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
+        if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
 
-      userFound.column1.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
+        setColumn1(resUser.column1);
+        setColumn2(resUser.column2);
+        setColumn3(resUser.column3);
+      }
 
-      userFound.column2.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
-
-      userFound.column3.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
-
-      updateInfoLocal(totalIDs, userFound.column1, userFound.column2, userFound.column3);
+      if(resTasks){
+        setTasks(resTasks)
+      }
 
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
@@ -131,21 +138,139 @@ const SetUserModal = () => {
         setUser(userName);
       }
 
-      const userRes_2 = await fetch("/api/user?name="+userName, {
+      const userCreated = await fetch("/api/user?name="+userName, {
         method: 'GET'
       })
       .then(res => res.json())
       .then(data => data.resposta.rows);
   
-      const userFound_2 = userRes_2[0];
-  
-      setId(userFound_2.id);
+      const res = await loginFunction(userName, parseInt(userCreated.id))
+      
+      const resUser = await getUserFunction(userName);
+
+      if(resUser){
+        setUser(resUser.name);
+        setId(parseInt(resUser.id));
+      }
 
     }
 
     setLoading(false);
 
   }
+
+
+  //
+
+  const loginFunction = async (username: String, userId: number) => {
+    if(schema){
+
+      // User def
+      
+      const query = `
+          mutation Login($username: String!) {
+        login(username: $username)
+        }
+      `
+
+      const vars = {
+          "username": username
+      }
+  
+      const result: ExecutionResult = await graphql({
+          schema,
+          source: query,
+          variableValues: vars
+      })
+
+      // Task fetching
+
+      const query_tasks = `
+        mutation PopTasks($id: Int!) {
+          populateTasks(id: $id)
+        }
+      `
+  
+      const vars_tasks = {
+          "username": username,
+          "id": userId
+      }
+  
+      const result_tasks: ExecutionResult = await graphql({
+          schema,
+          source: query_tasks,
+          variableValues: vars_tasks
+      })
+
+      return {
+        user_message: result,
+        tasks_message: result_tasks
+      }
+    }
+}
+
+//
+
+const getUserFunction = async (username: String): Promise<User | undefined> => {
+  if(schema){
+    const query = `
+  query getUser {
+    user(name: "${username}") {
+      id
+      name
+      column1
+      column1_name
+      column2
+      column2_name
+      column3
+      column3_name
+  }
+}
+  `
+  const result: ExecutionResult = await graphql({
+      schema,
+      source: query
+  })
+
+  if (result.data && result.data.user) {
+    const user: User = result.data.user as User;
+
+    return user
+  }
+
+  return undefined
+
+  }
+}
+
+//
+
+const getTasksFunction = async (done?: boolean): Promise<Task[] | undefined> => {
+  if(schema){
+    const query = `query AllTasks {
+      tasks(done: ${!done ? 'false' : (done ? 'true' : 'false')}){
+    id,
+    name,
+    description,
+    color,
+    done,
+    }
+    }`
+      const result: ExecutionResult = await graphql({
+          schema,
+          source: query
+      })
+      
+      if (result.data && result.data.tasks) {
+        const tasks: Task[] = result.data.tasks as Task[];
+    
+        return tasks
+      }
+    
+      return undefined
+  }
+}
+
 
   return (
     <>
