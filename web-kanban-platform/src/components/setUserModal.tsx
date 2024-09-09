@@ -32,6 +32,10 @@ interface SetUserModalProps{
   tasks_schema?: Record<string, Task>
 }
 
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps ) => {
   // Contextos
 
@@ -76,7 +80,10 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
       const resUser = await getUserFunction_GQL(userName, schema);
       
       if(resUser){
-        console.log(parseInt(resUser.id))
+        //console.log(parseInt(resUser.id))
+
+        await wait(1000);
+
         const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
 
         setLoadingTasks(true); // Loading nas colunas
@@ -94,6 +101,7 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
 
 
         if(resTasks){
+          //console.log(resTasks);
           const col1 = resUser.column1;
           const col2 = resUser.column2;
           const col3 = resUser.column3;
@@ -103,14 +111,9 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
             id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
           }))
 
-          // console.log("******")
-          // console.log(resUser);
-          // console.log(users_schema);
-          // console.log(tasks_schema)
-          // console.log("*")
-          // console.log(resTasks);
-          // console.log(resTasks_Filtered);
-          
+          console.log('there is')
+          console.log(resTasks_Filtered)
+
           setTasks(
             resTasks_Filtered.map( (item:Task) => ({
               ...item,
@@ -177,10 +180,7 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
   //
 
   const loginFunction = async (username: String, userId: number) => {
-    if(schema){
-
-      // User def
-      
+    if(schema){  
       const query = `
           mutation Login($username: String!) {
         login(username: $username)
@@ -215,12 +215,6 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
           source: query_tasks,
           variableValues: vars_tasks
       })
-
-      const result_tasks_reforce: ExecutionResult = await graphql({
-        schema,
-        source: query_tasks,
-        variableValues: vars_tasks
-    })
 
       return {
         user_message: result,

@@ -199,10 +199,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
             throw new Error('User not found');
           }
 
-
           users[userData.id.toString()] = userData;
-
-          setUsers({[userData.id.toString()]: userData})
 
           return 'Logado com sucesso';
         },
@@ -213,15 +210,9 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
               //console.log('Tasks not found');
             }
 
-            const newTasks: Record<string, Task> = {}
-
             userData?.forEach(elem => {
-                newTasks[elem.id] = elem
+                tasks[elem.id] = elem
             })
-
-            //console.log(newTasks);
-
-            setTasks(newTasks)
 
             return 'Tasks populadas com sucesso';
           },
@@ -261,7 +252,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
             }
 
             else if (attribute=="done"){
-              
+
               const alteredTask: Task = {
                 ...foundTask,
                 done: (value) ? true : false,

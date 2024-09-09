@@ -23,7 +23,18 @@ import DoneLineGraph from './doneLineGraph';
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useTheme } from 'next-themes';
 
-const GraphDrawer = () => {
+import { GraphQLSchema } from 'graphql';
+import { User, Task } from '@/app/schemaWrapper';
+import { getTasksFunction_GQL } from '@/lib/graphQl_functions';
+
+interface GraphDrawerProps{
+  schema?: GraphQLSchema
+  users_schema?: Record<string, User>
+  tasks_schema?: Record<string, Task>
+}
+
+
+const GraphDrawer = ( { schema } : GraphDrawerProps) => {
 
   // Contextos e variáveis de estado
   const {theme} = useTheme();
@@ -44,28 +55,55 @@ const GraphDrawer = () => {
   const [doneSeries, setDoneSeries] = useState<number[]>(); // Quantidades de tasks feitas a serem exibidas
 
 
-  // Função de fetch de tarefas feitas pelo usuário baseado no range acima
+  // Função de fetch de tarefas feitas pelo usuário baseado no range acima 
   async function updateDoneLine(){
-
     setLoading(true);
 
     const newLabels:string[] = [];
     const newSeries:number[] = [];
 
+    const resDoneTasks = await getTasksFunction_GQL(id, true, schema); //(+GraphQL)
+
     if(doneRange){
       for(let i=doneRange; i>0;i--){
-        const currentDate = new Date(Date.now()); 
+        const currentDate = new Date(); // today
+
+
+        const previousDateLabel = new Date(currentDate); 
+        previousDateLabel.setDate(currentDate.getDate() - i + 1);
+
+        //
+
         const previousDate = new Date(currentDate); 
-        previousDate.setDate(currentDate.getDate() - i + 1);
-        const formattedDate = previousDate.toLocaleDateString('en-GB');
+        previousDate.setDate(currentDate.getDate() - i);
+        
+        const plusOneDate = new Date(currentDate); 
+        plusOneDate.setDate(currentDate.getDate() - i + 1);
+
+        const formattedDate = previousDateLabel.toLocaleDateString('en-GB');
         
         newLabels.push(formattedDate);
 
-        const numberOfTasks = await fetch(`api/tasks/done?user=${id}&doneTime=${i}&referenceTime=${i-1}`)
-          .then(res => res.json())
-          .then(data => data.resposta.rows.length)
+        if(resDoneTasks){
+          const quantity: Task[] = resDoneTasks.filter(
+            elem => {
+              if (elem.enddate) {
+                const endDate = new Date(elem.enddate);
+                if(previousDate.getTime() < endDate.getTime() && endDate.getTime() < plusOneDate.getTime()){
+                  return true
+                }
+                else{
+                  return false
+                }
+              }
+              else{
+                return false;
+              }
+            }
+           )
 
-        newSeries.push(numberOfTasks);
+           newSeries.push(quantity.length);
+        }
       }
     }
 
