@@ -1,14 +1,11 @@
 "use client";
-import React, { useState, useEffect, ReactNode } from 'react'
+import React, { useState, ReactNode } from 'react'
 
-import { graphql, ExecutionResult, GraphQLScalarType, Kind, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import DateTime from './api/graphql/resolve_defs';
 
-
-import App from './app';
-import SetUserModal from '@/components/setUserModal';
 
 export type Id = string | number;
 
@@ -52,8 +49,6 @@ interface ResponseTasks {
     };
   }
 
-
-
 //
 
 interface SchemaWrapperProps {
@@ -68,16 +63,14 @@ interface ChildComponentProps {
 
 const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     // Alvo mock de infos
-    const [users, setUsers] =  useState<Record<string, User>>({});
-    const [tasks, setTasks] =  useState<Record<string, Task>>({});
+    const [users] =  useState<Record<string, User>>({});
+    const [tasks] =  useState<Record<string, Task>>({});
     
     // Função populadora do Mock Object de início (login), único momento de fetch para funções primárias da aplicação
     async function fetchUserData(username: string): Promise<User | null> {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user?name=${username}`);
       const data: ResponseUser = await response.json();
-    
-      //console.log(data);
-    
+        
       if (data.resposta && data.resposta.rows.length > 0) {
         return data.resposta.rows[0];
       }
@@ -151,7 +144,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           } else if (name) {
             return Object.values(users).find((user) => user.name === name);
           }
-          throw new Error('ID or name are required');
+          throw new Error('ID ou nome são obrigatórios');
         },
         tasks: (_: unknown, { id, done }: {id: number, done: boolean}): Task[] | undefined => {
             try{
@@ -185,7 +178,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
                 }
             }
             catch{
-                throw new Error('ID or name are required');
+                throw new Error('ID é obrigatório');
             }
             
         }
@@ -196,7 +189,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           const userData = await fetchUserData(username);
     
           if (!userData) {
-            throw new Error('User not found');
+            throw new Error('Usuário não encontrado');
           }
 
           users[userData.id.toString()] = userData;
@@ -207,7 +200,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
             const userData = await fetchTasks(id);
 
             if (!userData) {
-              //console.log('Tasks not found');
+              throw new Error('Usuário não encontrado');
             }
 
             userData?.forEach(elem => {
@@ -321,12 +314,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           column2: users[userId].column2.filter(elem => elem!=id),
           column3: users[userId].column3.filter(elem => elem!=id)
         }
-        // console.log('!!!!!!!!!!')
-        // //console.log(tasks);
-        // //console.log(deletedTask);
-        // console.log(id.toString());
-        // console.log(tasks[id.toString()]);
-        // console.log('!!!!!!!!!!')
 
         delete tasks[id.toString()];
 
@@ -354,6 +341,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     const schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
 
 
+  // Repassando para children components (mesmo dentro de outros elementos básicos HTML)
   const cloneChildrenWithProps = (child: ReactNode): ReactNode => {
       if (React.isValidElement(child)) {
         const clonedChild = React.cloneElement(
