@@ -12,8 +12,7 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
       description,
       color,
       done,
-      startDate,
-      endDate,
+      enddate,
       }
       }`
         const result: ExecutionResult = await graphql({
@@ -94,7 +93,7 @@ export const updateTask_GQL = async (id: number, attribute: string, value: strin
               variableValues: vars
           })
 
-          console.log(result);
+          //console.log(result);
           return result;
     }
 }
@@ -156,8 +155,8 @@ export const deleteTask_GQL = async (id: number, userId:string, schema?: GraphQL
               variableValues: vars
           })
         
-          console.log("¨¨¨¨")
-          console.log(result);
+          //console.log("¨¨¨¨")
+          //console.log(result);
           return result;
     }
 }
@@ -190,7 +189,7 @@ export const updateColumn_GQL = async (userId: number, columnName: string, value
               variableValues: vars
           })
         
-          console.log(result);
+          //console.log(result);
           return result;
     }
 }
@@ -222,7 +221,7 @@ export const orderColumn_GQL = async (userId: number, columnName: string, value:
             variableValues: vars
         })
       
-        console.log(result);
+        //console.log(result);
         return result;
   }
 }

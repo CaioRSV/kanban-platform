@@ -29,8 +29,10 @@ export interface Task {
     columnId: Id,
     description?: string
     color?: string
-    startDate?: Date
-    endDate?: Date
+
+    startdate?: Date,
+    enddate?: Date,
+
     done?: boolean
 
     serverId: number
@@ -116,8 +118,8 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         columnId: Int!
         description: String
         color: String
-        startDate: DateTime
-        endDate: DateTime
+        startdate: DateTime
+        enddate: DateTime
         done: Boolean
         serverId: Int!
       }
@@ -152,23 +154,34 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           throw new Error('ID or name are required');
         },
         tasks: (_: unknown, { id, done }: {id: number, done: boolean}): Task[] | undefined => {
-
-          //console.log(id);
-          // console.log(Object.values(tasks))
-          // console.log(Object.values(tasks).filter(elem => elem.userid == id))
-
             try{
                 if(done!=undefined && done!=null){
-                    // console.log("0040404004040-1")
-                    // console.log(Object.values(tasks).filter(elem => elem.done==done && elem.userid==id));
 
-                    return Object.values(tasks).filter(elem => elem.done==done && elem.userid==id);
+                    const resObject = Object.values(tasks)
+                      .map(item => {
+                        return {
+                          ...item,
+                          startdate: item.startdate ? new Date(item.startdate) : undefined,
+                          enddate: item.enddate ? new Date(item.enddate) : undefined
+                        }
+                      })
+                      .filter(elem => elem.done==done && elem.userid==id)
+
+                    return resObject
                 }
                 else{
-                    // console.log("0040404004040-2")
-                    // console.log(Object.values(tasks).filter(elem => elem.userid==id))
 
-                    return Object.values(tasks).filter(elem => elem.userid==id);
+                    const resObject = Object.values(tasks)
+                      .map(item => {
+                        return {
+                          ...item,
+                          startdate: item.startdate ? new Date(item.startdate) : undefined,
+                          enddate: item.enddate ? new Date(item.enddate) : undefined
+                        }
+                      })
+                      .filter(elem => elem.userid==id)
+
+                    return resObject
                 }
             }
             catch{
@@ -248,9 +261,11 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
             }
 
             else if (attribute=="done"){
+              
               const alteredTask: Task = {
                 ...foundTask,
-                done: (value) ? true : false
+                done: (value) ? true : false,
+                enddate: new Date()
               }
 
               tasks[id] = alteredTask;
@@ -277,32 +292,32 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         },
 
         addTask: (_: unknown, {id, name, columnId, serverId, userId} : {id: number, name: string, columnId: number, serverId: number, userId: number}): Task | null => {
-        const resElem = {
-          id: id,
-          name: name,
-          columnId: columnId,
-          serverId: serverId,
-          userid: userId,
-          done: false
-        };
+          const resElem = {
+            id: id,
+            name: name,
+            columnId: columnId,
+            serverId: serverId,
+            userid: userId,
+            done: false
+          };
 
-        tasks[id.toString()] = resElem;
+          tasks[id.toString()] = resElem;
 
-        if(
-          users[userId.toString()].column1.includes(id) ||
-          users[userId.toString()].column2.includes(id) ||
-          users[userId.toString()].column3.includes(id)
-          ) return null;
+          if(
+            users[userId.toString()].column1.includes(id) ||
+            users[userId.toString()].column2.includes(id) ||
+            users[userId.toString()].column3.includes(id)
+            ) return null;
 
-        if (columnId === 1) {
-          users[userId.toString()].column1 = [...users[userId.toString()].column1, id];
-        } else if (columnId === 2) {
-          users[userId.toString()].column2 = [...users[userId.toString()].column2, id];
-        } else if (columnId === 3) {
-          users[userId.toString()].column3 = [...users[userId.toString()].column3, id];
-        }
+          if (columnId === 1) {
+            users[userId.toString()].column1 = [...users[userId.toString()].column1, id];
+          } else if (columnId === 2) {
+            users[userId.toString()].column2 = [...users[userId.toString()].column2, id];
+          } else if (columnId === 3) {
+            users[userId.toString()].column3 = [...users[userId.toString()].column3, id];
+          }
 
-        return resElem;
+          return resElem;
       },
 
       deleteTask: (_: unknown, {id, userId} : {id: number, userId: string}): Task | null => {
@@ -342,7 +357,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       }
 
       },
-      DateTime
+      DateTime: DateTime
     };
     
     const schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });

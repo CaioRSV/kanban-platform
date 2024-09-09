@@ -97,10 +97,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
             (tasks.filter(item => item.columnId==3)).map(elem => elem.serverId)
         )
 
-        console.log('===')
-
         // GraphQL ---
-
         for(let i=1;i<=3;i++){
             orderColumn_GQL(id, `column${i}`,
                 (tasks.filter(item => item.columnId == i)).map(elem => elem.serverId)

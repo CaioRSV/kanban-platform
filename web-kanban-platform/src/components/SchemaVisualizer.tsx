@@ -14,11 +14,10 @@ interface WorkspaceProps{
     schema?: GraphQLSchema
     users_schema?: Record<string, User>
     tasks_schema?: Record<string, Task>
-  }
+}
 
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -27,10 +26,13 @@ import {
     AlertDialogTrigger,
 } from "./ui/alert-dialog"
 import { useUserContext } from './contexts/userContext'
+import { useTheme } from 'next-themes';
 
 
 const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps) => {
   const {user, id} = useUserContext();
+  const {theme, setTheme} = useTheme();
+
   //
   const [userQuery, setUserQuery] = useState<string>();
   const [tasksQuery, setTasksQuery] = useState<string>();
@@ -64,6 +66,8 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
                     <p className={`z-10`}>Visualize GraphQL</p>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
+                <AlertDialogDescription>GraphQL Visualizer</AlertDialogDescription>
+
                     <AlertDialogHeader>
                         <AlertDialogTitle>Status local da base GraphQL</AlertDialogTitle>
                     </AlertDialogHeader>
@@ -73,7 +77,7 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
 
                         <div className={`w-[90%]`}>
                           <p>Query Users:</p>
-                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll ${theme=="dark" ? 'contrast-125' : ''}`}>
                             <JSONPretty id="user-pretty" data={userQuery}></JSONPretty>
                           </div>
                         </div>
@@ -83,7 +87,7 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
                       <div className={`w-full flex-1 flex justify-center`}>
                         <div className={`w-[90%]`}>
                           <p>Query Current Tasks:</p>
-                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll ${theme=="dark" ? 'contrast-125' : ''}`}>
                             <JSONPretty id="tasks-pretty" data={tasksQuery}></JSONPretty>
                           </div>
                         </div>
@@ -93,7 +97,7 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
                       <div className={`w-full flex-1 flex justify-center`}>
                         <div className={`w-[90%]`}>
                           <p>Query Done Tasks:</p>
-                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll ${theme=="dark" ? 'contrast-125' : ''}`}>
                             <JSONPretty id="tasks-pretty" data={doneTasksQuery}></JSONPretty>
                           </div>
                         </div>
