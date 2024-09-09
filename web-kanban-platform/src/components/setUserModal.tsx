@@ -32,9 +32,6 @@ interface SetUserModalProps{
   tasks_schema?: Record<string, Task>
 }
 
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps ) => {
   // Contextos
@@ -80,10 +77,6 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
       const resUser = await getUserFunction_GQL(userName, schema);
       
       if(resUser){
-        //console.log(parseInt(resUser.id))
-
-        await wait(1000);
-
         const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
 
         setLoadingTasks(true); // Loading nas colunas

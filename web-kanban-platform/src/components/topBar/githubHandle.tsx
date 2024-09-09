@@ -14,13 +14,13 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 const GithubHandle = () => {
   return (
     <HoverCard>
-        <HoverCardTrigger>
+        <HoverCardTrigger href='https://github.com/CaioRSV' target='_blank'>
             <div className="inline-flex items-center justify-center">
-                <a href="https://github.com/CaioRSV" target="_blank">
+                <div>
                     <Button variant="link" className={`m-2 -mt-3 w-fit`}>
                         @caiorsv
                     </Button>
-                </a>
+                </div>
             </div>
         </HoverCardTrigger>
         <HoverCardContent className={`w-80`}>
