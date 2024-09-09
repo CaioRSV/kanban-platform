@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { GrGraphQl } from "react-icons/gr";
+import { HiOutlineTemplate } from "react-icons/hi";
 import { useTaskContext } from './contexts/tasksContext';
 import { Task } from './dragNdrop/workspace';
 import { useUserContext } from './contexts/userContext';
@@ -245,7 +245,7 @@ export default function GraphQlMocker() {
     <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0 || tasks.length!=0) ? 'none': 'all' }} className={`${!(tasks.length==0 && !loadingTasks) ? 'opacity-50 pointer-events-none' : ''}`}>
       <DropdownMenu>
         <DropdownMenuTrigger className={`p-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground`}>
-            <GrGraphQl size={23} />          
+          <HiOutlineTemplate size={23} />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>

@@ -101,7 +101,6 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
 
 
         if(resTasks){
-          //console.log(resTasks);
           const col1 = resUser.column1;
           const col2 = resUser.column2;
           const col3 = resUser.column3;

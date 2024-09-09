@@ -132,8 +132,8 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
                 <p className={`w-full flex justify-center`}>Relatórios</p>
               </DrawerTitle>
 
-              <DrawerDescription>
-                <p className={`w-full flex justify-center`}>Informações sobre suas atividades no aplicativo.</p>
+              <DrawerDescription className={`w-full flex justify-center`}>
+                Informações sobre suas atividades no aplicativo.
               </DrawerDescription>
 
             </DrawerHeader>

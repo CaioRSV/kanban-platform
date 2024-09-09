@@ -84,7 +84,7 @@ const FinishColumn = ({schema, users_schema, tasks_schema}: FinishColumnProps) =
         <div className={`flex gap-2 h-full items-center`}>
             <AlertDialog>
                 {/* Aplicando abaixo variant="outline" sem hydration error de button on button, e style equivalente a "rounded-full" */}
-                <AlertDialogTrigger className={buttonOutline_style} style={{borderRadius: '9999px'}}> 
+                <AlertDialogTrigger className={buttonOutline_style} style={{borderRadius: '9999px'}} disabled={column3.length==0}> 
                         <p className={`z-10`}>Confirmar conclusão</p>
                         <CiSaveUp1 className={`z-10 ml-[1px]`} size={25} />
                 </AlertDialogTrigger>
