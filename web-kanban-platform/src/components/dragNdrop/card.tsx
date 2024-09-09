@@ -34,7 +34,7 @@ import { GoTrash } from "react-icons/go";
 interface TaskCardProps{
     task: Task
     deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string, attribute?: string) => void;
+    updateTask: (id: Id, content: string, attribute: string) => void;
 }
 
 const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
@@ -85,7 +85,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                             className={`h-[80%] w-full resize-none bg-transparent focus:outline-none`}
                             value={tempDesc}
                             onChange={(e)=>{setTempDesc(e.target.value)}}
-                            onBlur={(e)=>{updateTask(task.id, tempDesc);setEditing(false);}}
+                            onBlur={(e)=>{updateTask(task.id, tempDesc, "description");setEditing(false);}}
                         />
                     </div>
 

@@ -24,6 +24,8 @@ import { ImSpinner8 } from "react-icons/im";
 import { User, Task } from '@/app/schemaWrapper';
 import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 
+import { getTasksFunction_GQL, getUserFunction_GQL } from '@/lib/graphQl_functions';
+
 interface SetUserModalProps{
   schema?: GraphQLSchema
   users_schema?: Record<string, User>
@@ -52,36 +54,7 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
   //
   
 
-  // Funções que atualizam informações dos contextos
-    // Atualizando contexto de tasks
-  async function updateInfoLocal(id: number[], col1:number[], col2:number[], col3:number[] ){
-    setLoadingTasks(true); // Loading nas colunas
-
-    const resFetch:Task[] = await fetch("/api/tasks?task="+id)
-      .then(res => res.json())
-      .then(data => data.resposta.rows);
-
-    if(resFetch.length>0){
-      setTasks(
-        resFetch.map( (item:Task) =>({
-          ...item,
-          id: Math.floor(Math.random()*10000),
-          columnId: 
-            col1.includes(item.id) ? 1 : 
-              col2.includes(item.id) ? 2 :
-                col3.includes(item.id) ? 3 :
-                0,
-          name: item.name,
-          serverId: item.id
-        })
-          ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
-      );
-    }
-
-    setLoadingTasks(false);
-  }
-
-  // Atualizando contexto de user
+  // Funções que atualizam informações dos contextos de User e Tasks (+GraphQL)
   async function setUserServer(userName:string){
 
     if(userName.length==0 || !schema) return;
@@ -100,30 +73,67 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
 
       const res = await loginFunction(userName, parseInt(userFound.id))
       
-      const resUser = await getUserFunction(userName);
-      const resTasks = await getTasksFunction();
-
-      console.log(resUser);
-      console.log("---");
-      console.log(resTasks);
-
+      const resUser = await getUserFunction_GQL(userName, schema);
+      
       if(resUser){
+        console.log(parseInt(resUser.id))
+        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
+
+        setLoadingTasks(true); // Loading nas colunas
+
         setUser(resUser.name);
         setId(parseInt(resUser.id));
+
+        setColumn1(resUser.column1);
+        setColumn2(resUser.column2);
+        setColumn3(resUser.column3);
 
         if(resUser.column1_name !== null && resUser.column1_name !==undefined) setColumn1_name(resUser.column1_name);
         if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
         if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
 
-        setColumn1(resUser.column1);
-        setColumn2(resUser.column2);
-        setColumn3(resUser.column3);
-      }
 
-      if(resTasks){
-        setTasks(resTasks)
-      }
+        if(resTasks){
+          const col1 = resUser.column1;
+          const col2 = resUser.column2;
+          const col3 = resUser.column3;
 
+          const resTasks_Filtered = resTasks.map(elem => ({
+            ...elem,
+            id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
+          }))
+
+          // console.log("******")
+          // console.log(resUser);
+          // console.log(users_schema);
+          // console.log(tasks_schema)
+          // console.log("*")
+          // console.log(resTasks);
+          // console.log(resTasks_Filtered);
+          
+          setTasks(
+            resTasks_Filtered.map( (item:Task) => ({
+              ...item,
+              id: Math.floor(Math.random()*10000),
+              columnId: 
+                col1.includes(item.id) ? 1 : 
+                  col2.includes(item.id) ? 2 :
+                    col3.includes(item.id) ? 3 :
+                    0,
+              name: item.name,
+              serverId: item.id
+            })
+              ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
+          
+          )
+        
+        }
+
+        setLoadingTasks(false);
+
+      }
+      
+      
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
       const createUserRes = await fetch("/api/user/add?name="+userName, {
@@ -146,9 +156,13 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
   
       const res = await loginFunction(userName, parseInt(userCreated.id))
       
-      const resUser = await getUserFunction(userName);
+      const resUser = await getUserFunction_GQL(userName, schema);
+
+      //console.log(resUser);
 
       if(resUser){
+        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
+        //console.log(resTasks)
         setUser(resUser.name);
         setId(parseInt(resUser.id));
       }
@@ -202,6 +216,12 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
           variableValues: vars_tasks
       })
 
+      const result_tasks_reforce: ExecutionResult = await graphql({
+        schema,
+        source: query_tasks,
+        variableValues: vars_tasks
+    })
+
       return {
         user_message: result,
         tasks_message: result_tasks
@@ -210,67 +230,6 @@ const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps 
 }
 
 //
-
-const getUserFunction = async (username: String): Promise<User | undefined> => {
-  if(schema){
-    const query = `
-  query getUser {
-    user(name: "${username}") {
-      id
-      name
-      column1
-      column1_name
-      column2
-      column2_name
-      column3
-      column3_name
-  }
-}
-  `
-  const result: ExecutionResult = await graphql({
-      schema,
-      source: query
-  })
-
-  if (result.data && result.data.user) {
-    const user: User = result.data.user as User;
-
-    return user
-  }
-
-  return undefined
-
-  }
-}
-
-//
-
-const getTasksFunction = async (done?: boolean): Promise<Task[] | undefined> => {
-  if(schema){
-    const query = `query AllTasks {
-      tasks(done: ${!done ? 'false' : (done ? 'true' : 'false')}){
-    id,
-    name,
-    description,
-    color,
-    done,
-    }
-    }`
-      const result: ExecutionResult = await graphql({
-          schema,
-          source: query
-      })
-      
-      if (result.data && result.data.tasks) {
-        const tasks: Task[] = result.data.tasks as Task[];
-    
-        return tasks
-      }
-    
-      return undefined
-  }
-}
-
 
   return (
     <>

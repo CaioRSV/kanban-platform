@@ -3,7 +3,10 @@ import React, { useState, useEffect, ReactNode } from 'react'
 
 import { graphql, ExecutionResult, GraphQLScalarType, Kind, GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+
 import DateTime from './api/graphql/resolve_defs';
+
+
 import App from './app';
 import SetUserModal from '@/components/setUserModal';
 
@@ -31,6 +34,7 @@ export interface Task {
     done?: boolean
 
     serverId: number
+    userid?: number
 };
 
 
@@ -65,7 +69,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     const [users, setUsers] =  useState<Record<string, User>>({});
     const [tasks, setTasks] =  useState<Record<string, Task>>({});
     
-    
     // Função populadora do Mock Object de início (login), único momento de fetch para funções primárias da aplicação
     async function fetchUserData(username: string): Promise<User | null> {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user?name=${username}`);
@@ -85,8 +88,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/getAll?user=${id}`);
         const data: ResponseTasks = await response.json();
       
-        //console.log(data);
-      
         if (data.resposta && data.resposta.rows.length > 0) {
           return data.resposta.rows;
         }
@@ -97,7 +98,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     
     const schemaString = `
       scalar DateTime
-    
+
       type User {
         id: ID!
         name: String!
@@ -123,23 +124,21 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     
       type Query {
         user(id: ID, name: String): User
-        tasks(id: ID, done: Boolean): [Task]  # Updated to return a list of tasks
+        tasks(id: ID, done: Boolean): [Task]
       }
     
       type Mutation {
         login(username: String!): String
         populateTasks(id: Int!): String
-        updateColumnName(id: ID!, column: String!, newColumnName: String!): User
-    
+        updateTask(id: ID!, attribute: String!, value: String!): Task
+        updateColumn(userId: ID!, column_name: String!, value: String!): User
+        addTask(id: ID!, name: String!, columnId: Int!, serverId: Int!, userId: Int!): Task
       }
     `;
     
     const resolvers = {
       Query: {
-        user: (_: unknown, { id, name }: { id?: string; name?: string }): User | undefined => {
-    
-          //console.log(users);
-    
+        user: (_: unknown, { id, name }: { id?: string; name?: string }): User | undefined => {    
           if (id) {
             return users[id];
           } else if (name) {
@@ -147,81 +146,167 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           }
           throw new Error('ID or name are required');
         },
-        tasks: (_: unknown, { done }: {id: string, done: boolean}): Task[] | undefined => {
-    
-            //console.log(users);
-            //console.log("=====================================")
-            //console.log(tasks);
-    
+        tasks: (_: unknown, { id, done }: {id: number, done: boolean}): Task[] | undefined => {
+
+          //console.log(id);
+          // console.log(Object.values(tasks))
+          // console.log(Object.values(tasks).filter(elem => elem.userid == id))
+
             try{
                 if(done!=undefined && done!=null){
-                    return Object.values(tasks).filter(elem => elem.done==done);
+                    // console.log("0040404004040-1")
+                    // console.log(Object.values(tasks).filter(elem => elem.done==done && elem.userid==id));
+
+                    return Object.values(tasks).filter(elem => elem.done==done && elem.userid==id);
                 }
                 else{
-                    return Object.values(tasks);
+                    // console.log("0040404004040-2")
+                    // console.log(Object.values(tasks).filter(elem => elem.userid==id))
+
+                    return Object.values(tasks).filter(elem => elem.userid==id);
                 }
             }
             catch{
                 throw new Error('ID or name are required');
             }
             
-    
         }
       },
       Mutation: {
         login: async (_: unknown, { username }: { username: string }): Promise<string> => {
-          if (Object.values(users).find((user) => user.name === username)) {
-            return 'Já logado';
-          }
     
           const userData = await fetchUserData(username);
     
           if (!userData) {
             throw new Error('User not found');
           }
-          
+
+
           users[userData.id.toString()] = userData;
 
-          setUsers(prev => ({...prev, [userData.id.toString()]: userData}))
-    
-          //console.log(users);
+          setUsers({[userData.id.toString()]: userData})
+
           return 'Logado com sucesso';
         },
         populateTasks: async (_: unknown, { id }: { id: number }): Promise<string> => {
-            if (Object.values(tasks).length > 0) {
-                //console.log(tasks)
-              return 'User already has tasks populated';
-            }
-      
             const userData = await fetchTasks(id);
-      
+
             if (!userData) {
               //console.log('Tasks not found');
             }
-            
+
+            const newTasks: Record<string, Task> = {}
+
             userData?.forEach(elem => {
-                tasks[elem.id] = elem
+                newTasks[elem.id] = elem
             })
-      
-            //console.log(tasks);
+
+            //console.log(newTasks);
+
+            setTasks(newTasks)
+
             return 'Tasks populadas com sucesso';
           },
-    
-        updateColumnName: (
-          _: unknown,
-          { id, column, newColumnName }: { id: string; column: string; newColumnName: string }
-        ): User | undefined => {
-          const user = users[id];
+        updateTask: (_: unknown, { id, attribute, value }: { id: number, attribute: string, value: string}): Task | null => {
+          const foundTask = tasks[id.toString()];
+          if(foundTask){
+
+            if(attribute=="name"){
+              const alteredTask: Task = {
+                ...foundTask,
+                name: value
+              }
+
+              tasks[id] = alteredTask;
+
+              return alteredTask;
+            }
+            else if (attribute=="description"){
+              const alteredTask: Task = {
+                ...foundTask,
+                description: value
+              }
+
+              tasks[id] = alteredTask;
+
+              return alteredTask;
+            }
+            else if (attribute=="color"){
+              const alteredTask: Task = {
+                ...foundTask,
+                color: value
+              }
+
+              tasks[id] = alteredTask;
+
+              return alteredTask;
+            }
+
+            else if (attribute=="done"){
+              const alteredTask: Task = {
+                ...foundTask,
+                done: (value) ? true : false
+              }
+
+              tasks[id] = alteredTask;
+
+              return alteredTask;
+            }
+
+          }
+          return null;
+        },
+
+        updateColumn: (_: unknown, {userId, column_name, value }: { userId:number, column_name: string, value: string}): User | null => {
+          const user = users[userId.toString()];
           if (user) {
-            if (['column1', 'column2', 'column3'].includes(column)) {
-              (user as any)[`${column}_name`] = newColumnName;
+            if (['column1', 'column2', 'column3'].includes(column_name)) {
+              (user as any)[`${column_name}_name`] = value;
+              
               return user;
+            
             } else {
-              throw new Error('Invalid column name');
+              throw new Error('Nome de coluna inválido');
             }
           }
-          throw new Error('User not found');
+          throw new Error('UserID inválido');
         },
+
+        addTask: (_: unknown, {id, name, columnId, serverId, userId} : {id: number, name: string, columnId: number, serverId: number, userId: number}): Task | null => {
+          
+          const resElem = {
+            id: id,
+            name: name,
+            columnId: columnId,
+            serverId: serverId,
+            userid: userId,
+            done: false
+          }
+          
+          tasks[id.toString()] = resElem;
+
+          if(columnId==1){
+            users[userId.toString()] = {
+              ...users[userId.toString()],
+              column1: [...users[userId.toString()].column1, id]
+            }
+          }
+          else if(columnId==2){
+            users[userId.toString()] = {
+              ...users[userId.toString()],
+              column2: [...users[userId.toString()].column2, id]
+            }
+          } 
+          else if(columnId==3){
+            users[userId.toString()] = {
+              ...users[userId.toString()],
+              column3: [...users[userId.toString()].column3, id]
+            }
+          }
+
+          return resElem;
+
+        }
       },
       DateTime
     };

@@ -26,6 +26,8 @@ import { onDragOver } from './functions/dnd_functions';
 import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { User } from '@/app/schemaWrapper';
 
+import { addTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
+
 // Types
 
 export type Id = string | number;
@@ -66,7 +68,7 @@ interface WorkspaceProps{
 const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     // Contextos
     const {
-        id,
+        user, id,
         setColumn1_name, column1_name,
         setColumn2_name, column2_name,
         setColumn3_name, column3_name,
@@ -150,6 +152,9 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         paramStack += `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
 
         fetch("/api/user/update"+paramStack);
+
+        // GraphQL ---
+        updateColumn_GQL(id, `column${columnId}`, title, schema);
     }
 
     function updateColumn(id: Id, title: string){
@@ -169,28 +174,30 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     }
 
     async function addTask(columnId: Id, definedObject?: Task){
-        if(definedObject){
-            if(!tasks.find(item => item.serverId == definedObject.id)){
-                setTasks([...tasks, definedObject]);
-            }
-        }
-        else{
-            let newId =  Math.floor(getDateID());
+        // if(definedObject){
+        //     if(!tasks.find(item => item.serverId == definedObject.id)){
+        //         setTasks([...tasks, definedObject]);
+        //     }
+        // }
+        // else{
+        //     let newId =  Math.floor(getDateID());
 
-            const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
-                .then(res => res.json())
-                .then(data => data.resposta.id);
+        //     const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
+        //         .then(res => res.json())
+        //         .then(data => data.resposta.id);
 
-            const newTask: Task = {
-                id: newId,
-                name: "Nova tarefa",
-                columnId: columnId,
-                serverId: parseInt(res)
-            }
+        //     const newTask: Task = {
+        //         id: newId,
+        //         name: "Nova tarefa",
+        //         columnId: columnId,
+        //         serverId: parseInt(res)
+        //     }
 
-            setTasks([...tasks, newTask]);
+        //     setTasks([...tasks, newTask]);
 
-        }
+        // }
+
+        addTask_GQL(190239,"teste", 1, 101, 1725277995, schema)
 
     }
 
@@ -216,7 +223,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         setTasks([...newTasks, newTask]);
     }
 
-    function updateTask(localId: Id, content: string, attribute?: string){
+    function updateTask(localId: Id, content: string, attribute: string){
 
         const serverId_chosen = tasks.find(item => item.id==localId)?.serverId
 
@@ -239,7 +246,15 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
             }
         });
 
-        setTasks(newTasks);  
+        setTasks(newTasks);
+
+
+        // GraphQL ---
+
+        if(serverId_chosen){
+            updateTask_GQL(serverId_chosen, attribute, content, schema);
+        }
+
     }
 
     //
@@ -265,7 +280,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         schema,
         source: query
     })
-    console.log(result);
+    //console.log(result);
     }
     }
 
@@ -299,8 +314,6 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
             onDragOver={(e)=>{onDragOver(e, tasks, setTasks)}}
             sensors={sensors} collisionDetection={closestCorners}
         >
-        <p className={`p-2 bg-emerald-300 m-2`} onClick={()=>{console.log(id)}}>SHOW USER</p>
-        <p className={`p-2 bg-emerald-500 m-2`} onClick={()=>{console.log(tasks)}}>SHOW TASKS</p>
             <SortableContext items={columnsId}>
                 {
                     columns.map(col => (
@@ -310,6 +323,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
                                 addTask={addTask} 
                                 deleteTask={deleteTask}
                                 updateTask={updateTask}
+                                schema={schema}
                                 />
                         </div>
                     ))

@@ -18,16 +18,22 @@ import { Button } from '../ui/button';
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { GraphQLSchema } from 'graphql';
+import { User } from '@/app/schemaWrapper';
 
 interface TaskColumnProps {
     column: Column;
     updateColumn: (id: Id, title: string) => void;
     addTask: (columnId: Id, definedObject?: Task) => void;
     deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string, attribute?: string) => void;
+    updateTask: (id: Id, content: string, attribute: string) => void;
+
+    schema?: GraphQLSchema
+    users_schema?: Record<string, User>
+    tasks_schema?: Record<string, Task>
 }
 
-const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask}) => {
+const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask, schema}) => {
 
     const {tasks} = useTaskContext();
     const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
@@ -169,7 +175,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                             <IoMdAdd size={20}/>
                         </Button>
                         {
-                            column.id == 3 && <FinishColumn/>
+                            column.id == 3 && <FinishColumn schema={schema}/>
                         }
 
 

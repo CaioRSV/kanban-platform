@@ -9,6 +9,7 @@ import SaveColumns from '@/components/saveColumns';
 import GraphQlMocker from '@/components/graphQlMocker';
 import { GraphQLSchema } from 'graphql';
 import SchemaWrapper from './schemaWrapper';
+import SchemaVisualizer from '../components/SchemaVisualizer';
 
 // SetUserModal: Pop up/alerta de definição de usuário/área de trabalho 
 // TopBar: Elementos do topo da página
@@ -31,6 +32,8 @@ export default function App() {
             
             <div className={`flex w-[80%] pt-4 pb-4`}>
               <GraphQlMocker/>
+              <div className={`flex-1`}/>
+              <SchemaVisualizer/>
               <div className={`flex-1`}/>
               <SaveColumns/>
             </div>
