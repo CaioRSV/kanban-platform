@@ -33,7 +33,7 @@ import { GoTrash } from "react-icons/go";
 
 interface TaskCardProps{
     task: Task
-    deleteTask: (id: Id) => void;
+    deleteTask: (serverId: Id, localId: Id) => void;
     updateTask: (id: Id, content: string, attribute: string) => void;
 }
 
@@ -163,7 +163,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
 
         
             <ContextMenuContent>
-                <ContextMenuItem onClick={()=>{deleteTask(task.id)}}>
+                <ContextMenuItem onClick={()=>{deleteTask(task.serverId, task.id)}}>
                     <div className={`flex gap-2`}>
                         <p>Excluir tarefa</p>
                         <GoTrash size={16} />

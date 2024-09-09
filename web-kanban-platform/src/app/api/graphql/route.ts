@@ -133,8 +133,6 @@ const resolvers = {
     tasks: (_: unknown, { done }: {id: string, done: boolean}): Task[] | undefined => {
 
         console.log(users);
-        console.log("=====================================")
-        console.log(tasks);
 
         try{
             if(done!=undefined && done!=null){
@@ -179,6 +177,9 @@ const resolvers = {
         if (!userData) {
           console.log('Tasks not found');
         }
+        console.log('================1')
+        console.log(userData);
+        console.log('================2')
         
         userData?.forEach(elem => {
             tasks[elem.id] = elem

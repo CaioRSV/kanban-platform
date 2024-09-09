@@ -20,12 +20,13 @@ import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { GraphQLSchema } from 'graphql';
 import { User } from '@/app/schemaWrapper';
+import { orderColumn_GQL } from '@/lib/graphQl_functions';
 
 interface TaskColumnProps {
     column: Column;
     updateColumn: (id: Id, title: string) => void;
     addTask: (columnId: Id, definedObject?: Task) => void;
-    deleteTask: (id: Id) => void;
+    deleteTask: (serverId: Id, localId: Id) => void;
     updateTask: (id: Id, content: string, attribute: string) => void;
 
     schema?: GraphQLSchema
@@ -42,7 +43,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
     const [tempColName, setTempColName] = useState<string>(column.title);
 
     const {
-        user,
+        user, id,
         column1_name,
         column2_name,
         column3_name,
@@ -95,6 +96,17 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         setColumn3(
             (tasks.filter(item => item.columnId==3)).map(elem => elem.serverId)
         )
+
+        console.log('===')
+
+        // GraphQL ---
+
+        for(let i=1;i<=3;i++){
+            orderColumn_GQL(id, `column${i}`,
+                (tasks.filter(item => item.columnId == i)).map(elem => elem.serverId)
+            , schema);
+        }
+
     }, [tasks])
 
 

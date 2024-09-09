@@ -26,7 +26,7 @@ import { onDragOver } from './functions/dnd_functions';
 import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { User } from '@/app/schemaWrapper';
 
-import { addTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
+import { addTask_GQL, deleteTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
 
 // Types
 
@@ -174,36 +174,39 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     }
 
     async function addTask(columnId: Id, definedObject?: Task){
-        // if(definedObject){
-        //     if(!tasks.find(item => item.serverId == definedObject.id)){
-        //         setTasks([...tasks, definedObject]);
-        //     }
-        // }
-        // else{
-        //     let newId =  Math.floor(getDateID());
+        if(definedObject){
+            if(!tasks.find(item => item.serverId == definedObject.id)){
+                setTasks([...tasks, definedObject]);
+            }
+        }
+        else{
+            let newId =  Math.floor(getDateID()/100);
 
-        //     const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
-        //         .then(res => res.json())
-        //         .then(data => data.resposta.id);
+            const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
+                .then(res => res.json())
+                .then(data => data.resposta.id);
 
-        //     const newTask: Task = {
-        //         id: newId,
-        //         name: "Nova tarefa",
-        //         columnId: columnId,
-        //         serverId: parseInt(res)
-        //     }
+            const newTask: Task = {
+                id: newId,
+                name: "Nova tarefa",
+                columnId: columnId,
+                serverId: parseInt(res)
+            }
+            
+            // GraphQL ---
+            addTask_GQL(parseInt(res), "Nova tarefa", parseInt(columnId.toString()), parseInt(res), id, schema)
 
-        //     setTasks([...tasks, newTask]);
+            setTasks([...tasks, newTask]);
 
-        // }
-
-        addTask_GQL(190239,"teste", 1, 101, 1725277995, schema)
+        }
 
     }
 
-    function deleteTask(id: Id){
-        const newTasks = tasks.filter(task => task.id != id);
+    function deleteTask(serverId: Id, localId: Id){
+        const newTasks = tasks.filter(task => task.id != localId);
         setTasks(newTasks);
+        console.log(serverId+" ; "+localId);
+        deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), schema)
     }
 
     async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
@@ -341,7 +344,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
                                 <ColumnElement column={activeColumn} 
                                     updateColumn={updateColumn} 
                                     addTask={addTask}
-                                    deleteTask={()=>{deleteTask(activeColumn.id)}}
+                                    deleteTask={deleteTask}
                                     updateTask={updateTask}
                                 />
                             }

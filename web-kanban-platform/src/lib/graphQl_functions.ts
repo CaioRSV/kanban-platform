@@ -100,8 +100,8 @@ export const updateTask_GQL = async (id: number, attribute: string, value: strin
 }
 
 export const addTask_GQL = async (id: number, name: String, columnId: number, serverId: number, userId: number, schema?: GraphQLSchema) =>{
-    if(schema){
-        const query = `mutation addTask($id: ID!, $name: String!, $columnId: Int!, $serverId: Int!, $userId: Int!) {
+  if(schema){
+        const query = `mutation addTask($id: Int!, $name: String!, $columnId: Int!, $serverId: Int!, $userId: Int!) {
             addTask(id: $id, name: $name, columnId: $columnId, serverId: $serverId, userId: $userId){
                     id,
                     name,
@@ -125,11 +125,43 @@ export const addTask_GQL = async (id: number, name: String, columnId: number, se
               variableValues: vars
           })
         
+          // console.log("¨¨¨¨")
+          // console.log(result);
+          return result;
+    }
+}
+
+//
+
+export const deleteTask_GQL = async (id: number, userId:string, schema?: GraphQLSchema) =>{
+  if(schema){
+        const query = `mutation removeTask($id: Int!, $userId: ID!) {
+            deleteTask(id: $id, userId: $userId){
+                    id,
+                    name,
+                    columnId,
+                    color
+                }
+            }
+          `
+      
+          const vars = {
+              "id": id,
+              "userId": userId
+          }
+      
+          const result: ExecutionResult = await graphql({
+              schema,
+              source: query,
+              variableValues: vars
+          })
+        
           console.log("¨¨¨¨")
           console.log(result);
           return result;
     }
 }
+
 
 //
 
@@ -161,4 +193,36 @@ export const updateColumn_GQL = async (userId: number, columnName: string, value
           console.log(result);
           return result;
     }
+}
+
+//
+
+export const orderColumn_GQL = async (userId: number, columnName: string, value: number[], schema?: GraphQLSchema) =>{
+  if(schema){
+      const query = `mutation OrderColumn($userId: ID!, $column_name: String!, $value: [Int]!) {
+          orderColumn(userId: $userId, column_name: $column_name, value: $value){
+                  id,
+                  name,
+                  column1_name,
+                  column2_name,
+                  column3_name
+              }
+          }
+        `
+    
+        const vars = {
+            "userId": userId,
+            "column_name": columnName,
+            "value": value
+        }
+    
+        const result: ExecutionResult = await graphql({
+            schema,
+            source: query,
+            variableValues: vars
+        })
+      
+        console.log(result);
+        return result;
+  }
 }

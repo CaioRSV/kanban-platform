@@ -132,9 +132,14 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         populateTasks(id: Int!): String
         updateTask(id: ID!, attribute: String!, value: String!): Task
         updateColumn(userId: ID!, column_name: String!, value: String!): User
-        addTask(id: ID!, name: String!, columnId: Int!, serverId: Int!, userId: Int!): Task
+        addTask(id: Int!, name: String!, columnId: Int!, serverId: Int!, userId: Int!): Task
+        deleteTask(id: Int!, userId: ID!): Task
+        orderColumn(userId: ID!, column_name: String!, value: [Int]!): User
       }
     `;
+
+    // Uso de INT ao invés do ID em alguns casos de organização de colunas
+    // para manter a lógica original de contextos do código
     
     const resolvers = {
       Query: {
@@ -256,7 +261,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
           }
           return null;
         },
-
         updateColumn: (_: unknown, {userId, column_name, value }: { userId:number, column_name: string, value: string}): User | null => {
           const user = users[userId.toString()];
           if (user) {
@@ -273,132 +277,79 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         },
 
         addTask: (_: unknown, {id, name, columnId, serverId, userId} : {id: number, name: string, columnId: number, serverId: number, userId: number}): Task | null => {
-          
-          const resElem = {
-            id: id,
-            name: name,
-            columnId: columnId,
-            serverId: serverId,
-            userid: userId,
-            done: false
-          }
-          
-          tasks[id.toString()] = resElem;
+        const resElem = {
+          id: id,
+          name: name,
+          columnId: columnId,
+          serverId: serverId,
+          userid: userId,
+          done: false
+        };
 
-          if(columnId==1){
-            users[userId.toString()] = {
-              ...users[userId.toString()],
-              column1: [...users[userId.toString()].column1, id]
-            }
-          }
-          else if(columnId==2){
-            users[userId.toString()] = {
-              ...users[userId.toString()],
-              column2: [...users[userId.toString()].column2, id]
-            }
-          } 
-          else if(columnId==3){
-            users[userId.toString()] = {
-              ...users[userId.toString()],
-              column3: [...users[userId.toString()].column3, id]
-            }
-          }
+        tasks[id.toString()] = resElem;
 
-          return resElem;
+        if(
+          users[userId.toString()].column1.includes(id) ||
+          users[userId.toString()].column2.includes(id) ||
+          users[userId.toString()].column3.includes(id)
+          ) return null;
 
+        if (columnId === 1) {
+          users[userId.toString()].column1 = [...users[userId.toString()].column1, id];
+        } else if (columnId === 2) {
+          users[userId.toString()].column2 = [...users[userId.toString()].column2, id];
+        } else if (columnId === 3) {
+          users[userId.toString()].column3 = [...users[userId.toString()].column3, id];
         }
+
+        return resElem;
+      },
+
+      deleteTask: (_: unknown, {id, userId} : {id: number, userId: string}): Task | null => {
+        
+        const deletedTask = tasks[id];
+
+        users[userId] = {
+          ...users[userId],
+          column1: users[userId].column1.filter(elem => elem!=id),
+          column2: users[userId].column2.filter(elem => elem!=id),
+          column3: users[userId].column3.filter(elem => elem!=id)
+        }
+        // console.log('!!!!!!!!!!')
+        // //console.log(tasks);
+        // //console.log(deletedTask);
+        // console.log(id.toString());
+        // console.log(tasks[id.toString()]);
+        // console.log('!!!!!!!!!!')
+
+        delete tasks[id.toString()];
+
+        return deletedTask
+      },
+
+      orderColumn: (_: unknown, {userId, column_name, value }: { userId:number, column_name: string, value: number[]}): User | null => {
+        const user = users[userId.toString()];
+        if (user) {
+          if (['column1', 'column2', 'column3'].includes(column_name)) {
+            (user as any)[`${column_name}`] = value;
+            return user;
+          
+          } else {
+            throw new Error('Coluna inválida');
+          }
+        }
+        throw new Error('UserID inválido');
+      }
+
       },
       DateTime
     };
     
     const schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
 
-    const loginFunction = async () =>{
-        const query = `mutation Login($username: String!) {
-          login(username: $username)
-          }
-        `
 
-        const vars = {
-            "username": "Caio",
-            "id": 1725277995
-        }
-
-        const result: ExecutionResult = await graphql({
-            schema,
-            source: query,
-            variableValues: vars
-        })
-
-        //console.log(result);
-    }
-
-    const popFunction = async () =>{
-        const query = `mutation PopTasks($id: Int!) {
-          populateTasks(id: $id)
-        }
-        `
-
-        const vars = {
-            "username": "Caio",
-            "id": 1725277995
-        }
-
-        const result: ExecutionResult = await graphql({
-            schema,
-            source: query,
-            variableValues: vars
-        })
-        //console.log(result);
-    }
-
-    const getUserFunction = async () =>{
-        const query = `
-        query getUser {
-        user(name: "Caio") {
-          id
-          name
-          column1
-          column1_name
-					column2
-					column2_name
-					column3
-					column3_name
-  }
-}
-        `
-        const result: ExecutionResult = await graphql({
-            schema,
-            source: query
-        })
-        //console.log(result);
-    }
-
-    const getTasksFunction = async () =>{
-        const query = `query AllTasks {
-        tasks(done: true){
-		id,
-		name,
-		description,
-		color,
-		done,
-	}
-}`
-        const result: ExecutionResult = await graphql({
-            schema,
-            source: query
-        })
-        //console.log(result);
-    }
-
-
-      // Pass schemaObject to children
-
-
-  // Helper function to recursively clone children and pass props
   const cloneChildrenWithProps = (child: ReactNode): ReactNode => {
       if (React.isValidElement(child)) {
-        // Recursively apply the function to children
         const clonedChild = React.cloneElement(
           child as React.ReactElement<ChildComponentProps>,
           { schema, users_schema: users, tasks_schema: tasks },
@@ -409,7 +360,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       return child;
     };
 
-    // Recursively apply props to all children
     const childrenWithProps = React.Children.map(children, cloneChildrenWithProps);
 
     return <>{childrenWithProps}</>;

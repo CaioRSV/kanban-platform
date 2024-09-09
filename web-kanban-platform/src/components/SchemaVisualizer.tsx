@@ -52,8 +52,8 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
        ));
 
        setUserQuery(JSON.stringify(resUser));
-       setTasksQuery(JSON.stringify(presentTasks))
-       setDoneTasksQuery(JSON.stringify(resDoneTasks))
+       setTasksQuery(JSON.stringify(presentTasks));
+       setDoneTasksQuery(JSON.stringify(resDoneTasks));
     }
   }
 
@@ -69,34 +69,36 @@ const SchemaVisualizer = ({schema, users_schema, tasks_schema} : WorkspaceProps)
                     </AlertDialogHeader>
 
                     <div className={`w-full h-[400px] overflow-y-scroll flex flex-col gap-2`}>
-                      <div className={`w-full flex-1`}>
+                      <div className={`w-full flex-1 flex justify-center`}>
 
-                        <p>Query Users:</p>
-                        <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
-                          <JSONPretty id="user-pretty" data={userQuery}></JSONPretty>
+                        <div className={`w-[90%]`}>
+                          <p>Query Users:</p>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                            <JSONPretty id="user-pretty" data={userQuery}></JSONPretty>
+                          </div>
                         </div>
 
                       </div>
 
-                      <div className={`w-full flex-1`}>
-                      <p>Query Current Tasks:</p>
-                      <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
-                        <JSONPretty id="tasks-pretty" data={tasksQuery}></JSONPretty>
-                      </div>
-                      </div>
-
-
-                      <div className={`w-full flex-1`}>
-                      <p>Query Done Tasks:</p>
-                      <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
-                        <JSONPretty id="tasks-pretty" data={doneTasksQuery}></JSONPretty>
-                      </div>
+                      <div className={`w-full flex-1 flex justify-center`}>
+                        <div className={`w-[90%]`}>
+                          <p>Query Current Tasks:</p>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                            <JSONPretty id="tasks-pretty" data={tasksQuery}></JSONPretty>
+                          </div>
+                        </div>
+                    
                       </div>
 
+                      <div className={`w-full flex-1 flex justify-center`}>
+                        <div className={`w-[90%]`}>
+                          <p>Query Done Tasks:</p>
+                          <div className={`w-full max-h-[250px] min-h-[20px] rounded-md bg-black text-white overflow-y-scroll`}>
+                            <JSONPretty id="tasks-pretty" data={doneTasksQuery}></JSONPretty>
+                          </div>
+                        </div>
 
-
-
-
+                      </div>
 
                     </div>
                     <AlertDialogCancel>Voltar</AlertDialogCancel>
