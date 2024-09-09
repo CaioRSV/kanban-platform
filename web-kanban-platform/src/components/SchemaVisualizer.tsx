@@ -165,6 +165,8 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
                     </AlertDialogHeader>
 
                     <div className={`w-full h-[400px] overflow-y-scroll flex flex-col gap-2`}>
+                      <Divisor/>
+
                       <div className={`w-full flex-1 flex justify-center`}>
                         <QueryResContainer title="Query - Usuário atual" querySet={userQuery ?? ""} queryInfo={query_user}/>
                       </div>
@@ -180,6 +182,8 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
                       <div className={`w-full flex-1 flex justify-center`}>
                         <QueryResContainer title="Query - Tarefas concluídas" querySet={doneTasksQuery ?? ""} queryInfo={query_tasks_done}/>
                       </div>
+
+                      <Divisor/>
 
                     </div>
                     <AlertDialogCancel>Voltar</AlertDialogCancel>

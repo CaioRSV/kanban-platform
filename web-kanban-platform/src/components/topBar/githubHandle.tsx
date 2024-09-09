@@ -14,7 +14,7 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 const GithubHandle = () => {
   return (
     <HoverCard>
-        <HoverCardTrigger asChild>
+        <HoverCardTrigger>
             <div className="inline-flex items-center justify-center">
                 <a href="https://github.com/CaioRSV" target="_blank">
                     <Button variant="link" className={`m-2 -mt-3 w-fit`}>
