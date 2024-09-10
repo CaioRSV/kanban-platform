@@ -4,7 +4,7 @@ import React, { useState, ReactNode } from 'react'
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-import DateTime from './api/graphql/resolve_defs';
+import DateTime from '../lib/resolve_defs';
 
 
 export type Id = string | number;
