@@ -7,13 +7,14 @@ import GraphDrawer from '@/components/graphBar/graphDrawer';
 
 import SaveColumns from '@/components/saveColumns';
 import GraphQlMocker from '@/components/graphQlMocker';
-import { GraphQLSchema } from 'graphql';
 import SchemaWrapper from './schemaWrapper';
 import SchemaVisualizer from '../components/SchemaVisualizer';
 
+// SchemaWrapper: "Provider" de props da base GraphQL local mockada para permitir queries e mutations nela
+
 // SetUserModal: Pop up/alerta de definição de usuário/área de trabalho 
 // TopBar: Elementos do topo da página
-// GraphQlMocker: Botão para importação de templates (query utilizando GraphQL Tools - Mock)
+// GraphQlMocker: Botão para importação de templates (Base GraphQL isolada, da primeira versão do projeto)
 // SaveColumns: Botão que salva modificações na área de trabalho
 // Workspace: Área Kanban
 // GraphDrawer: Botão que apresenta o Drawer com relatórios em formato de gráfico

@@ -161,7 +161,7 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
                 <AlertDialogDescription>GraphQL Visualizer</AlertDialogDescription>
 
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Status local da base GraphQL</AlertDialogTitle>
+                        <AlertDialogTitle>Status da base local GraphQL</AlertDialogTitle>
                     </AlertDialogHeader>
 
                     <div className={`w-full h-[400px] overflow-y-scroll flex flex-col gap-2`}>

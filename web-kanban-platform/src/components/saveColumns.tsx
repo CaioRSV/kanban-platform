@@ -13,9 +13,8 @@ const SaveColumns = () => {
         column1,
         column2,
         column3,
-        } = useUserContext();
+    } = useUserContext();
         
-
     // Variáveis de timing
     const [confirmed, setConfirmed] = useState<boolean>(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -40,7 +39,7 @@ const SaveColumns = () => {
 
         timeoutRef.current = setTimeout(() => {
             setConfirmed(false);
-        }, 700);
+        }, 700); // Delay para sumir o ícone de confirmação
     }
 
 

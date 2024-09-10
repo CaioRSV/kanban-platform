@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -142,11 +141,11 @@ export default function GraphQlMocker({schema}: GraphQlMockerProps) {
           const templateData = result.data as { template: TemplateData };
           setTodo(templateData.template.tasks);
         } else {
-          console.error("Unexpected result structure:", result);
+          console.error("Estrutura não compatível:", result);
         }
       })
       .catch((error) => {
-        console.error("Error fetching todo:", error);
+        console.error("Erro no fetching:", error);
       });
 
       return [];
@@ -179,6 +178,7 @@ export default function GraphQlMocker({schema}: GraphQlMockerProps) {
         let newId =  Math.floor(Math.random()*10000);
         const clr = definedObject.color ?? '1'
         
+        // Conversação necessária com o banco
         const res = await fetch(`/api/tasks/add?user=${id}&name=${definedObject.name}&description=${definedObject.description}&color=${Object.keys(priorityColorObject).includes(clr) ? priorityColorObject[clr] : 'white'}`)
             .then(res => {
               if(!res.ok){
@@ -204,6 +204,7 @@ export default function GraphQlMocker({schema}: GraphQlMockerProps) {
         return newTask;
         }
         else{
+          //Fallback editable
           const newTask: Task = {
             id: -1,
             name: '',
@@ -237,7 +238,7 @@ export default function GraphQlMocker({schema}: GraphQlMockerProps) {
       const processTasks = async (tasks: Task[]) => {
         for (const item of tasks) {
           newTaskList.push(await addTask(1, item));
-          await sleep(1200);
+          await sleep(1200); // Workaround evitar a necessidade de um aprimoramento na conversação sincronizada (REST) com o banco
         }
       };
 

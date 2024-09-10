@@ -19,19 +19,14 @@ import { Input } from "@/components/ui/input"
 import { RiLoginCircleLine } from "react-icons/ri";
 import { ImSpinner8 } from "react-icons/im";
 
-//---
-
-import { User, Task } from '@/app/schemaWrapper';
+import { Task } from '@/app/schemaWrapper';
 import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 
 import { getTasksFunction_GQL, getUserFunction_GQL } from '@/lib/graphQl_functions';
 
 interface SetUserModalProps{
   schema?: GraphQLSchema
-  users_schema?: Record<string, User>
-  tasks_schema?: Record<string, Task>
 }
-
 
 const SetUserModal = ( {schema } : SetUserModalProps ) => {
   // Contextos
@@ -62,7 +57,7 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
 
     setLoading(true);
 
-    // Parte REST apenas para verificação se usuário existe ou não (simplicidade)
+    // Parte REST (populating) apenas para verificação se usuário existe ou não (simplicidade)
     const userRes = await fetch("/api/user?name="+userName, {
         method: 'GET'
       })
@@ -72,12 +67,12 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
     if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
-      const res = await loginFunction(userName, parseInt(userFound.id))
+      await loginFunction(userName, parseInt(userFound.id)); // Setando usuário e populando tasks na base
       
-      const resUser = await getUserFunction_GQL(userName, schema);
+      const resUser = await getUserFunction_GQL(userName, schema); // Fetch user data na base
       
       if(resUser){
-        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
+        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema); // Fetch tasks do user
 
         setLoadingTasks(true); // Loading nas colunas
 
@@ -98,14 +93,13 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
           const col2 = resUser.column2;
           const col3 = resUser.column3;
 
+          // typing
           const resTasks_Filtered = resTasks.map(elem => ({
             ...elem,
             id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
           }))
 
-          console.log('there is')
-          console.log(resTasks_Filtered)
-
+          // Atualizando localmente as tasks
           setTasks(
             resTasks_Filtered.map( (item:Task) => ({
               ...item,
@@ -119,8 +113,8 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
               serverId: item.id
             })
               ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
-          
           )
+          // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
         
         }
 
@@ -132,7 +126,7 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
       const createUserRes = await fetch("/api/user/add?name="+userName, {
-        method: 'GET'
+        method: 'GET' // Se cria o usuário no banco com REST (populating, necessário)
       })
       .then(res => res.json())
       .then(data => {
@@ -144,20 +138,17 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
       }
 
       const userCreated = await fetch("/api/user?name="+userName, {
-        method: 'GET'
+        method: 'GET' // Se busca mais uma vez no banco para finalmente transferir de vez para a base local GraphQL
       })
       .then(res => res.json())
       .then(data => data.resposta.rows);
   
-      const res = await loginFunction(userName, parseInt(userCreated.id))
+      await loginFunction(userName, parseInt(userCreated.id))
       
       const resUser = await getUserFunction_GQL(userName, schema);
 
-      //console.log(resUser);
 
       if(resUser){
-        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema);
-        //console.log(resTasks)
         setUser(resUser.name);
         setId(parseInt(resUser.id));
       }
@@ -168,14 +159,11 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
 
   }
 
-
-  //
-
   const loginFunction = async (username: String, userId: number) => {
     if(schema){  
       const query = `
           mutation Login($username: String!) {
-        login(username: $username)
+          login(username: $username)
         }
       `
 
@@ -208,6 +196,7 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
           variableValues: vars_tasks
       })
 
+      // Para debugging
       return {
         user_message: result,
         tasks_message: result_tasks

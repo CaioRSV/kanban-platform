@@ -8,15 +8,10 @@ import { Switch } from "@/components/ui/switch"
 
 import { FaRegDotCircle } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
-import { useUserContext } from '../contexts/userContext';
-import { useTaskContext } from '../contexts/tasksContext';
 
 const ThemeSwitch = () => {
   const {theme, setTheme} = useTheme();
 
-  const { user, id } = useUserContext();
-  const {tasks} = useTaskContext();
- 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -31,10 +26,9 @@ const ThemeSwitch = () => {
       </>;
   }
 
-
   return (
     <div className={`flex gap-2`} >
-        <FaRegLightbulb size={20} className={`text-slate-600`} onChange={()=>{setTheme('dark')}}/>
+        <FaRegLightbulb size={20} className={`text-slate-600`}/>
         <Switch checked={theme=='light'} onCheckedChange={()=>{setTheme(theme=='light'?'dark':'light')}}/>
     </div>
   )

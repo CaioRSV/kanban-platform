@@ -23,12 +23,11 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { onDragStart } from './functions/dnd_functions';
 import { onDragEnd } from './functions/dnd_functions';
 import { onDragOver } from './functions/dnd_functions';
-import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
-import { User } from '@/app/schemaWrapper';
+import { GraphQLSchema } from 'graphql';
 
 import { addTask_GQL, deleteTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
 
-// Types
+// Local Types (minor differences from GraphQL local base, but doesnt matter too much, minor type adapts)
 
 export type Id = string | number;
 
@@ -56,16 +55,11 @@ const getDateID = () => {
     return Date.now()/10
 }
 
-
-//
-
 interface WorkspaceProps{
     schema?: GraphQLSchema
-    users_schema?: Record<string, User>
-    tasks_schema?: Record<string, Task>
 }
 
-const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
+const Workspace = ({schema}:WorkspaceProps) => {
     // Contextos
     const {
         user, id,
@@ -151,6 +145,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         paramStack += `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
         paramStack += `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
 
+        // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
         fetch("/api/user/update"+paramStack);
 
         // GraphQL ---
@@ -182,9 +177,12 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         else{
             let newId =  Math.floor(getDateID()/100);
 
+            // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
             const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
                 .then(res => res.json())
                 .then(data => data.resposta.id);
+
+            // GraphQL ---
 
             const newTask: Task = {
                 id: newId,
@@ -192,12 +190,10 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
                 columnId: columnId,
                 serverId: parseInt(res)
             }
-            
-            // GraphQL ---
+
             addTask_GQL(parseInt(res), "Nova tarefa", parseInt(columnId.toString()), parseInt(res), id, schema)
 
             setTasks([...tasks, newTask]);
-
         }
 
     }
@@ -205,7 +201,6 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     function deleteTask(serverId: Id, localId: Id){
         const newTasks = tasks.filter(task => task.id != localId);
         setTasks(newTasks);
-        console.log(serverId+" ; "+localId);
         deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), schema)
     }
 
@@ -232,6 +227,7 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
 
         const newTasks = tasks.map((task) => {
             if(task.id === localId && content.length>0){
+                // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
                 fetch(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content)
                 
                 if (attribute == 'name'){
@@ -259,56 +255,6 @@ const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
         }
 
     }
-
-    //
-
-
-    const getUserFunction = async () =>{
-        if(schema){
-          const query = `
-        query getUser {
-        user(name: "Caio") {
-          id
-          name
-          column1
-          column1_name
-          column2
-          column2_name
-          column3
-          column3_name
-      }
-      }
-        `
-    const result: ExecutionResult = await graphql({
-        schema,
-        source: query
-    })
-    //console.log(result);
-    }
-    }
-
-    //
-
-    const getTasksFunction = async () =>{
-        if(schema){
-            const query = `query AllTasks {
-                tasks(done: true){
-                id,
-                name,
-                description,
-                color,
-                done,
-            }
-        }`
-                const result: ExecutionResult = await graphql({
-                    schema,
-                    source: query
-                })
-                console.log(result);
-        }
-    }
-
-      
 
     return (
         <DndContext 

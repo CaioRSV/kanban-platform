@@ -23,13 +23,10 @@ import {
 
 import { Input } from '../ui/input';
 
-
 import { MdDragIndicator } from "react-icons/md";
 import { MdCircle } from "react-icons/md";
 import { TbTextPlus } from "react-icons/tb";
 import { GoTrash } from "react-icons/go";
-
-
 
 interface TaskCardProps{
     task: Task
@@ -155,7 +152,8 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                     }
                     
                 </div>
-                <div className={`flex-1`}></div>
+
+                <div className={`flex-1`}/>
                 
                 <MdDragIndicator size={28} className={`text-[var(--background)]`} />
 

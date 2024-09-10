@@ -19,7 +19,6 @@ import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { GraphQLSchema } from 'graphql';
-import { User } from '@/app/schemaWrapper';
 import { orderColumn_GQL } from '@/lib/graphQl_functions';
 
 interface TaskColumnProps {
@@ -30,18 +29,10 @@ interface TaskColumnProps {
     updateTask: (id: Id, content: string, attribute: string) => void;
 
     schema?: GraphQLSchema
-    users_schema?: Record<string, User>
-    tasks_schema?: Record<string, Task>
 }
 
 const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask, schema}) => {
-
     const {tasks} = useTaskContext();
-    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
-
-    const [editing, setEditing] = useState<boolean>(false);
-    const [tempColName, setTempColName] = useState<string>(column.title);
-
     const {
         user, id,
         column1_name,
@@ -52,6 +43,12 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         setColumn3,
         loadingTasks,
     } = useUserContext();
+    
+    // Locais
+    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
+
+    const [editing, setEditing] = useState<boolean>(false);
+    const [tempColName, setTempColName] = useState<string>(column.title);
 
     // Preenche o editável baseado em qual coluna seja
     useEffect(() => {

@@ -24,18 +24,14 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useTheme } from 'next-themes';
 
 import { GraphQLSchema } from 'graphql';
-import { User, Task } from '@/app/schemaWrapper';
+import { Task } from '@/app/schemaWrapper';
 import { getTasksFunction_GQL } from '@/lib/graphQl_functions';
 
 interface GraphDrawerProps{
   schema?: GraphQLSchema
-  users_schema?: Record<string, User>
-  tasks_schema?: Record<string, Task>
 }
 
-
 const GraphDrawer = ( { schema } : GraphDrawerProps) => {
-
   // Contextos e variáveis de estado
   const {theme} = useTheme();
 
@@ -68,15 +64,16 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
       for(let i=doneRange; i>0;i--){
         const currentDate = new Date(); // today
 
-
         const previousDateLabel = new Date(currentDate); 
         previousDateLabel.setDate(currentDate.getDate() - i + 1);
 
-        //
+        // Começando do range (7) e dimiuindo até o 1, contar quantidade de done tasks:
 
+        // Entre i dias atrás
         const previousDate = new Date(currentDate); 
         previousDate.setDate(currentDate.getDate() - i);
         
+        // e i+1 dias atrás
         const plusOneDate = new Date(currentDate); 
         plusOneDate.setDate(currentDate.getDate() - i + 1);
 
