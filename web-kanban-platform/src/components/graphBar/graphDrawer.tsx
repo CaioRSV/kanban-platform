@@ -60,6 +60,9 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
 
     const resDoneTasks = await getTasksFunction_GQL(id, true, schema); //(+GraphQL)
 
+    console.log('=')
+    console.log(resDoneTasks);
+
     if(doneRange){
       for(let i=doneRange; i>0;i--){
         const currentDate = new Date(); // today
@@ -89,6 +92,10 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
                 if(previousDate.getTime() < endDate.getTime() && endDate.getTime() < plusOneDate.getTime()){
                   return true
                 }
+                // Today handler
+                else if(i==1 &&previousDate.getTime() < endDate.getTime() && endDate.getTime() > plusOneDate.getTime()){
+                  return true
+                }
                 else{
                   return false
                 }
@@ -98,7 +105,7 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
               }
             }
            )
-
+           console.log(quantity.length);
            newSeries.push(quantity.length);
         }
       }

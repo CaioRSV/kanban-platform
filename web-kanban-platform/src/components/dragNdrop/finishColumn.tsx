@@ -49,6 +49,8 @@ const FinishColumn = ({schema, users_schema, tasks_schema}: FinishColumnProps) =
 
         column3.forEach(item => {
             fetch(`/api/tasks/update?id=${item}&done=TRUE`)
+
+            // GraphQL ---
             updateTask_GQL(item, "done", "true", schema);
         });
     }
