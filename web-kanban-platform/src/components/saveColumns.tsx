@@ -13,9 +13,8 @@ const SaveColumns = () => {
         column1,
         column2,
         column3,
-        } = useUserContext();
+    } = useUserContext();
         
-
     // Variáveis de timing
     const [confirmed, setConfirmed] = useState<boolean>(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -27,9 +26,7 @@ const SaveColumns = () => {
         const col2_params = `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
         const col3_params = `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
 
-        console.log(`/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`);
-
-        await fetch(`/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`)
+        await fetch(`/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`) // Update (apenas envio, sem uso local)
     }
 
     // Funções de timing 
@@ -40,7 +37,7 @@ const SaveColumns = () => {
 
         timeoutRef.current = setTimeout(() => {
             setConfirmed(false);
-        }, 700);
+        }, 700); // Delay para sumir o ícone de confirmação
     }
 
 

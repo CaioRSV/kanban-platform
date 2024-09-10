@@ -47,8 +47,8 @@ const UserHandle = () => {
         <ContextMenuContent>
         <ContextMenuItem onClick={()=>{logout()}}>
             <div className={`flex gap-1`}>
-            <p>Mudar de usuário</p>
-            <CgArrowsExchangeAlt size={20} />
+              <p>Mudar de usuário</p>
+              <CgArrowsExchangeAlt size={20} />
             </div>
         </ContextMenuItem>
         </ContextMenuContent>

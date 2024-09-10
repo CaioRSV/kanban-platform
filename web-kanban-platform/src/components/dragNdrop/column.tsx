@@ -18,25 +18,23 @@ import { Button } from '../ui/button';
 import { MdDragHandle } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { GraphQLSchema } from 'graphql';
+import { orderColumn_GQL } from '@/lib/graphQl_functions';
 
 interface TaskColumnProps {
     column: Column;
     updateColumn: (id: Id, title: string) => void;
     addTask: (columnId: Id, definedObject?: Task) => void;
-    deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string, attribute?: string) => void;
+    deleteTask: (serverId: Id, localId: Id) => void;
+    updateTask: (id: Id, content: string, attribute: string) => void;
+
+    schema?: GraphQLSchema
 }
 
-const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask}) => {
-
+const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask, schema}) => {
     const {tasks} = useTaskContext();
-    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
-
-    const [editing, setEditing] = useState<boolean>(false);
-    const [tempColName, setTempColName] = useState<string>(column.title);
-
     const {
-        user,
+        user, id,
         column1_name,
         column2_name,
         column3_name,
@@ -45,6 +43,12 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         setColumn3,
         loadingTasks,
     } = useUserContext();
+    
+    // Locais
+    const tasksId = useMemo(() => tasks.map(task=>task.id), [tasks]); // Mapeando IDs das tasks
+
+    const [editing, setEditing] = useState<boolean>(false);
+    const [tempColName, setTempColName] = useState<string>(column.title);
 
     // Preenche o editável baseado em qual coluna seja
     useEffect(() => {
@@ -89,6 +93,14 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         setColumn3(
             (tasks.filter(item => item.columnId==3)).map(elem => elem.serverId)
         )
+
+        // GraphQL ---
+        for(let i=1;i<=3;i++){
+            orderColumn_GQL(id, `column${i}`,
+                (tasks.filter(item => item.columnId == i)).map(elem => elem.serverId)
+            , schema);
+        }
+
     }, [tasks])
 
 
@@ -169,7 +181,7 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                             <IoMdAdd size={20}/>
                         </Button>
                         {
-                            column.id == 3 && <FinishColumn/>
+                            column.id == 3 && <FinishColumn schema={schema}/>
                         }
 
 

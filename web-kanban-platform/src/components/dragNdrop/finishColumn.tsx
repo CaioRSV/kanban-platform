@@ -20,12 +20,21 @@ import {
 import { FaCheck } from "react-icons/fa6";
 import { CiSaveUp1 } from "react-icons/ci";
 
+import { updateTask_GQL } from '@/lib/graphQl_functions';
+import { GraphQLSchema } from 'graphql';
+import { Task, User } from '@/app/schemaWrapper';
+
 
 // Outline style pego do Button do shadcn
 const buttonOutline_style = `inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2`
 
-const FinishColumn = () => { 
+interface FinishColumnProps{
+    schema?: GraphQLSchema
+    users_schema?: Record<string, User>
+    tasks_schema?: Record<string, Task>
+  }
 
+const FinishColumn = ({schema, users_schema, tasks_schema}: FinishColumnProps) => { 
     // Contextos
     const { column3, column3_name } = useUserContext();
     const {setTasks} = useTaskContext();
@@ -40,6 +49,9 @@ const FinishColumn = () => {
 
         column3.forEach(item => {
             fetch(`/api/tasks/update?id=${item}&done=TRUE`)
+
+            // GraphQL ---
+            updateTask_GQL(item, "done", "true", schema);
         });
     }
 
@@ -74,7 +86,7 @@ const FinishColumn = () => {
         <div className={`flex gap-2 h-full items-center`}>
             <AlertDialog>
                 {/* Aplicando abaixo variant="outline" sem hydration error de button on button, e style equivalente a "rounded-full" */}
-                <AlertDialogTrigger className={buttonOutline_style} style={{borderRadius: '9999px'}}> 
+                <AlertDialogTrigger className={buttonOutline_style} style={{borderRadius: '9999px'}} disabled={column3.length==0}> 
                         <p className={`z-10`}>Confirmar conclusão</p>
                         <CiSaveUp1 className={`z-10 ml-[1px]`} size={25} />
                 </AlertDialogTrigger>

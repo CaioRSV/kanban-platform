@@ -23,8 +23,11 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { onDragStart } from './functions/dnd_functions';
 import { onDragEnd } from './functions/dnd_functions';
 import { onDragOver } from './functions/dnd_functions';
+import { GraphQLSchema } from 'graphql';
 
-// Types
+import { addTask_GQL, deleteTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
+
+// Local Types (minor differences from GraphQL local base, but doesnt matter too much, minor type adapts)
 
 export type Id = string | number;
 
@@ -52,10 +55,14 @@ const getDateID = () => {
     return Date.now()/10
 }
 
-const Workspace = () => {
+interface WorkspaceProps{
+    schema?: GraphQLSchema
+}
+
+const Workspace = ({schema}:WorkspaceProps) => {
     // Contextos
     const {
-        id,
+        user, id,
         setColumn1_name, column1_name,
         setColumn2_name, column2_name,
         setColumn3_name, column3_name,
@@ -138,7 +145,11 @@ const Workspace = () => {
         paramStack += `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
         paramStack += `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
 
+        // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
         fetch("/api/user/update"+paramStack);
+
+        // GraphQL ---
+        updateColumn_GQL(id, `column${columnId}`, title, schema);
     }
 
     function updateColumn(id: Id, title: string){
@@ -164,11 +175,14 @@ const Workspace = () => {
             }
         }
         else{
-            let newId =  Math.floor(getDateID());
+            let newId =  Math.floor(getDateID()/100);
 
+            // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
             const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
                 .then(res => res.json())
                 .then(data => data.resposta.id);
+
+            // GraphQL ---
 
             const newTask: Task = {
                 id: newId,
@@ -177,15 +191,17 @@ const Workspace = () => {
                 serverId: parseInt(res)
             }
 
-            setTasks([...tasks, newTask]);
+            addTask_GQL(parseInt(res), "Nova tarefa", parseInt(columnId.toString()), parseInt(res), id, schema)
 
+            setTasks([...tasks, newTask]);
         }
 
     }
 
-    function deleteTask(id: Id){
-        const newTasks = tasks.filter(task => task.id != id);
+    function deleteTask(serverId: Id, localId: Id){
+        const newTasks = tasks.filter(task => task.id != localId);
         setTasks(newTasks);
+        deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), schema)
     }
 
     async function changeToEmptyColumn(overColumnID: Id, activeTaskID: Id, definedObject?: Task){
@@ -205,12 +221,13 @@ const Workspace = () => {
         setTasks([...newTasks, newTask]);
     }
 
-    function updateTask(localId: Id, content: string, attribute?: string){
+    function updateTask(localId: Id, content: string, attribute: string){
 
         const serverId_chosen = tasks.find(item => item.id==localId)?.serverId
 
         const newTasks = tasks.map((task) => {
             if(task.id === localId && content.length>0){
+                // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
                 fetch(`/api/tasks/update?id=${serverId_chosen}&${attribute ? attribute : 'description'}=`+content)
                 
                 if (attribute == 'name'){
@@ -228,7 +245,15 @@ const Workspace = () => {
             }
         });
 
-        setTasks(newTasks);  
+        setTasks(newTasks);
+
+
+        // GraphQL ---
+
+        if(serverId_chosen){
+            updateTask_GQL(serverId_chosen, attribute, content, schema);
+        }
+
     }
 
     return (
@@ -247,6 +272,7 @@ const Workspace = () => {
                                 addTask={addTask} 
                                 deleteTask={deleteTask}
                                 updateTask={updateTask}
+                                schema={schema}
                                 />
                         </div>
                     ))
@@ -264,7 +290,7 @@ const Workspace = () => {
                                 <ColumnElement column={activeColumn} 
                                     updateColumn={updateColumn} 
                                     addTask={addTask}
-                                    deleteTask={()=>{deleteTask(activeColumn.id)}}
+                                    deleteTask={deleteTask}
                                     updateTask={updateTask}
                                 />
                             }

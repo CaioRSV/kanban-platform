@@ -26,10 +26,9 @@ const ThemeSwitch = () => {
       </>;
   }
 
-
   return (
     <div className={`flex gap-2`} >
-        <FaRegLightbulb size={20} className={`text-slate-600`} onChange={()=>{setTheme('dark')}}/>
+        <FaRegLightbulb size={20} className={`text-slate-600`}/>
         <Switch checked={theme=='light'} onCheckedChange={()=>{setTheme(theme=='light'?'dark':'light')}}/>
     </div>
   )

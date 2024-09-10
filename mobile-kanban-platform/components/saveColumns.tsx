@@ -20,6 +20,7 @@ const SaveColumns = () => {
         const col2_params = `${column2.length> 0 ? `&column2=${column2.join(',')}` : ``}`;
         const col3_params = `${column3.length> 0 ? `&column3=${column3.join(',')}` : ``}`;
         
+        // Update (apenas envio, sem uso local)
         await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/user/update?id=${id}${col1_params}${col2_params}${col3_params}`);
     }
 

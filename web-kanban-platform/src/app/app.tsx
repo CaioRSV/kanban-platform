@@ -7,19 +7,24 @@ import GraphDrawer from '@/components/graphBar/graphDrawer';
 
 import SaveColumns from '@/components/saveColumns';
 import GraphQlMocker from '@/components/graphQlMocker';
+import SchemaWrapper from './schemaWrapper';
+import SchemaVisualizer from '../components/SchemaVisualizer';
+
+// SchemaWrapper: "Provider" de props da base GraphQL local mockada para permitir queries e mutations nela
 
 // SetUserModal: Pop up/alerta de definição de usuário/área de trabalho 
 // TopBar: Elementos do topo da página
-// GraphQlMocker: Botão para importação de templates (query utilizando GraphQL Tools - Mock)
+// GraphQlMocker: Botão para importação de templates (Base GraphQL isolada, da primeira versão do projeto)
 // SaveColumns: Botão que salva modificações na área de trabalho
 // Workspace: Área Kanban
 // GraphDrawer: Botão que apresenta o Drawer com relatórios em formato de gráfico
 
+
 export default function App() {
   return (
+    <SchemaWrapper>
         <main className="min-h-screen p-12 flex flex-col transition-all duration-500">
-          <SetUserModal/>
-
+            <SetUserModal/> 
           <div className={`w-full h-fit flex justify-center items-center`}>
             <TopBar/>
           </div>
@@ -28,6 +33,8 @@ export default function App() {
             
             <div className={`flex w-[80%] pt-4 pb-4`}>
               <GraphQlMocker/>
+              <div className={`flex-1`}/>
+              <SchemaVisualizer/>
               <div className={`flex-1`}/>
               <SaveColumns/>
             </div>
@@ -42,5 +49,6 @@ export default function App() {
 
           </div>
         </main>
+    </SchemaWrapper>
   );
 }

@@ -11,6 +11,10 @@ import SaveColumns from './saveColumns';
 import Workspace from './dragNdrop/workspace';
 import GraphDrawer from './graphs/graphDrawer';
 
+import SchemaWrapper from './schemaWrapper';
+
+// SchemaWrapper: "Provider" de props da base GraphQL local mockada para permitir queries e mutations nela
+
 // SetUserModal: Pop up/alerta de definição de usuário/área de trabalho 
 // TopBar: Elementos do topo da página
 // GraphQlMocker: Botão para importação de templates (query utilizando GraphQL Tools - Mock)
@@ -23,6 +27,9 @@ const Main = () => {
 
   return (
     <View style={{overflow: 'scroll'}} className={`h-full w-full dark:bg-black p-8 relative`}>
+
+      <SchemaWrapper>
+        
         <SetUserModal theme={colorScheme=='dark'?'dark':'light'}/> 
 
         <TopBar/>
@@ -32,6 +39,9 @@ const Main = () => {
           <Workspace theme={colorScheme=='dark' ? 'dark' : 'light'}/>
           <GraphDrawer/>
         </ScrollView>
+
+      </SchemaWrapper>
+
     </View>
   )
 }

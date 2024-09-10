@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 import { useUserContext } from './contexts/userContext';
 import { useTaskContext } from './contexts/tasksContext';
 
-import { Task } from './dragNdrop/workspace';
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,9 +19,16 @@ import { Input } from "@/components/ui/input"
 import { RiLoginCircleLine } from "react-icons/ri";
 import { ImSpinner8 } from "react-icons/im";
 
+import { Task } from '@/app/schemaWrapper';
+import { ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 
-const SetUserModal = () => {
+import { getTasksFunction_GQL, getUserFunction_GQL } from '@/lib/graphQl_functions';
 
+interface SetUserModalProps{
+  schema?: GraphQLSchema
+}
+
+const SetUserModal = ( {schema } : SetUserModalProps ) => {
   // Contextos
 
   const {
@@ -44,43 +49,13 @@ const SetUserModal = () => {
   const [loading, setLoading] = useState<boolean>(false);
   //
   
-
-  // Funções que atualizam informações dos contextos
-    // Atualizando contexto de tasks
-  async function updateInfoLocal(id: number[], col1:number[], col2:number[], col3:number[] ){
-    setLoadingTasks(true); // Loading nas colunas
-
-    const resFetch:Task[] = await fetch("/api/tasks?task="+id)
-      .then(res => res.json())
-      .then(data => data.resposta.rows);
-
-    if(resFetch.length>0){
-      setTasks(
-        resFetch.map( (item:Task) =>({
-          ...item,
-          id: Math.floor(Math.random()*10000),
-          columnId: 
-            col1.includes(item.id) ? 1 : 
-              col2.includes(item.id) ? 2 :
-                col3.includes(item.id) ? 3 :
-                0,
-          name: item.name,
-          serverId: item.id
-        })
-          ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
-      );
-    }
-
-    setLoadingTasks(false);
-  }
-
-  // Atualizando contexto de user
+  // Funções que atualizam informações dos contextos de User e Tasks (+GraphQL)
   async function setUserServer(userName:string){
-
-    if(userName.length==0) return;
+    if(userName.length==0 || !schema) return;
 
     setLoading(true);
 
+    // Parte REST (populating) apenas para verificação se usuário existe ou não (simplicidade)
     const userRes = await fetch("/api/user?name="+userName, {
         method: 'GET'
       })
@@ -90,37 +65,63 @@ const SetUserModal = () => {
     if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
-      setUser(userName);
-      setId(userFound.id);
+      await loginFunction(userName, parseInt(userFound.id)); // Setando usuário e populando tasks na base
+      
+      const resUser = await getUserFunction_GQL(userName, schema); // Fetch user data na base
+      
+      if(resUser){
+        const resTasks = await getTasksFunction_GQL(parseInt(resUser.id), false, schema); // Fetch tasks do user
 
-      if(userFound.column1_name !== null) setColumn1_name(userFound.column1_name);
-      if(userFound.column2_name !== null) setColumn2_name(userFound.column2_name);
-      if(userFound.column3_name !== null) setColumn3_name(userFound.column3_name);
+        setLoadingTasks(true); // Loading nas colunas
 
-      setColumn1(userFound.column1);
-      setColumn2(userFound.column2);
-      setColumn3(userFound.column3);
+        setUser(resUser.name);
+        setId(parseInt(resUser.id));
 
-      let totalIDs:number[] = []
+        setColumn1(resUser.column1);
+        setColumn2(resUser.column2);
+        setColumn3(resUser.column3);
 
-      userFound.column1.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
+        if(resUser.column1_name !== null && resUser.column1_name !==undefined) setColumn1_name(resUser.column1_name);
+        if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
+        if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
 
-      userFound.column2.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
 
-      userFound.column3.forEach((elem:number) => {
-        totalIDs.push(elem)
-      });
+        if(resTasks){
+          const col1 = resUser.column1;
+          const col2 = resUser.column2;
+          const col3 = resUser.column3;
 
-      updateInfoLocal(totalIDs, userFound.column1, userFound.column2, userFound.column3);
+          // typing
+          const resTasks_Filtered = resTasks.map(elem => ({
+            ...elem,
+            id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
+          }))
+
+          // Atualizando localmente as tasks
+          setTasks(
+            resTasks_Filtered.map( (item:Task) => ({
+              ...item,
+              id: Math.floor(Math.random()*10000),
+              columnId: 
+                col1.includes(item.id) ? 1 : 
+                  col2.includes(item.id) ? 2 :
+                    col3.includes(item.id) ? 3 :
+                    0,
+              name: item.name,
+              serverId: item.id
+            })
+              ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
+          )
+          // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
+        
+        }
+        setLoadingTasks(false);
+      } 
 
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
       const createUserRes = await fetch("/api/user/add?name="+userName, {
-        method: 'GET'
+        method: 'GET' // Se cria o usuário no banco com REST (populating, necessário)
       })
       .then(res => res.json())
       .then(data => {
@@ -131,21 +132,71 @@ const SetUserModal = () => {
         setUser(userName);
       }
 
-      const userRes_2 = await fetch("/api/user?name="+userName, {
-        method: 'GET'
+      const userCreated = await fetch("/api/user?name="+userName, {
+        method: 'GET' // Se busca mais uma vez no banco para finalmente transferir de vez para a base local GraphQL
       })
       .then(res => res.json())
       .then(data => data.resposta.rows);
   
-      const userFound_2 = userRes_2[0];
-  
-      setId(userFound_2.id);
+      await loginFunction(userName, parseInt(userCreated.id))
+      
+      const resUser = await getUserFunction_GQL(userName, schema);
 
+      if(resUser){
+        setUser(resUser.name);
+        setId(parseInt(resUser.id));
+      }
     }
 
     setLoading(false);
-
   }
+
+  const loginFunction = async (username: String, userId: number) => {
+    if(schema){  
+      const query = `
+          mutation Login($username: String!) {
+          login(username: $username)
+        }
+      `
+
+      const vars = {
+          "username": username
+      }
+  
+      const result: ExecutionResult = await graphql({
+          schema,
+          source: query,
+          variableValues: vars
+      })
+
+      // Task fetching
+
+      const query_tasks = `
+        mutation PopTasks($id: Int!) {
+          populateTasks(id: $id)
+        }
+      `
+  
+      const vars_tasks = {
+          "username": username,
+          "id": userId
+      }
+  
+      const result_tasks: ExecutionResult = await graphql({
+          schema,
+          source: query_tasks,
+          variableValues: vars_tasks
+      })
+
+      // Para debugging
+      return {
+        user_message: result,
+        tasks_message: result_tasks
+      }
+    }
+}
+
+//
 
   return (
     <>

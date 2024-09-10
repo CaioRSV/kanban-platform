@@ -23,18 +23,15 @@ import {
 
 import { Input } from '../ui/input';
 
-
 import { MdDragIndicator } from "react-icons/md";
 import { MdCircle } from "react-icons/md";
 import { TbTextPlus } from "react-icons/tb";
 import { GoTrash } from "react-icons/go";
 
-
-
 interface TaskCardProps{
     task: Task
-    deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string, attribute?: string) => void;
+    deleteTask: (serverId: Id, localId: Id) => void;
+    updateTask: (id: Id, content: string, attribute: string) => void;
 }
 
 const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
@@ -85,7 +82,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                             className={`h-[80%] w-full resize-none bg-transparent focus:outline-none`}
                             value={tempDesc}
                             onChange={(e)=>{setTempDesc(e.target.value)}}
-                            onBlur={(e)=>{updateTask(task.id, tempDesc);setEditing(false);}}
+                            onBlur={(e)=>{updateTask(task.id, tempDesc, "description");setEditing(false);}}
                         />
                     </div>
 
@@ -155,7 +152,8 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                     }
                     
                 </div>
-                <div className={`flex-1`}></div>
+
+                <div className={`flex-1`}/>
                 
                 <MdDragIndicator size={28} className={`text-[var(--background)]`} />
 
@@ -163,7 +161,7 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
 
         
             <ContextMenuContent>
-                <ContextMenuItem onClick={()=>{deleteTask(task.id)}}>
+                <ContextMenuItem onClick={()=>{deleteTask(task.serverId, task.id)}}>
                     <div className={`flex gap-2`}>
                         <p>Excluir tarefa</p>
                         <GoTrash size={16} />

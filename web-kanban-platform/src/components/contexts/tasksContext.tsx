@@ -3,7 +3,7 @@ import React from 'react'
 
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-import { Task } from '../dragNdrop/workspace';
+import { Task } from "@/components/dragNdrop/workspace";
 
 // Contexto que armazena novas e antigas tasks (fetch da área de trabalho do cliente caso existam)
 
