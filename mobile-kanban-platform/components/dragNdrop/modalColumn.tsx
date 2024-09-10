@@ -9,12 +9,15 @@ import { useTaskContext } from "../contexts/tasksContext";
 import { useUserContext } from "../contexts/userContext";
 
 import { Task, Id } from "./column";
+import { deleteTask_GQL, updateTask_GQL } from "../../utils/graphQl_functions";
+import { GraphQLSchema } from "graphql";
 
 export interface ColumnProps{
   name: string;
   idServer: number;
   isDone: boolean;
   theme: string;
+  schema?: GraphQLSchema
 
   editingTask: Id;
   updateLocalAll (param: Task[]): void;
@@ -48,6 +51,7 @@ const ModalColumn = (props: ColumnProps) => {
 
     // Contextos
     const {
+        id,
         setColumn1,
         setColumn2,
         setColumn3,
@@ -68,18 +72,21 @@ const ModalColumn = (props: ColumnProps) => {
         }
     }
 
-    function deleteTask(id: Id){
-        const newTasks = tasks.filter(task => task.id != id);
+    function deleteTask(serverId: Id, localId: Id){
+        const newTasks = tasks.filter(task => task.id != localId);
         setTasks(newTasks);
         updateLocal(newTasks);
+        deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), props.schema)
     }
 
     function updateTask(localId: Id){
         const serverId_chosen = tasks.find(item => item.id==localId)?.serverId
 
         if(localId){
+            // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
             fetch(process.env.EXPO_PUBLIC_SERVER_URL+`/api/tasks/update?id=${serverId_chosen}&name=${tempName}&description=${tempDesc}&color=${tempColor}`)
             
+            // Local
             const newTasks: Task[] = tasks.map(item => {
                 if (item.id == localId){
                     return {
@@ -95,6 +102,14 @@ const ModalColumn = (props: ColumnProps) => {
                     return item;
                 }
             })
+
+            // GraphQL
+            if(serverId_chosen){
+                // Aplicação não ideal, mas no futuro com mais calma se adaptará a função atual e seus parâmetros
+                updateTask_GQL(serverId_chosen, "name", tempName, props.schema);
+                updateTask_GQL(serverId_chosen, "description", tempDesc, props.schema);
+                updateTask_GQL(serverId_chosen, "color", tempColor, props.schema);
+            }
 
             setTasks(newTasks);
             updateLocalAll(newTasks);
@@ -119,7 +134,7 @@ const ModalColumn = (props: ColumnProps) => {
                 {
                     text: 'Deletar',
                     onPress: () => {
-                        deleteTask(editingTask)
+                        deleteTask(tasks.find(elem => elem.serverId).serverId, editingTask)
                     }
                 }
                 ,

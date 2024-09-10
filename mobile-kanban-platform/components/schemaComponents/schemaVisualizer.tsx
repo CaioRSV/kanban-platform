@@ -6,6 +6,7 @@ import { GraphQLSchema } from 'graphql';
 import { getTasksFunction_GQL, getUserFunction_GQL } from '../../utils/graphQl_functions';
 import { useUserContext } from '../contexts/userContext';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { User } from './schemaWrapper';
 
 
 
@@ -20,13 +21,12 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
     //
     const [openModal, setOpenModal] = useState<boolean>(false);
 
-    const [userQuery, setUserQuery] = useState<string>();
-    const [tasksQuery, setTasksQuery] = useState<string>();
-
-    const [doneTasksQuery, setDoneTasksQuery] = useState<string>();
+    const [userQuery, setUserQuery] = useState<string>("{}"); // Evitar erro com JSON.parse
+    const [tasksQuery, setTasksQuery] = useState<string>("{}"); // ^ =
+    const [doneTasksQuery, setDoneTasksQuery] = useState<string>("{}"); // ^ =
 
     const handleOpen = async () => {
-      const resUser = await getUserFunction_GQL(user, schema);
+      const resUser: User = await getUserFunction_GQL(user, schema);
       const resTasks = await getTasksFunction_GQL(id, false, schema);
       const resDoneTasks = await getTasksFunction_GQL(id, true, schema);
 
@@ -37,7 +37,7 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
           typeof elem.id === "string" ? parseInt(elem.id) : elem.id
         ));
 
-        setUserQuery(JSON.stringify(resUser));
+        setUserQuery(JSON.stringify({name: resUser.name, id: resUser.id}));
         setTasksQuery(JSON.stringify(presentTasks));
         setDoneTasksQuery(JSON.stringify(resDoneTasks));
       }
@@ -88,7 +88,7 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
 
           <Divisor/>
 
-          <QueryResContainer title="Query - Usuário atual" queryString={userQuery} />
+          <QueryResContainer title="Query - Dados do usuário atual" queryString={userQuery} />
 
           <Divisor/>
 

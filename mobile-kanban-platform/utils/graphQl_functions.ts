@@ -20,7 +20,7 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
             source: query
         })
 
-        //console.log(result);
+        console.log(result);
         
         if (result.data && result.data.tasks) {
           const tasks: Task[] = result.data.tasks as Task[];
@@ -57,15 +57,13 @@ export const getUserFunction_GQL = async (username: String, schema?: GraphQLSche
   
     if (result.data && result.data.user) {
       const user: User = result.data.user as User;
-  
       return user
     }
   
     return undefined
 
     }
-  }
-
+}
 
 // Mutations
 
