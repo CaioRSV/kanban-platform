@@ -49,10 +49,8 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
   const [loading, setLoading] = useState<boolean>(false);
   //
   
-
   // Funções que atualizam informações dos contextos de User e Tasks (+GraphQL)
   async function setUserServer(userName:string){
-
     if(userName.length==0 || !schema) return;
 
     setLoading(true);
@@ -117,12 +115,9 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
           // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
         
         }
-
         setLoadingTasks(false);
+      } 
 
-      }
-      
-      
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
       const createUserRes = await fetch("/api/user/add?name="+userName, {
@@ -147,16 +142,13 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
       
       const resUser = await getUserFunction_GQL(userName, schema);
 
-
       if(resUser){
         setUser(resUser.name);
         setId(parseInt(resUser.id));
       }
-
     }
 
     setLoading(false);
-
   }
 
   const loginFunction = async (username: String, userId: number) => {
