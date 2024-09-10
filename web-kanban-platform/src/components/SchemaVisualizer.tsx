@@ -151,7 +151,7 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
   }
 
   return (
-    <div>
+    <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0) ? 'none': 'all' }}>
         <AlertDialog>
                 <AlertDialogTrigger className={`${buttonOutline_style} gap-2`} onClick={handleOpen}> 
                     <p className={`z-10`}>Visualizar GraphQL</p>

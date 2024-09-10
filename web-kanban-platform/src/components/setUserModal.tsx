@@ -33,7 +33,7 @@ interface SetUserModalProps{
 }
 
 
-const SetUserModal = ( {schema, users_schema, tasks_schema} : SetUserModalProps ) => {
+const SetUserModal = ( {schema } : SetUserModalProps ) => {
   // Contextos
 
   const {

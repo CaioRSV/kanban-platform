@@ -28,9 +28,10 @@ import { Task } from './dragNdrop/workspace';
 import { useUserContext } from './contexts/userContext';
 
 // Fazendo lógica de mock de um schema GraphQL
-import { graphql, ExecutionResult } from 'graphql';
+import { graphql, ExecutionResult, GraphQLSchema } from 'graphql';
 import { addMocksToSchema } from '@graphql-tools/mock';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { addTask_GQL } from '@/lib/graphQl_functions';
 
 // Schema a ser mockado
 const schemaString = `
@@ -103,10 +104,14 @@ const schemaWithMocks = addMocksToSchema({
   },
 });
 
-export default function GraphQlMocker() {
+interface GraphQlMockerProps{
+  schema?: GraphQLSchema
+}
+
+export default function GraphQlMocker({schema}: GraphQlMockerProps) {
   // Contextos
   const {tasks, setTasks} = useTaskContext();
-  const {user, id, loadingTasks, setLoadingTasks} = useUserContext();
+  const {user, id, loadingTasks, setLoadingTasks, column1, column2, column3} = useUserContext();
 
   // Variáveis de estado locais
   const [todo, setTodo] = useState<Todo[]>([]); // Lista a ser enviada e transformada em tasks
@@ -193,6 +198,9 @@ export default function GraphQlMocker() {
             description: definedObject.description
         }
 
+        // GraphQL ---
+        addTask_GQL(parseInt(res), definedObject.name, parseInt(columnId.toString()), parseInt(res), id, schema)
+
         return newTask;
         }
         else{
@@ -226,10 +234,10 @@ export default function GraphQlMocker() {
 
       const newTaskList:Task[] = [];
 
-      const processTasks = async (tasks: any[]) => {
+      const processTasks = async (tasks: Task[]) => {
         for (const item of tasks) {
           newTaskList.push(await addTask(1, item));
-          await sleep(800);
+          await sleep(1200);
         }
       };
 
@@ -242,7 +250,7 @@ export default function GraphQlMocker() {
   }
 
   return (
-    <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0 || tasks.length!=0) ? 'none': 'all' }} className={`${!(tasks.length==0 && !loadingTasks) ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0 || [...column1, ...column2, ...column3].length!=0) ? 'none': 'all' }} className={`${!(tasks.length==0 && !loadingTasks) ? 'opacity-50 pointer-events-none' : ''}`}>
       <DropdownMenu>
         <DropdownMenuTrigger className={`p-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground`}>
           <HiOutlineTemplate size={23} />

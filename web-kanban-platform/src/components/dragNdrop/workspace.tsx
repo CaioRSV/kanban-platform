@@ -63,7 +63,7 @@ interface WorkspaceProps{
     schema?: GraphQLSchema
     users_schema?: Record<string, User>
     tasks_schema?: Record<string, Task>
-  }
+}
 
 const Workspace = ({schema, users_schema, tasks_schema}:WorkspaceProps) => {
     // Contextos
