@@ -1,4 +1,4 @@
-import { Task, User } from "../components/schemaWrapper";
+import { Task, User } from "../components/schemaComponents/schemaWrapper";
 import { ExecutionResult, graphql, GraphQLSchema } from "graphql"
 
 // Queries
@@ -20,7 +20,7 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
             source: query
         })
 
-        console.log(result);
+        //console.log(result);
         
         if (result.data && result.data.tasks) {
           const tasks: Task[] = result.data.tasks as Task[];

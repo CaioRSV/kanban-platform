@@ -27,7 +27,7 @@ export interface Task {
 
 interface SetUserModalProps{
   theme: string;
-  schema?: GraphQLSchema
+  schema?: GraphQLSchema;
 }
 
 const SetUserModal = ({theme, schema}: SetUserModalProps) => {
@@ -57,20 +57,16 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
     setLoading(true);
 
     // Parte REST (populating) apenas para verificação se usuário existe ou não (simplicidade)
-    const userRes = await fetch("/api/user?name="+userName, {
+    const userRes = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user?name="+userName, {
         method: 'GET'
       })
       .then(res => res.json())
       .then(data => data.resposta.rows);
 
-    console.log(userRes.length>0);
-
     if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
-      console.log('1')
       await loginFunction(userName, parseInt(userFound.id)); // Setando usuário e populando tasks na base
-      console.log('2')
       
       const resUser = await getUserFunction_GQL(userName, schema); // Fetch user data na base
       
@@ -90,7 +86,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
         if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
         if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
 
-
         if(resTasks){
           const col1 = resUser.column1;
           const col2 = resUser.column2;
@@ -103,6 +98,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
           }))
 
           // Atualizando localmente as tasks
+
           setTasks(
             resTasks_Filtered.map( (item:Task) => ({
               ...item,
@@ -125,7 +121,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
 
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
-      const createUserRes = await fetch("/api/user/add?name="+userName, {
+      const createUserRes = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user/add?name="+userName, {
         method: 'GET' // Se cria o usuário no banco com REST (populating, necessário)
       })
       .then(res => res.json())
@@ -137,7 +133,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
         setUser(userName);
       }
 
-      const userCreated = await fetch("/api/user?name="+userName, {
+      const userCreated = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user?name="+userName, {
         method: 'GET' // Se busca mais uma vez no banco para finalmente transferir de vez para a base local GraphQL
       })
       .then(res => res.json())
@@ -183,7 +179,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
       `
   
       const vars_tasks = {
-          "username": username,
           "id": userId
       }
   
@@ -194,6 +189,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
       })
 
       // Para debugging
+
       return {
         user_message: result,
         tasks_message: result_tasks

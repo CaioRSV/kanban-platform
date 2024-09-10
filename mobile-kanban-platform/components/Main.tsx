@@ -11,7 +11,8 @@ import SaveColumns from './saveColumns';
 import Workspace from './dragNdrop/workspace';
 import GraphDrawer from './graphs/graphDrawer';
 
-import SchemaWrapper from './schemaWrapper';
+import SchemaWrapper from './schemaComponents/schemaWrapper';
+import SchemaVisualizer from './schemaComponents/schemaVisualizer';
 
 // SchemaWrapper: "Provider" de props da base GraphQL local mockada para permitir queries e mutations nela
 
@@ -36,7 +37,9 @@ const Main = () => {
 
         <ScrollView>
           <SaveColumns/>
+          
           <Workspace theme={colorScheme=='dark' ? 'dark' : 'light'}/>
+          <SchemaVisualizer theme={colorScheme=='dark' ? 'dark' : 'light'}/>
           <GraphDrawer/>
         </ScrollView>
 
