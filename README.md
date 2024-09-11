@@ -66,21 +66,24 @@ Informe o seu nome de usuário para criar ou acessar sua área de trabalho.
 
 ---
 
-![image2](https://github.com/user-attachments/assets/fd719ee1-db5c-4d24-99fa-8e148bb8ae05)
+![web_features_explanation](https://github.com/user-attachments/assets/59a59ef8-e1ee-45dd-b6da-8ef4efa7b3df)
+
 
 - **A)** Nome do usuário (Botão direito para mudar de usuário)
 
-- **B)** Carregar templates de tarefas, fazendo fetch de uma base GraphQL mockada (Disponível apenas caso não existam tarefas em sua área de trabalho)
+- **B)** Carregar templates de tarefas, fazendo fetch de uma base GraphQL mockada independente da base geral da aplicação (Disponível apenas caso não existam tarefas em sua área de trabalho)
 
-- **C)** Colunas kanban que podem ser trocadas de lugar entre si, e que também podem ter seus nomes personalizados para cada usuário
+- **C)** Componente que permite visualizar o estado atual da base local GraphQL (por meio de resultado de queries)
 
 - **D)** Salvar suas alterações na área de trabalho
 
-- **E)** Adicionar uma nova tarefa à uma coluna
+- **E)** Colunas kanban que podem ser trocadas de lugar entre si, e que também podem ter seus nomes personalizados para cada usuário
 
-- **F)** Visualizar relatórios em formato de gráficos sobre sua área de trabalho e tarefas concluídas anteriormente
+- **F)** Adicionar uma nova tarefa à uma coluna
 
-- **G)** Botão long-hold que marca as tarefas na coluna como concluídas e as libera da área de trabalho (necessário segurá-lo por alguns segundos para executar a ação)
+- **G)** Botão que marca as tarefas na coluna como concluídas e as libera da área de trabalho
+
+- **H)** Visualizar relatórios em formato de gráficos sobre sua área de trabalho e tarefas concluídas anteriormente
 
 ---
 
