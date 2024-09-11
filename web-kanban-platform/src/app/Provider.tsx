@@ -5,7 +5,7 @@ import { type ThemeProviderProps } from "next-themes/dist/types"
 import { ProviderUserContext } from '@/components/contexts/userContext';
 import { ProviderTaskContext } from '@/components/contexts/tasksContext';
 
-function Provider({ children, ...props }: ThemeProviderProps) {
+function Provider({ children }: ThemeProviderProps) {
   return (
     <>
     <ProviderUserContext>

@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 
 import { GraphQLSchema } from 'graphql'
 
-import {User, Task} from "../app/schemaWrapper"
-
 import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/monikai.css';
 
@@ -12,8 +10,6 @@ import { getTasksFunction_GQL, getUserFunction_GQL } from '@/lib/graphQl_functio
 
 interface WorkspaceProps{
     schema?: GraphQLSchema
-    users_schema?: Record<string, User>
-    tasks_schema?: Record<string, Task>
 }
 
 import {
@@ -43,14 +39,13 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 const buttonOutline_style = `inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2`
 
 
-const SchemaVisualizer = ({schema } : WorkspaceProps) => {
+const SchemaVisualizer = ({schema} : WorkspaceProps) => {
   const {user, id} = useUserContext();
   const {theme} = useTheme();
 
-  //
+  // Strings que serão populadas com as queries GraphQL para serem exibidas
   const [userQuery, setUserQuery] = useState<string>();
   const [tasksQuery, setTasksQuery] = useState<string>();
-
   const [doneTasksQuery, setDoneTasksQuery] = useState<string>();
 
   //
@@ -150,6 +145,8 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
     );
   }
 
+  //
+
   return (
     <div style={{filter: (!user || user.length==0) ? 'blur(3px)' : '', pointerEvents: (!user || user.length==0) ? 'none': 'all' }}>
         <AlertDialog>
@@ -184,8 +181,8 @@ const SchemaVisualizer = ({schema } : WorkspaceProps) => {
                       </div>
 
                       <Divisor/>
-
                     </div>
+                    
                     <AlertDialogCancel>Voltar</AlertDialogCancel>
                 </AlertDialogContent>
             </AlertDialog>

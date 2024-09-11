@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity, Linking, Switch } from 'react-native'
-import React from 'react'
 import { AntDesign, Ionicons, Octicons } from '@expo/vector-icons';
 
 import { useColorScheme } from 'nativewind';
@@ -21,6 +20,8 @@ const TopBar = () => {
 
     const {setTasks} = useTaskContext();
 
+    //
+
     function cleanUp(){
         setUser("");
         setId(-1);
@@ -36,18 +37,17 @@ const TopBar = () => {
   return (
     <View className={`w-full flex flex-row`}>
         <TouchableOpacity onPress={()=>{Linking.openURL("https://github.com/CaioRSV")}}  className={`flex-1 items-start justify-center`}>
-        <AntDesign name="github" size={40} color={`${colorScheme=='dark'?'white':'black'}`} />
+          <AntDesign name="github" size={40} color={`${colorScheme=='dark'?'white':'black'}`} />
         </TouchableOpacity>
 
         <View className={`flex-1 flex gap-2 flex-row justify-center items-center`}>
-        <Text className={`${colorScheme=='dark'?'text-white':'text-black'}`}>{user}</Text>
-        <Octicons name="arrow-switch" size={24} color={`${colorScheme=='dark'?'white':'black'}`} onPress={cleanUp} />
+          <Text className={`${colorScheme=='dark'?'text-white':'text-black'}`}>{user}</Text>
+          <Octicons name="arrow-switch" size={24} color={`${colorScheme=='dark'?'white':'black'}`} onPress={cleanUp} />
         </View>
 
         <View className={`flex-1 flex flex-row justify-end items-center`}>
-        <Ionicons name="bulb-outline" size={24} color={`${colorScheme=='dark'?'white':'black'}`} />
-        <Switch value={colorScheme=='light'} onValueChange={toggleColorScheme} thumbColor={colorScheme=='light' ? 'black' : 'white'} trackColor={{false: 'gray', true: 'gray'}}/>
-        
+          <Ionicons name="bulb-outline" size={24} color={`${colorScheme=='dark'?'white':'black'}`} />
+          <Switch value={colorScheme=='light'} onValueChange={toggleColorScheme} thumbColor={colorScheme=='light' ? 'black' : 'white'} trackColor={{false: 'gray', true: 'gray'}}/>
         </View>
     </View>
   )

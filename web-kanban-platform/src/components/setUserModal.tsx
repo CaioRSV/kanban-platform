@@ -199,43 +199,40 @@ const SetUserModal = ( {schema } : SetUserModalProps ) => {
 //
 
   return (
-    <>
-        <AlertDialog open={!user || user.length==0}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    <div className={`flex`}>
-                      <p>Quem é você?</p>
-                      <div className={`flex-1`}/>
-                      {
-                        loading
-                          ?
-                          <ImSpinner8 size={20} className={`animate-spin mr-1`}/>
-                          :
-                          <></>
-                      }
-                    </div>
-                  </AlertDialogTitle>
+    <AlertDialog open={!user || user.length==0}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+              <AlertDialogTitle>
+                <div className={`flex`}>
+                  <p>Quem é você?</p>
+                  <div className={`flex-1`}/>
+                  {
+                    loading
+                      ?
+                      <ImSpinner8 size={20} className={`animate-spin mr-1`}/>
+                      :
+                      <></>
+                  }
+                </div>
+              </AlertDialogTitle>
 
-                  <AlertDialogDescription>
-                  Informe seu nome de usuário para acessar sua área de trabalho
-                  </AlertDialogDescription>
+              <AlertDialogDescription>
+              Informe seu nome de usuário para acessar sua área de trabalho
+              </AlertDialogDescription>
 
-              </AlertDialogHeader>
+          </AlertDialogHeader>
 
-              <div className={`w-full flex gap-2`}>  
-                <Input autoFocus onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
-                
-                <AlertDialogFooter>
-                    <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>
-                    <RiLoginCircleLine size={28} />   
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-              </div>
-          
-            </AlertDialogContent>
-        </AlertDialog>
-    </>
+          <div className={`w-full flex gap-2`}>  
+            <Input autoFocus onBlur={(e)=>{setTempUserName(e.target.value)}} onKeyDown={(e)=>{if(e.key=='Enter'){setUserServer(e.currentTarget.value)} }}/>
+            
+            <AlertDialogFooter>
+                <AlertDialogAction onClick={()=>{setUserServer(tempUserName)}}>
+                <RiLoginCircleLine size={28} />   
+                </AlertDialogAction>
+            </AlertDialogFooter>
+          </div>
+        </AlertDialogContent>
+    </AlertDialog>
   )
 }
 

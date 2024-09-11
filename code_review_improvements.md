@@ -23,7 +23,7 @@ A imagem acima busca traduzir de forma prática a nova lógica implementada, que
 
 - A aplicação é populada pelo banco serverless uma única vez assim que o usuário entra em sua área de trabalho
 - Armazena as informações em uma base local, preparada para ser acessada e modificada por métodos (queries e mutations) GraphQL
-- A cada atualização e modificação dos dados dentro da aplicação, a base local GraphQL é modificada por meio de suas funções específicas, em formato adequado
+- A cada atualização e modificação dos dados na aplicação, a base local GraphQL é modificada por meio de suas funções específicas, em formato adequado
   - Além disso, as requisições REST de atualização do banco foram mantidas, não por necessidade de funcionamento, mas para manter a lógica de retenção de dados anterior. Essas poderiam ser removidas sem maiores problemas no uso imediato.
 
 Arquivos importantes para a implementação e visualização da lógica implementada:
@@ -31,15 +31,19 @@ Arquivos importantes para a implementação e visualização da lógica implemen
 - `schemaWrapper.tsx`
 - `SchemaVisualizer.tsx`
 
+Para a visualização dessas mudanças, foi adicionado um novo componente em cada uma das versões da aplicação, onde o usuário poderá visualizar o estado atual da base local GraphQL por meio de queries feitas diretamente a ela, de modo que seus resultados são exibidos para leitura. Segue abaixo uma captura de tela desse componente (aberto ao clicar no botão: Visualizar GraphQL)
+
+![graphl_visualizer_web](https://github.com/user-attachments/assets/ac0aba16-909b-4ab1-b77d-ba9de2f47db1)
+
 ---
 ##### Componentização:
 
-Foram feitos esforços para componentizar componentes para promover uma maior simplicidade, coesão e reutilização de componentes e subcomponentes no código.
+Foram feitos esforços para componentizar mais frequentemente elementos da aplicação para promover uma maior simplicidade, coesão e reutilização de componentes e subcomponentes no código.
 
 ---
 ##### Comentários não ideais
 
-Foram observados, adaptados de forma a terem explicações mais formais, e adicionados ou removidos com mais cuidado. Em relação ao comentário original citado, ele se referia a uma possível limitação do DATATYPE Int nos bancos, o que poderia ser um problema pela utilização da lógica de TIMESTAMP como ID para as rotas do banco provisório. Novos comentários foram adicionados para esclarecer tal situação.
+Foram observados, adaptados de forma a terem explicações mais formais, e adicionados ou removidos com mais cuidado. Em relação ao comentário original citado, ele se referia a uma possível limitação (em um período de tempo muito a frente do relevante para o escopo desse projeto) do DATATYPE Int nos bancos, o que poderia ser um problema pela utilização da lógica de TIMESTAMP como ID para as rotas do banco provisório. Novos comentários foram adicionados para esclarecer tal situação.
 
 ---
 ##### Código com exemplo "Hello World"
@@ -49,22 +53,22 @@ Se tratava de um código "vestigial" de uma etapa de testes com o GraphQL, antes
 ---
 ##### Utilização não necessária de client components na versão web
 
-Foram observados componentes que poderiam ter tido sua definição de 'client component' feita de forma equivocada. Como exemplo, o `App.tsx`, que foi prontamente subdividido e adaptado para mantê-lo como 'server component', repassando as funções de blur antes do mount para componentes individuais. Também, outros componentes como `GithubHandle.tsx` e `Card.tsx` puderam ser transformados/mantidos para não apresentarem a necessidade do "use client".
+Foram observados componentes que poderiam ter tido sua definição de 'client component' feita de forma equivocada. Como exemplo, o `App.tsx`, que foi prontamente subdividido e adaptado para mantê-lo como 'server component', repassando as funções de blur antes do mount para componentes individuais. Também, componentes como `GithubHandle.tsx`, `Card.tsx` entre outros, puderam ser transformados/mantidos para não apresentarem a necessidade do "use client".
 
 ---
 ##### Utilização desnecessária de "use client" na versão mobile
 
-Na hora da adaptação do código da aplicação web para a aplicação mobile, acabaram sendo mantidos os marcadores de componentes de cliente "use client". Foram prontamente removidos.
+Durante a adaptação do código da aplicação web para a aplicação mobile, acabaram sendo mantidos os marcadores de componentes de cliente "use client". Foram prontamente removidos.
 
 ---
 ##### Indentação e organização
 
-A organização de arquivos individuais, comentários, indentação e organização de pastas no projeto foram revisadas, para tornar toda a estrutura mais organizada.
+Aspectos como organização de arquivos individuais, comentários, indentação e organização de pastas no projeto foram revisados, para tornar toda a estrutura mais organizada.
 
 ---
 ##### Fluxo confuso de confirmar conclusão de tarefas
 
-O fluxo foi simplificado. Não há mais necessidade de pressionar e segura em um botão. Ao clicar no botão de `Confirmar Tarefas`, um alerta explicando a funcionalidade aparece e dando a possibilidade de confirmar ou não a ação.
+O fluxo foi simplificado. Não há mais necessidade de pressionar e segurar um botão para confirmar a conclusão de tarefas. Ao clicar no botão de `Confirmar Tarefas`, um alerta explicando a funcionalidade aparece e dando a possibilidade de confirmar ou não a ação.
 
 ---
 

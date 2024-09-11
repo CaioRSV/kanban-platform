@@ -39,8 +39,7 @@ const SaveColumns = () => {
             setConfirmed(false);
         }, 700); // Delay para sumir o ícone de confirmação
     }
-
-
+    
     // Dando clear on mount
     useEffect(() => {
         return () => {

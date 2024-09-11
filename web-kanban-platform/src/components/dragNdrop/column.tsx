@@ -32,6 +32,7 @@ interface TaskColumnProps {
 }
 
 const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTask, deleteTask, updateTask, schema}) => {
+    // Contextos
     const {tasks} = useTaskContext();
     const {
         user, id,
@@ -65,7 +66,6 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
 
 
     // Sortable configs
-
     const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
         id: column.id,
         data: {
@@ -80,6 +80,8 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
         transform: CSS.Transform.toString(transform),
         filter: (!user || user.length==0) ? 'blur(3px)' : '' // Add blur enquanto não dá mount
     };
+
+    //
 
     useEffect(()=>{
         setColumn1(
@@ -149,8 +151,6 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
 
             <SortableContext items={[]} strategy={verticalListSortingStrategy}>
                 <div className={`min-h-[300px] h-full flex flex-col`}>
-
-
                     <div className={`flex-1 flex flex-col gap-2 overflow-scroll`}>
                         {
                             loadingTasks
@@ -180,11 +180,11 @@ const ColumnElement: React.FC<TaskColumnProps> = ({ column, updateColumn, addTas
                         >
                             <IoMdAdd size={20}/>
                         </Button>
+
                         {
                             column.id == 3 && <FinishColumn schema={schema}/>
                         }
-
-
+                        
                     </div>
                 </div>
             </SortableContext>

@@ -1,8 +1,6 @@
 import { View } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
 
-import React from 'react'
-
 import { useColorScheme } from 'nativewind';
 
 import SetUserModal from './setUserModal';
@@ -11,7 +9,8 @@ import SaveColumns from './saveColumns';
 import Workspace from './dragNdrop/workspace';
 import GraphDrawer from './graphs/graphDrawer';
 
-import SchemaWrapper from './schemaWrapper';
+import SchemaWrapper from './schemaComponents/schemaWrapper';
+import SchemaVisualizer from './schemaComponents/schemaVisualizer';
 
 // SchemaWrapper: "Provider" de props da base GraphQL local mockada para permitir queries e mutations nela
 
@@ -27,7 +26,6 @@ const Main = () => {
 
   return (
     <View style={{overflow: 'scroll'}} className={`h-full w-full dark:bg-black p-8 relative`}>
-
       <SchemaWrapper>
         
         <SetUserModal theme={colorScheme=='dark'?'dark':'light'}/> 
@@ -37,11 +35,11 @@ const Main = () => {
         <ScrollView>
           <SaveColumns/>
           <Workspace theme={colorScheme=='dark' ? 'dark' : 'light'}/>
+          <SchemaVisualizer theme={colorScheme=='dark' ? 'dark' : 'light'}/>
           <GraphDrawer/>
         </ScrollView>
 
       </SchemaWrapper>
-
     </View>
   )
 }

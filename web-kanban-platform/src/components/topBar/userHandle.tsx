@@ -16,15 +16,17 @@ import { useTaskContext } from '../contexts/tasksContext';
 const UserHandle = () => {
     const {setTasks} = useTaskContext();
     const {
-        user, setUser, 
-        setId, 
-        setColumn1_name, 
-        setColumn2_name, 
-        setColumn3_name,
-        setColumn1, 
-        setColumn2, 
-        setColumn3
-      } = useUserContext();
+      user, setUser, 
+      setId, 
+      setColumn1_name, 
+      setColumn2_name, 
+      setColumn3_name,
+      setColumn1, 
+      setColumn2, 
+      setColumn3
+    } = useUserContext();
+
+    //
 
     function logout(){
         setUser("");
@@ -37,7 +39,6 @@ const UserHandle = () => {
         setColumn3_name("Finalizadas");
         setTasks([]);
       }
-
       
   return (
     <ContextMenu>

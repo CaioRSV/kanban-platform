@@ -10,13 +10,8 @@ import { useTaskContext } from "../contexts/tasksContext";
 import { useUserContext } from "../contexts/userContext";
 import ModalColumn from "./modalColumn";
 import ButtonAddTask from "./buttonAddTask";
-
-export interface ColumnProps{
-  name: string;
-  idServer: number;
-  isDone: boolean;
-  theme: string;
-}
+import { addTask_GQL, orderColumn_GQL, updateTask_GQL } from "../../utils/graphQl_functions";
+import { GraphQLSchema } from "graphql";
 
 export type Id = string | number;
 
@@ -47,21 +42,27 @@ const colorToPriorities = [
     "rgb(239,68,68)"
 ]
 
-const Column = (props: ColumnProps) => {
+export interface ColumnProps{
+    name: string;
+    idServer: number;
+    isDone: boolean;
+    theme: string;
+    schema?: GraphQLSchema;
+  }
 
+const Column = (props: ColumnProps) => {
   // Contextos
   const {tasks, setTasks} = useTaskContext();
   const {
     id,
-    setColumn1,
-    setColumn2,
+    setColumn1, column1,
+    setColumn2, column2,
     setColumn3, column3,
     loadingTasks
   } = useUserContext();
 
   // Variáveis de estado locais
-
-  const [editingTask, setEditingTask] = useState<number>();
+  const [editingTask, setEditingTask] = useState<{ id: number, serverId: number }>({id: null, serverId: null});
 
   const [edit, setEdit] = useState<boolean>(false);
   const [tempName, setTempName] = useState<string>();
@@ -84,26 +85,41 @@ const Column = (props: ColumnProps) => {
     else if(props.idServer==3){
         setColumn3(newTasks.filter(item => item.columnId==props.idServer).map(found => found.serverId));
     }
+
+    // GraphQL ---
+    for(let i=1;i<=3;i++){
+        orderColumn_GQL(id, `column${i}`,
+            (tasks.filter(item => item.columnId == i)).map(elem => elem.serverId)
+        , props.schema);
+    }
   }
 
-  // Função de atualização de lista de tasks local em todas as colunas de uma vez
+  // Função de atualização de lista de tasks local em todas as colunas de uma vez (Poderia ser fundida com a anterior, mas achei semanticamente interessante separar)
   const updateLocalAll = (newTasks: Task[]) => {
     setColumn1(newTasks.filter(item => item.columnId==1).map(found => found.serverId));
     setColumn2(newTasks.filter(item => item.columnId==2).map(found => found.serverId));
     setColumn3(newTasks.filter(item => item.columnId==3).map(found => found.serverId));
+
+    // GraphQL ---
+    for(let i=1;i<=3;i++){
+        orderColumn_GQL(id, `column${i}`,
+            (tasks.filter(item => item.columnId == i)).map(elem => elem.serverId)
+        , props.schema);
+    }
+
   }
 
   // Adicionando Task
   async function addTask(columnId: Id, definedObject?: Task){
+    if (loadingAddingTask) return;
     setLoadingAddingTask(true);
         if(definedObject){
             if(!tasks.find(item => item.serverId == definedObject.id)){
-                setTasks([...tasks, definedObject]);
+                setTasks(prev => [...prev, definedObject]);
             }
         }
         else{
-            let newId =  Math.floor(Math.random()*10000);
-
+            // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente tirando o ID timestamp para garantir sem erros sync)
             const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
                 .then(res => res.json())
                 .then(data => data.resposta.id)
@@ -113,13 +129,15 @@ const Column = (props: ColumnProps) => {
                 })
 
             const newTask: Task = {
-                id: newId,
+                id: parseInt(res),
                 name: "Nova tarefa",
                 columnId: columnId,
                 serverId: parseInt(res)
             }
 
-            setTasks([...tasks, newTask]);
+            setTasks(prev => [...prev, newTask]);
+            addTask_GQL(parseInt(res), "Nova tarefa", parseInt(columnId.toString()), parseInt(res), id, props.schema) // GraphQL
+            updateLocalAll([...tasks, newTask])
 
         }
         setLoadingAddingTask(false);
@@ -131,13 +149,14 @@ const Column = (props: ColumnProps) => {
             setTasks(prev => prev.filter(item => item.columnId!=3));
 
             column3.forEach(item => {
+                //  Update (apenas envio, sem uso local)
                 fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/tasks/update?id=${item}&done=TRUE`)
                     .catch(err => {
                         throw err
                     })
+                // GraphQL ---
+                updateTask_GQL(item, "done", "true", props.schema);
             });
-
-            setColumn3([]); // Para evitar concluídos fantasmas
 
         }
         catch(err){
@@ -152,6 +171,8 @@ const Column = (props: ColumnProps) => {
                     text: 'Prosseguir',
                     onPress: () => {
                         setDone();
+                        updateLocalAll(tasks);
+                        setColumn3([]); // Para evitar concluídos fantasmas
                     }
                 }
                 ,
@@ -193,50 +214,41 @@ const Column = (props: ColumnProps) => {
   const renderItem = ({item, drag}) => {
     const {isActive} = useOnCellActiveAnimation();
 
-   if(item.columnId == props.idServer){
     return(
         <ScaleDecorator>
-        <OpacityDecorator>
-          <ShadowDecorator>
-            <TouchableOpacity style={{
-              backgroundColor: props.theme=='dark' ? 'black' : 'white',
-              padding: 10,
-              elevation: isActive ? 20 : 0,
-              marginVertical: 3,
-              borderWidth: 1,
-              borderColor: 'rgb(100,116,139)',
-              flex: 1,
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'flex-start',
-              alignItems: 'center'
-            }}
-            onLongPress={drag}
-            onPress={()=>{
-                setEdit(true);
-                setEditingTask(item.id);
-                updateTemps(item.id);
-            }}
-            >
-  
-              <View style={{width: 10, height: 10, backgroundColor: item.color, borderRadius: 100}}></View>
-  
-              <Text style={{flex: 1, color: props.theme=='dark' ? 'white' : 'black', fontSize: 16}}>{item.name}</Text>
-  
-              <MaterialIcons name="drag-handle" size={24} style={{color: props.theme=='dark' ? 'gray' : 'black'}} />
-  
-              
-            </TouchableOpacity>
-          </ShadowDecorator>
-        </OpacityDecorator>
-      </ScaleDecorator>
-      )
-   }
-   else{
-    return(
-        <></>
+            <OpacityDecorator>
+            <ShadowDecorator>
+                <TouchableOpacity style={{
+                backgroundColor: props.theme=='dark' ? 'black' : 'white',
+                padding: 10,
+                elevation: isActive ? 20 : 0,
+                marginVertical: 3,
+                borderWidth: 1,
+                borderColor: 'rgb(100,116,139)',
+                flex: 1,
+                flexDirection: 'row',
+                gap: 5,
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+                }}
+                onLongPress={drag}
+                onPress={()=>{
+                    setEdit(true);
+                    setEditingTask({
+                        id: item.id,
+                        serverId: item.serverId
+                    });
+                    updateTemps(item.id);
+                }}
+                >
+                    <View style={{width: 10, height: 10, backgroundColor: item.color, borderRadius: 100}}></View>
+                    <Text style={{flex: 1, color: props.theme=='dark' ? 'white' : 'black', fontSize: 16}}>{item.name}</Text>
+                    <MaterialIcons name="drag-handle" size={24} style={{color: props.theme=='dark' ? 'gray' : 'black'}} />
+                </TouchableOpacity>
+            </ShadowDecorator>
+            </OpacityDecorator>
+        </ScaleDecorator>
     )
-   }
   }
 
   return (
@@ -265,7 +277,7 @@ const Column = (props: ColumnProps) => {
                     :
                     <DraggableFlatList
                         ref={listRef}
-                        data={tasks}
+                        data={tasks.filter(elem => elem.columnId==props.idServer).sort((a,b)=> [...column1, ...column2, ...column3].findIndex(item => item==a.serverId)>[...column1, ...column2, ...column3].findIndex(item => item==b.serverId) ? 0 : -1)}
                         renderItem={renderItem}
                         keyExtractor={(item) => `draggable-item-${item.id}`}
                         onDragEnd={({ data }) => {
@@ -276,12 +288,10 @@ const Column = (props: ColumnProps) => {
             }
             
             {
-                loadingAddingTask ?
+                loadingAddingTask &&
                 <View style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginVertical: 5}}>
                     <ActivityIndicator size="small" color={props.theme=='dark'? 'white' : 'black'} style={{opacity: 0.2}} />
                 </View>
-                :
-                <></>
             }
 
         </View>

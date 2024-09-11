@@ -50,7 +50,6 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
   const [doneLabels, setDoneLabels] = useState<string[]>(); // Labels do gráfico a serem exibidas
   const [doneSeries, setDoneSeries] = useState<number[]>(); // Quantidades de tasks feitas a serem exibidas
 
-
   // Função de fetch de tarefas feitas pelo usuário baseado no range acima 
   async function updateDoneLine(){
     setLoading(true);
@@ -59,9 +58,6 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
     const newSeries:number[] = [];
 
     const resDoneTasks = await getTasksFunction_GQL(id, true, schema); //(+GraphQL)
-
-    console.log('=')
-    console.log(resDoneTasks);
 
     if(doneRange){
       for(let i=doneRange; i>0;i--){
@@ -105,7 +101,6 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
               }
             }
            )
-           console.log(quantity.length);
            newSeries.push(quantity.length);
         }
       }
@@ -175,7 +170,6 @@ const GraphDrawer = ( { schema } : GraphDrawerProps) => {
             <DrawerClose>
                 <Button variant="outline" className={`my-2`}>Voltar</Button>
             </DrawerClose>
-
         </DrawerContent>
       </Drawer>
     </div>

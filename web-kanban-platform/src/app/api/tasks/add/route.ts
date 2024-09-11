@@ -1,7 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
-
 // Add nova task
 
 const epoch2038_limit = 2147483647; // Limitação em ms do datatype int

@@ -27,7 +27,7 @@ export interface Task {
 
 interface SetUserModalProps{
   theme: string;
-  schema?: GraphQLSchema
+  schema?: GraphQLSchema;
 }
 
 const SetUserModal = ({theme, schema}: SetUserModalProps) => {
@@ -57,20 +57,16 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
     setLoading(true);
 
     // Parte REST (populating) apenas para verificação se usuário existe ou não (simplicidade)
-    const userRes = await fetch("/api/user?name="+userName, {
+    const userRes = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user?name="+userName, {
         method: 'GET'
       })
       .then(res => res.json())
       .then(data => data.resposta.rows);
 
-    console.log(userRes.length>0);
-
     if(userRes.length>0){ // Fetch no banco (área de trabalho existente)
       const userFound = userRes[0];
 
-      console.log('1')
       await loginFunction(userName, parseInt(userFound.id)); // Setando usuário e populando tasks na base
-      console.log('2')
       
       const resUser = await getUserFunction_GQL(userName, schema); // Fetch user data na base
       
@@ -82,14 +78,9 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
         setUser(resUser.name);
         setId(parseInt(resUser.id));
 
-        setColumn1(resUser.column1);
-        setColumn2(resUser.column2);
-        setColumn3(resUser.column3);
-
         if(resUser.column1_name !== null && resUser.column1_name !==undefined) setColumn1_name(resUser.column1_name);
         if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
         if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
-
 
         if(resTasks){
           const col1 = resUser.column1;
@@ -102,22 +93,29 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
             id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
           }))
 
+          // Para considerar nos relatórios apenas as ainda não concluídas
+          setColumn1(resUser.column1.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
+          setColumn2(resUser.column2.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
+          setColumn3(resUser.column3.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
+
           // Atualizando localmente as tasks
-          setTasks(
-            resTasks_Filtered.map( (item:Task) => ({
-              ...item,
-              id: Math.floor(Math.random()*10000),
-              columnId: 
+
+          const resultingTasks = resTasks_Filtered.map( (item) => ({
+            ...item,
+            columnId: 
                 col1.includes(item.id) ? 1 : 
-                  col2.includes(item.id) ? 2 :
-                    col3.includes(item.id) ? 3 :
-                    0,
-              name: item.name,
-              serverId: item.id
-            })
-              ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1)
-          )
+                col2.includes(item.id) ? 2 :
+                col3.includes(item.id) ? 3 :
+                  0,
+            name: item.name,
+            serverId: item.id,
+            id: Math.floor(Math.random()*10000),
+          })
+            ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1);
+          
           // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
+
+          setTasks(resultingTasks)
         
         }
         setLoadingTasks(false);
@@ -125,7 +123,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
 
     }
     else{ // Criação de conta (Usuário não tinha área de trabalho anteriormente)
-      const createUserRes = await fetch("/api/user/add?name="+userName, {
+      const createUserRes = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user/add?name="+userName, {
         method: 'GET' // Se cria o usuário no banco com REST (populating, necessário)
       })
       .then(res => res.json())
@@ -137,7 +135,7 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
         setUser(userName);
       }
 
-      const userCreated = await fetch("/api/user?name="+userName, {
+      const userCreated = await fetch(process.env.EXPO_PUBLIC_SERVER_URL+"/api/user?name="+userName, {
         method: 'GET' // Se busca mais uma vez no banco para finalmente transferir de vez para a base local GraphQL
       })
       .then(res => res.json())
@@ -183,7 +181,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
       `
   
       const vars_tasks = {
-          "username": username,
           "id": userId
       }
   
@@ -207,8 +204,8 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
           animationType="fade"
           visible={!user || user.length==0}
         >
-           <View className={`w-full h-full flex justify-center p-4 bg-[rgba(0,0,0,0.5)]`}>
-                <View className={`${theme=='dark'?'bg-black':'bg-white'} p-4 flex gap-2 rounded-md`}>
+           <View className={`w-full h-full flex justify-center p-4`} style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <View className={`${theme=='dark'?'bg-black':'bg-white'} p-4 flex gap-2 rounded-md border border-slate-500`}>
                     <Text className={`text-lg font-semibold ${theme=='dark'?'text-white':'text-black'}`}>Quem é você?</Text>
                     <Text className={`mb-2 ${theme=='dark'?'text-white':'text-black'}`}>Informe seu nome de usuário para acessar sua área de trabalho</Text>
                     

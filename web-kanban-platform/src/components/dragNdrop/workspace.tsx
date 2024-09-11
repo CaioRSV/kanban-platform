@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom';
+import { GraphQLSchema } from 'graphql';
 
 import { useUserContext } from '../contexts/userContext';
 import { useTaskContext } from '../contexts/tasksContext';
 
 import ColumnElement from './column';
 import Card from './card';
-
 
 import { DndContext, closestCorners, 
     useSensor, useSensors, 
@@ -23,8 +23,8 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { onDragStart } from './functions/dnd_functions';
 import { onDragEnd } from './functions/dnd_functions';
 import { onDragOver } from './functions/dnd_functions';
-import { GraphQLSchema } from 'graphql';
 
+// Local GraphQL base Functions
 import { addTask_GQL, deleteTask_GQL, updateColumn_GQL, updateTask_GQL } from '@/lib/graphQl_functions';
 
 // Local Types (minor differences from GraphQL local base, but doesnt matter too much, minor type adapts)
@@ -74,7 +74,6 @@ const Workspace = ({schema}:WorkspaceProps) => {
     const {tasks, setTasks} = useTaskContext();
 
     // Colunas (locais)
-    
     const [columns, setColumns] = useState<Column[]>([
         {
             id: 1,
@@ -91,7 +90,6 @@ const Workspace = ({schema}:WorkspaceProps) => {
     ]);
 
     // Populando colunas com nomes recebidos do back on mount
-
     useEffect(()=>{
         setColumns([
             {
@@ -110,7 +108,6 @@ const Workspace = ({schema}:WorkspaceProps) => {
     }, [column1_name, column2_name, column3_name])
     
     const columnsId = useMemo(() => columns.map(col=>col.id), [columns]); // Mapeando cada ID de colunas
-
 
     const [activeTask , setActiveTask] = useState<Task | null>(); // Info task de interação atual
     const [activeColumn , setActiveColumn] = useState<Column | null>(); // Info coluna de interação atual
@@ -168,7 +165,12 @@ const Workspace = ({schema}:WorkspaceProps) => {
         setColumns(newColumns);
     }
 
+    const [stealthLoading, setStealthLoading] = useState<boolean>(false); // Carregando add porém sem afetar visualmente
+
     async function addTask(columnId: Id, definedObject?: Task){
+        if(stealthLoading) return;
+
+        setStealthLoading(true);
         if(definedObject){
             if(!tasks.find(item => item.serverId == definedObject.id)){
                 setTasks([...tasks, definedObject]);
@@ -176,6 +178,8 @@ const Workspace = ({schema}:WorkspaceProps) => {
         }
         else{
             let newId =  Math.floor(getDateID()/100);
+
+            if(tasks.find(item => item.id==newId)) return; // Evitar mesmo ID
 
             // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
             const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
@@ -195,7 +199,7 @@ const Workspace = ({schema}:WorkspaceProps) => {
 
             setTasks([...tasks, newTask]);
         }
-
+        setStealthLoading(false);
     }
 
     function deleteTask(serverId: Id, localId: Id){
@@ -222,7 +226,6 @@ const Workspace = ({schema}:WorkspaceProps) => {
     }
 
     function updateTask(localId: Id, content: string, attribute: string){
-
         const serverId_chosen = tasks.find(item => item.id==localId)?.serverId
 
         const newTasks = tasks.map((task) => {
