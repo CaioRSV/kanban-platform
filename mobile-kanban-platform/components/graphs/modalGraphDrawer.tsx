@@ -1,5 +1,5 @@
 import { View, Text, Modal, ActivityIndicator, TouchableOpacity } from 'react-native'
-import React, { SetStateAction, useState } from 'react'
+import React, { SetStateAction } from 'react'
 import DoneLineGraph from './doneLineGraph';
 import RatioGraph from './ratioGraph';
 
@@ -23,8 +23,6 @@ const ModalGraphDrawer = ( props: ModalGraphDrawerProps ) => {
         column3,
         loadingTasks
     } = useUserContext();
-
-    // Done line graph
 
     const { colorScheme } = useColorScheme();
 

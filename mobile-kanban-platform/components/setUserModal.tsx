@@ -94,7 +94,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
           }))
 
           // Para considerar nos relatórios apenas as ainda não concluídas
-
           setColumn1(resUser.column1.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
           setColumn2(resUser.column2.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
           setColumn3(resUser.column3.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
@@ -192,7 +191,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
       })
 
       // Para debugging
-
       return {
         user_message: result,
         tasks_message: result_tasks

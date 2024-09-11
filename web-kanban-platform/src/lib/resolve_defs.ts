@@ -1,5 +1,7 @@
 import { GraphQLScalarType, Kind } from 'graphql';
 
+// Definição do DataType de DateTime, usado no schema mock local do GraphQL
+
 const DateTime = new GraphQLScalarType({
   name: 'DateTime',
   description: 'ISO 8601',

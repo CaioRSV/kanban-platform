@@ -21,6 +21,7 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
     //
     const [openModal, setOpenModal] = useState<boolean>(false);
 
+    // Strings que serão populadas com as queries GraphQL para serem exibidas
     const [userQuery, setUserQuery] = useState<string>("{}"); // Evitar erro com JSON.parse
     const [tasksQuery, setTasksQuery] = useState<string>("{}"); // ^ =
     const [doneTasksQuery, setDoneTasksQuery] = useState<string>("{}"); // ^ =
@@ -99,7 +100,6 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
           <QueryResContainer title="Query - Tarefas concluídas" queryString={doneTasksQuery} />
 
           <Divisor/>
-          
         </ScrollView>
       </View>
 

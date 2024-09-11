@@ -32,8 +32,6 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
     }
   }
 
-//
-
 export const getUserFunction_GQL = async (username: String, schema?: GraphQLSchema): Promise<User | undefined> => {
     if(schema){
       const query = `
@@ -91,7 +89,6 @@ export const updateTask_GQL = async (id: number, attribute: string, value: strin
               variableValues: vars
           })
 
-          //console.log(result);
           return result;
     }
 }
@@ -122,13 +119,9 @@ export const addTask_GQL = async (id: number, name: String, columnId: number, se
               variableValues: vars
           })
         
-          // console.log("¨¨¨¨")
-          // console.log(result);
           return result;
     }
 }
-
-//
 
 export const deleteTask_GQL = async (id: number, userId:string, schema?: GraphQLSchema) =>{
   if(schema){
@@ -185,7 +178,6 @@ export const updateColumn_GQL = async (userId: number, columnName: string, value
               variableValues: vars
           })
         
-          //console.log(result);
           return result;
     }
 }
@@ -217,7 +209,6 @@ export const orderColumn_GQL = async (userId: number, columnName: string, value:
             variableValues: vars
         })
       
-        //console.log(result);
         return result;
   }
 }

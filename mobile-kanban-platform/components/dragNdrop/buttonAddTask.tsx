@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Text, Modal, TextInput, Alert, ActivityIndicator, GestureResponderEvent} from "react-native";
+import { View, TouchableOpacity, Text, GestureResponderEvent} from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useUserContext } from "../contexts/userContext";
@@ -9,7 +9,7 @@ import { Task, Id } from "./column";
 export interface ButtonProps{
     name: string;
     idServer: number;
-    isDone: boolean;
+    isDone: boolean; // Valor que representa se a coluna será a escolhida para ter funcionalidade de confirmar conclusão
     theme: string;
     
     confirmDone: (event: GestureResponderEvent) => void;
@@ -18,7 +18,6 @@ export interface ButtonProps{
 
 const ButtonAddTask = (props: ButtonProps) => {
     const {addTask, confirmDone} = props;
-
     const { loadingTasks } = useUserContext();
 
   return (

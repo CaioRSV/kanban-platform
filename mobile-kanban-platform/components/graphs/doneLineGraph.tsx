@@ -1,10 +1,6 @@
-import { View } from 'react-native'
-import React from 'react'
+import { View, Dimensions } from 'react-native'
 
 import { LineChart } from "react-native-chart-kit";
-
-import {Dimensions} from 'react-native';
-
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -16,7 +12,6 @@ interface DoneLineGraphProps{
 }
 
 const DoneLineGraph = (props: DoneLineGraphProps) => {
-
   const data = {
     labels: props.labels ?? ["Fall", "Back"],
     datasets: [

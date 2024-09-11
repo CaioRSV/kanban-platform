@@ -47,8 +47,6 @@ interface ResponseTasks {
     };
   }
 
-//
-
 interface SchemaWrapperProps {
   children: ReactNode;
 }
@@ -64,7 +62,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     const [users] =  useState<Record<string, User>>({});
     const [tasks] =  useState<Record<string, Task>>({});
     
-    // Função populadora do Mock Object de início (login), único momento de fetch para funções primárias da aplicação
+    // Função populadora do Mock Object de início (login), único momento de fetch REST para funções primárias da aplicação
     async function fetchUserData(username: string): Promise<User | null> {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/user?name=${username}`);
       const data: ResponseUser = await response.json();
@@ -76,7 +74,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       return null;
     }
     
-    // Função populadora de tasks do usuário logado
+    // Função populadora de tasks do usuário logado, único momento de fetch REST para funções primárias da aplicação
     async function fetchTasks(id: number): Promise<Task[] | null> {
         const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/tasks/getAll?user=${id}`);
         const data: ResponseTasks = await response.json();
@@ -303,7 +301,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       },
 
       deleteTask: (_: unknown, {id, userId} : {id: number, userId: string}): Task | null => {
-        
         const deletedTask = tasks[id.toString()];
 
         users[userId] = {
@@ -339,7 +336,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     const schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
 
 
-  // Repassando para child components (mesmo dentro de outros elementos básicos HTML)
+  // Repassando para child components (mesmo dentro de outros elementos básicos)
   const cloneChildrenWithProps = (child: ReactNode): ReactNode => {
       if (React.isValidElement(child)) {
         const clonedChild = React.cloneElement(

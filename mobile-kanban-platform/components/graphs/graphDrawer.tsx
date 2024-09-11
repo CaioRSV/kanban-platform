@@ -15,9 +15,10 @@ interface GraphDrawerProps {
 }
 
 const GraphDrawer = ({schema} : GraphDrawerProps) => {
-    const [graphModal, setGraphModal] = useState<boolean>(false);
-
     const { user, id, setLoadingTasks } = useUserContext();
+    const { colorScheme } = useColorScheme();
+    //
+    const [graphModal, setGraphModal] = useState<boolean>(false);
 
     // Done line graph
     const [doneRange] = useState<number>(7);
@@ -25,6 +26,7 @@ const GraphDrawer = ({schema} : GraphDrawerProps) => {
     const [doneLabels, setDoneLabels] = useState<string[]>();
     const [doneSeries, setDoneSeries] = useState<number[]>();
 
+    // Verificando de hoje - (doneRange) dias quantas tasks foram concluídas por dia no total
     async function updateDoneLine(){
         setLoadingTasks(true);
     
@@ -67,11 +69,11 @@ const GraphDrawer = ({schema} : GraphDrawerProps) => {
                       return true
                     }
                     else{
-                      return false
+                      return false // Em nenhum range (nem hoje)
                     }
                   }
                   else{
-                    return false;
+                    return false; // null
                   }
                 }
                )
@@ -84,9 +86,6 @@ const GraphDrawer = ({schema} : GraphDrawerProps) => {
 
         setLoadingTasks(false);
       }
-
-    const { colorScheme } = useColorScheme();
-
 
     const openGraphDrawer = () => {
       setGraphModal(true);
@@ -104,7 +103,6 @@ const GraphDrawer = ({schema} : GraphDrawerProps) => {
 
       <View className={`h-full w-full flex justify-center items-center`}>
         <Text adjustsFontSizeToFit className={`text-blue-300`}>{user}</Text>
-
         <ModalGraphDrawer graphModal={graphModal} setGraphModal={setGraphModal} doneLabels={doneLabels} doneSeries={doneSeries}/>
       </View>
     </View>

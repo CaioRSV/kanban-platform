@@ -7,7 +7,6 @@ import { GraphQLSchema } from "graphql";
 interface WorkspaceProps{
   theme: string;
   schema?: GraphQLSchema;
-  tasks_schema: any;
 }
 
 const Workspace = (props: WorkspaceProps) => {
@@ -19,7 +18,7 @@ const Workspace = (props: WorkspaceProps) => {
   } = useUserContext();
 
   const selectedColumnObject = {
-    "column1" : <Column name={column1_name} idServer={1} isDone={false} theme={props.theme} schema={props.schema} tasks_schema={props.tasks_schema} />,
+    "column1" : <Column name={column1_name} idServer={1} isDone={false} theme={props.theme} schema={props.schema} />,
     "column2" : <Column name={column2_name}  idServer={2} isDone={false} theme={props.theme} schema={props.schema}/>,
     "column3" : <Column name={column3_name}  idServer={3} isDone={true} theme={props.theme} schema={props.schema}/>
   }

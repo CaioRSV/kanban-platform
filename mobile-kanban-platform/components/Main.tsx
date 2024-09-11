@@ -1,8 +1,6 @@
 import { View } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
 
-import React from 'react'
-
 import { useColorScheme } from 'nativewind';
 
 import SetUserModal from './setUserModal';
@@ -28,7 +26,6 @@ const Main = () => {
 
   return (
     <View style={{overflow: 'scroll'}} className={`h-full w-full dark:bg-black p-8 relative`}>
-
       <SchemaWrapper>
         
         <SetUserModal theme={colorScheme=='dark'?'dark':'light'}/> 
@@ -37,14 +34,12 @@ const Main = () => {
 
         <ScrollView>
           <SaveColumns/>
-          
           <Workspace theme={colorScheme=='dark' ? 'dark' : 'light'}/>
           <SchemaVisualizer theme={colorScheme=='dark' ? 'dark' : 'light'}/>
           <GraphDrawer/>
         </ScrollView>
 
       </SchemaWrapper>
-
     </View>
   )
 }
