@@ -14,6 +14,13 @@ pnpm dev
 bun dev
 ```
 
+---
+In environment file, set your base URL as follows
+```
+NEXT_PUBLIC_BASE_URL=''
+```
+---
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

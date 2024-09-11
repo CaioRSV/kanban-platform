@@ -66,7 +66,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
     const [users] =  useState<Record<string, User>>({});
     const [tasks] =  useState<Record<string, Task>>({});
     
-    // Função populadora do Mock Object de início (login), único momento de fetch para funções primárias da aplicação
+    // Função populadora do Mock Object de início (login), único momento de fetch REST para funções primárias da aplicação
     async function fetchUserData(username: string): Promise<User | null> {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user?name=${username}`);
       const data: ResponseUser = await response.json();
@@ -78,7 +78,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       return null;
     }
     
-    // Função populadora de tasks do usuário logado
+    // Função populadora de tasks do usuário logado, único momento de fetch REST para funções primárias da aplicação
     async function fetchTasks(id: number): Promise<Task[] | null> {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/getAll?user=${id}`);
         const data: ResponseTasks = await response.json();
@@ -149,7 +149,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
         tasks: (_: unknown, { id, done }: {id: number, done: boolean}): Task[] | undefined => {
             try{
                 if(done!=undefined && done!=null){
-
                     const resObject = Object.values(tasks)
                       .map(item => {
                         return {
@@ -185,7 +184,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       },
       Mutation: {
         login: async (_: unknown, { username }: { username: string }): Promise<string> => {
-    
           const userData = await fetchUserData(username);
     
           if (!userData) {
@@ -305,7 +303,6 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
       },
 
       deleteTask: (_: unknown, {id, userId} : {id: number, userId: string}): Task | null => {
-        
         const deletedTask = tasks[id];
 
         users[userId] = {

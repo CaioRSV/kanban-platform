@@ -9,6 +9,8 @@ interface DoneLineGraphProps{
     theme: string;
 }
 
+// Gráfico de linha
+
 class DoneLineGraph extends Component<DoneLineGraphProps> {
   render() {
     const { series, labels, theme} = this.props;

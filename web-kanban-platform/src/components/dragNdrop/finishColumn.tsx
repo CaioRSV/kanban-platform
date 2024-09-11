@@ -30,11 +30,9 @@ const buttonOutline_style = `inline-flex items-center justify-center whitespace-
 
 interface FinishColumnProps{
     schema?: GraphQLSchema
-    users_schema?: Record<string, User>
-    tasks_schema?: Record<string, Task>
   }
 
-const FinishColumn = ({schema, users_schema, tasks_schema}: FinishColumnProps) => { 
+const FinishColumn = ({schema}: FinishColumnProps) => { 
     // Contextos
     const { column3, column3_name } = useUserContext();
     const {setTasks} = useTaskContext();

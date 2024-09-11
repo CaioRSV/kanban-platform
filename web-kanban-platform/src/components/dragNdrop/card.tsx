@@ -46,7 +46,6 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
         setEditing(prev => !prev);
     };
 
-
     // Configs do Sortable
     const { attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
         id: task.id,
@@ -104,7 +103,6 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
 
         <ContextMenu>
             <ContextMenuTrigger className={`w-full flex items-center`}>
-
                 <div className={`h-full flex flex-col justify-center mr-2`}>
                     <DropdownMenu>
                         <DropdownMenuTrigger>
@@ -156,7 +154,6 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                 <div className={`flex-1`}/>
                 
                 <MdDragIndicator size={28} className={`text-[var(--background)]`} />
-
             </ContextMenuTrigger>
 
         
@@ -169,7 +166,6 @@ const Card: React.FC<TaskCardProps> = ({task, deleteTask, updateTask}) => {
                 </ContextMenuItem>
             </ContextMenuContent>
         </ContextMenu>
-
     </div>
   )
 }

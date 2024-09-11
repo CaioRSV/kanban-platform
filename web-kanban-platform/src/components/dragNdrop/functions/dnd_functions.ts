@@ -5,6 +5,8 @@ import React, { SetStateAction } from "react";
 import { Column, Task } from "../workspace";
 import { arrayMove } from "@dnd-kit/sortable";
 
+// Funções auxilares para o funcionamento do Drag and Drop no Workspace Kanban
+
 export function onDragStart(event: DragStartEvent, setCol: Function, setTask: Function){
     if(event.active.data.current?.type=="Column"){
         setCol(event.active.data.current.column)

@@ -21,9 +21,7 @@ const ThemeSwitch = () => {
 
   // Caso ainda não tenha terminado o mount, mostra uma animação indicativa disso
   if (!mounted) {
-    return <>
-        <FaRegDotCircle size={30} className={`animate-ping`} /> 
-      </>;
+    return <FaRegDotCircle size={30} className={`animate-ping`}/>;
   }
 
   return (

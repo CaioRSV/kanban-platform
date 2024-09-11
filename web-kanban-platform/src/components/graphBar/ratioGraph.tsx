@@ -9,6 +9,8 @@ interface RatioGraphProps {
   theme: string;
 }
 
+// Gráfico "Pizza" (Pie Graph)
+
 class RatioGraph extends Component<RatioGraphProps> {
   render() {
     const { series, labels, theme } = this.props;

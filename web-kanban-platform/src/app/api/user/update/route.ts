@@ -22,17 +22,17 @@ export async function GET(request: Request) {
   
   //
 
-    setCombo.push(`column1=$${setCombo.length+2}`);
-    refValues.push(column1);
-//
+  setCombo.push(`column1=$${setCombo.length+2}`);
+  refValues.push(column1);
+  //
 
-    setCombo.push(`column2=$${setCombo.length+2}`);
-    refValues.push(column2);
+  setCombo.push(`column2=$${setCombo.length+2}`);
+  refValues.push(column2);
 
-    //
+  //
 
-    setCombo.push(`column3=$${setCombo.length+2}`);
-    refValues.push(column3);
+  setCombo.push(`column3=$${setCombo.length+2}`);
+  refValues.push(column3);
 
   //
   if (column1_name) {
@@ -49,6 +49,7 @@ export async function GET(request: Request) {
     setCombo.push(`column3_name=$${setCombo.length+2}`);
     refValues.push(column3_name);
   }
+
   //
   
   const SQL = `
