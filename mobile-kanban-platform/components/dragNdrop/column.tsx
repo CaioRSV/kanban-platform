@@ -62,7 +62,7 @@ const Column = (props: ColumnProps) => {
   } = useUserContext();
 
   // Variáveis de estado locais
-  const [editingTask, setEditingTask] = useState<number>();
+  const [editingTask, setEditingTask] = useState<{ id: number, serverId: number }>({id: null, serverId: null});
 
   const [edit, setEdit] = useState<boolean>(false);
   const [tempName, setTempName] = useState<string>();
@@ -234,7 +234,10 @@ const Column = (props: ColumnProps) => {
                 onLongPress={drag}
                 onPress={()=>{
                     setEdit(true);
-                    setEditingTask(item.id);
+                    setEditingTask({
+                        id: item.id,
+                        serverId: item.serverId
+                    });
                     updateTemps(item.id);
                 }}
                 >

@@ -19,7 +19,7 @@ export interface ColumnProps{
   theme: string;
   schema?: GraphQLSchema
 
-  editingTask: Id;
+  editingTask: { id: number, serverId: number };
   updateLocalAll (param: Task[]): void;
 
   edit: boolean;
@@ -77,6 +77,8 @@ const ModalColumn = (props: ColumnProps) => {
         setTasks(newTasks);
         updateLocal(newTasks);
         deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), props.schema); // GraphQL
+        console.log(serverId)
+        console.log(id.toString())
     }
 
     function updateTask(localId: Id){
@@ -134,7 +136,7 @@ const ModalColumn = (props: ColumnProps) => {
                 {
                     text: 'Deletar',
                     onPress: () => {
-                        deleteTask(tasks.find(elem => elem.serverId==editingTask) ? tasks.find(elem => elem.serverId==editingTask).serverId : editingTask, editingTask);
+                        deleteTask(editingTask.serverId, editingTask.id);
                         setEdit(false);
                     }
                 }
@@ -172,7 +174,7 @@ const ModalColumn = (props: ColumnProps) => {
                     <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
                             <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Nome</Text>
                             <TextInput onChangeText={(e)=>{setTempName(e)}}
-                                placeholder={tasks.find(item => item.id == editingTask) ? tasks.find(item => item.id == editingTask).name : ''}
+                                placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).name : ''}
                                 placeholderTextColor={'gray'}
                                 style={{
                                     backgroundColor: props.theme=='dark' ? 'black' : 'white',
@@ -190,7 +192,7 @@ const ModalColumn = (props: ColumnProps) => {
                         <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
                             <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Descrição</Text>
                             <TextInput onChangeText={(e)=>{setTempDesc(e)}}
-                                placeholder={tasks.find(item => item.id == editingTask) ? tasks.find(item => item.id == editingTask).description : ''}
+                                placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).description : ''}
                                 placeholderTextColor={'gray'}
                                 style={{
                                     backgroundColor: props.theme=='dark' ? 'black' : 'white',
@@ -246,7 +248,7 @@ const ModalColumn = (props: ColumnProps) => {
 
                     <View style={{marginTop:25, flex: 1, gap: 5,  display:'flex', flexDirection:'row', justifyContent: 'center', alignItems: 'center', width: '100%', paddingHorizontal: 10}}>
                         
-                        <TouchableOpacity onPress={()=>{updateTask(editingTask)}} style={{flex: 0.9, display:'flex', flexDirection: 'row', gap:4, justifyContent: 'center', alignItems: 'center', borderColor: 'gray', borderWidth: 1, padding: 20, borderRadius: 5, width: '100%'}}>
+                        <TouchableOpacity onPress={()=>{updateTask(editingTask.id)}} style={{flex: 0.9, display:'flex', flexDirection: 'row', gap:4, justifyContent: 'center', alignItems: 'center', borderColor: 'gray', borderWidth: 1, padding: 20, borderRadius: 5, width: '100%'}}>
                             <Text style={{color: props.theme=='dark'?'white':'black', fontSize: 18}}>Salvar</Text>
                             <Feather name="check-circle" size={24} color={props.theme=='dark'?'white':'black'} />
                         </TouchableOpacity>
