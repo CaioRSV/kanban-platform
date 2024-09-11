@@ -23,13 +23,17 @@ A imagem acima busca traduzir de forma prática a nova lógica implementada, que
 
 - A aplicação é populada pelo banco serverless uma única vez assim que o usuário entra em sua área de trabalho
 - Armazena as informações em uma base local, preparada para ser acessada e modificada por métodos (queries e mutations) GraphQL
-- A cada atualização e modificação dos dados dentro da aplicação, a base local GraphQL é modificada por meio de suas funções específicas, em formato adequado
+- A cada atualização e modificação dos dados na aplicação, a base local GraphQL é modificada por meio de suas funções específicas, em formato adequado
   - Além disso, as requisições REST de atualização do banco foram mantidas, não por necessidade de funcionamento, mas para manter a lógica de retenção de dados anterior. Essas poderiam ser removidas sem maiores problemas no uso imediato.
 
 Arquivos importantes para a implementação e visualização da lógica implementada:
 - `graphQl_functions.ts`
 - `schemaWrapper.tsx`
 - `SchemaVisualizer.tsx`
+
+Para a visualização dessas mudanças, foi adicionado um novo componente em cada uma das versões da aplicação, onde o usuário poderá visualizar o estado atual da base local GraphQL por meio de queries feitas diretamente a ela, de modo que seus resultados são exibidos para leitura. Segue abaixo uma captura de tela desse componente (aberto ao clicar no botão: Visualizar GraphQL)
+
+![graphl_visualizer_web](https://github.com/user-attachments/assets/ac0aba16-909b-4ab1-b77d-ba9de2f47db1)
 
 ---
 ##### Componentização:
