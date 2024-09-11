@@ -161,9 +161,6 @@ const Column = (props: ColumnProps) => {
                 updateTask_GQL(item, "done", "true", props.schema);
             });
 
-            // Limpando na base local GraphQL (relatórios)
-            //orderColumn_GQL(id, "column3", [], props.schema);
-
         }
         catch(err){
             throw err

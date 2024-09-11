@@ -78,10 +78,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
         setUser(resUser.name);
         setId(parseInt(resUser.id));
 
-        setColumn1(resUser.column1);
-        setColumn2(resUser.column2);
-        setColumn3(resUser.column3);
-
         if(resUser.column1_name !== null && resUser.column1_name !==undefined) setColumn1_name(resUser.column1_name);
         if(resUser.column2_name !== null && resUser.column2_name !==undefined) setColumn2_name(resUser.column2_name);
         if(resUser.column3_name !== null && resUser.column3_name !==undefined) setColumn3_name(resUser.column3_name);
@@ -96,6 +92,12 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
             ...elem,
             id: typeof elem.id === 'string' ? parseInt(elem.id) : elem.id
           }))
+
+          // Para considerar nos relatórios apenas as ainda não concluídas
+
+          setColumn1(resUser.column1.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
+          setColumn2(resUser.column2.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
+          setColumn3(resUser.column3.filter(num => resTasks_Filtered.find(elem => elem.id==num)));
 
           // Atualizando localmente as tasks
 
@@ -204,8 +206,8 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
           animationType="fade"
           visible={!user || user.length==0}
         >
-           <View className={`w-full h-full flex justify-center p-4 bg-[rgba(0,0,0,0.5)]`}>
-                <View className={`${theme=='dark'?'bg-black':'bg-white'} p-4 flex gap-2 rounded-md`}>
+           <View className={`w-full h-full flex justify-center p-4`} style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <View className={`${theme=='dark'?'bg-black':'bg-white'} p-4 flex gap-2 rounded-md border border-slate-500`}>
                     <Text className={`text-lg font-semibold ${theme=='dark'?'text-white':'text-black'}`}>Quem é você?</Text>
                     <Text className={`mb-2 ${theme=='dark'?'text-white':'text-black'}`}>Informe seu nome de usuário para acessar sua área de trabalho</Text>
                     

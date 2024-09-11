@@ -134,7 +134,7 @@ const ModalColumn = (props: ColumnProps) => {
                 {
                     text: 'Deletar',
                     onPress: () => {
-                        deleteTask(tasks.find(elem => elem.serverId==editingTask).serverId, editingTask);
+                        deleteTask(tasks.find(elem => elem.serverId==editingTask) ? tasks.find(elem => elem.serverId==editingTask).serverId : editingTask, editingTask);
                         setEdit(false);
                     }
                 }
