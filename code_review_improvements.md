@@ -34,12 +34,12 @@ Arquivos importantes para a implementação e visualização da lógica implemen
 ---
 ##### Componentização:
 
-Foram feitos esforços para componentizar componentes para promover uma maior simplicidade, coesão e reutilização de componentes e subcomponentes no código.
+Foram feitos esforços para componentizar mais frequentemente elementos da aplicação para promover uma maior simplicidade, coesão e reutilização de componentes e subcomponentes no código.
 
 ---
 ##### Comentários não ideais
 
-Foram observados, adaptados de forma a terem explicações mais formais, e adicionados ou removidos com mais cuidado. Em relação ao comentário original citado, ele se referia a uma possível limitação do DATATYPE Int nos bancos, o que poderia ser um problema pela utilização da lógica de TIMESTAMP como ID para as rotas do banco provisório. Novos comentários foram adicionados para esclarecer tal situação.
+Foram observados, adaptados de forma a terem explicações mais formais, e adicionados ou removidos com mais cuidado. Em relação ao comentário original citado, ele se referia a uma possível limitação (em um período de tempo muito a frente do relevante para o escopo desse projeto) do DATATYPE Int nos bancos, o que poderia ser um problema pela utilização da lógica de TIMESTAMP como ID para as rotas do banco provisório. Novos comentários foram adicionados para esclarecer tal situação.
 
 ---
 ##### Código com exemplo "Hello World"
@@ -49,22 +49,22 @@ Se tratava de um código "vestigial" de uma etapa de testes com o GraphQL, antes
 ---
 ##### Utilização não necessária de client components na versão web
 
-Foram observados componentes que poderiam ter tido sua definição de 'client component' feita de forma equivocada. Como exemplo, o `App.tsx`, que foi prontamente subdividido e adaptado para mantê-lo como 'server component', repassando as funções de blur antes do mount para componentes individuais. Também, outros componentes como `GithubHandle.tsx` e `Card.tsx` puderam ser transformados/mantidos para não apresentarem a necessidade do "use client".
+Foram observados componentes que poderiam ter tido sua definição de 'client component' feita de forma equivocada. Como exemplo, o `App.tsx`, que foi prontamente subdividido e adaptado para mantê-lo como 'server component', repassando as funções de blur antes do mount para componentes individuais. Também, componentes como `GithubHandle.tsx`, `Card.tsx` entre outros, puderam ser transformados/mantidos para não apresentarem a necessidade do "use client".
 
 ---
 ##### Utilização desnecessária de "use client" na versão mobile
 
-Na hora da adaptação do código da aplicação web para a aplicação mobile, acabaram sendo mantidos os marcadores de componentes de cliente "use client". Foram prontamente removidos.
+Durante a adaptação do código da aplicação web para a aplicação mobile, acabaram sendo mantidos os marcadores de componentes de cliente "use client". Foram prontamente removidos.
 
 ---
 ##### Indentação e organização
 
-A organização de arquivos individuais, comentários, indentação e organização de pastas no projeto foram revisadas, para tornar toda a estrutura mais organizada.
+Aspectos como organização de arquivos individuais, comentários, indentação e organização de pastas no projeto foram revisados, para tornar toda a estrutura mais organizada.
 
 ---
 ##### Fluxo confuso de confirmar conclusão de tarefas
 
-O fluxo foi simplificado. Não há mais necessidade de pressionar e segura em um botão. Ao clicar no botão de `Confirmar Tarefas`, um alerta explicando a funcionalidade aparece e dando a possibilidade de confirmar ou não a ação.
+O fluxo foi simplificado. Não há mais necessidade de pressionar e segurar um botão para confirmar a conclusão de tarefas. Ao clicar no botão de `Confirmar Tarefas`, um alerta explicando a funcionalidade aparece e dando a possibilidade de confirmar ou não a ação.
 
 ---
 

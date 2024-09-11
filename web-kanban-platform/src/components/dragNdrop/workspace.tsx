@@ -168,7 +168,12 @@ const Workspace = ({schema}:WorkspaceProps) => {
         setColumns(newColumns);
     }
 
+    const [stealthLoading, setStealthLoading] = useState<boolean>(false); // Carregando add porém sem afetar visualmente
+
     async function addTask(columnId: Id, definedObject?: Task){
+        if(stealthLoading) return;
+
+        setStealthLoading(true);
         if(definedObject){
             if(!tasks.find(item => item.serverId == definedObject.id)){
                 setTasks([...tasks, definedObject]);
@@ -195,7 +200,7 @@ const Workspace = ({schema}:WorkspaceProps) => {
 
             setTasks([...tasks, newTask]);
         }
-
+        setStealthLoading(false);
     }
 
     function deleteTask(serverId: Id, localId: Id){

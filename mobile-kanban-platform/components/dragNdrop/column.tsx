@@ -115,6 +115,7 @@ const Column = (props: ColumnProps) => {
 
   // Adicionando Task
   async function addTask(columnId: Id, definedObject?: Task){
+    if (loadingAddingTask) return;
     setLoadingAddingTask(true);
         if(definedObject){
             if(!tasks.find(item => item.serverId == definedObject.id)){
