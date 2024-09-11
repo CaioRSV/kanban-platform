@@ -179,6 +179,8 @@ const Workspace = ({schema}:WorkspaceProps) => {
         else{
             let newId =  Math.floor(getDateID()/100);
 
+            if(tasks.find(item => item.id==newId)) return; // Evitar mesmo ID
+
             // REST request (apenas envio por virtude de manutenção do banco, não afeta localmente)
             const res = await fetch(`/api/tasks/add?user=${id}&name=${'Nova tarefa'}&description=${''}`)
                 .then(res => res.json())
