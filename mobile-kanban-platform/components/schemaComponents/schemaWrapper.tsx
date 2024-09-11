@@ -304,7 +304,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
 
       deleteTask: (_: unknown, {id, userId} : {id: number, userId: string}): Task | null => {
         
-        const deletedTask = tasks[id];
+        const deletedTask = tasks[id.toString()];
 
         users[userId] = {
           ...users[userId],

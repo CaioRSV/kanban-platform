@@ -76,7 +76,7 @@ const ModalColumn = (props: ColumnProps) => {
         const newTasks = tasks.filter(task => task.id != localId);
         setTasks(newTasks);
         updateLocal(newTasks);
-        deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), props.schema)
+        deleteTask_GQL(typeof serverId === "string" ? parseInt(serverId) : serverId, id.toString(), props.schema);
     }
 
     function updateTask(localId: Id){
@@ -134,7 +134,8 @@ const ModalColumn = (props: ColumnProps) => {
                 {
                     text: 'Deletar',
                     onPress: () => {
-                        deleteTask(tasks.find(elem => elem.serverId).serverId, editingTask)
+                        deleteTask(tasks.find(elem => elem.serverId==editingTask).serverId, editingTask);
+                        setEdit(false);
                     }
                 }
                 ,

@@ -153,8 +153,6 @@ export const deleteTask_GQL = async (id: number, userId:string, schema?: GraphQL
               variableValues: vars
           })
         
-          //console.log("¨¨¨¨")
-          //console.log(result);
           return result;
     }
 }

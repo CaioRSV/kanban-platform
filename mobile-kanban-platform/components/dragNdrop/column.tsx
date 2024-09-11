@@ -157,12 +157,12 @@ const Column = (props: ColumnProps) => {
                     .catch(err => {
                         throw err
                     })
-
                 // GraphQL ---
                 updateTask_GQL(item, "done", "true", props.schema);
             });
 
-            setColumn3([]); // Para evitar concluídos fantasmas
+            // Limpando na base local GraphQL (relatórios)
+            //orderColumn_GQL(id, "column3", [], props.schema);
 
         }
         catch(err){
@@ -178,6 +178,7 @@ const Column = (props: ColumnProps) => {
                     onPress: () => {
                         setDone();
                         updateLocalAll(tasks);
+                        setColumn3([]); // Para evitar concluídos fantasmas
                     }
                 }
                 ,
@@ -219,16 +220,6 @@ const Column = (props: ColumnProps) => {
   const renderItem = ({item, drag}) => {
     const {isActive} = useOnCellActiveAnimation();
 
-    // console.log("##########")
-    // console.log(item);
-    // console.log('=')
-    // console.log(props.idServer);
-    // console.log(typeof props.idServer);
-    // console.log(item.columnId);
-    // console.log(typeof item.columnId);
-    // console.log("##########")
-
-   if(props.idServer===item.columnId){
     return(
         <ScaleDecorator>
         <OpacityDecorator>
@@ -265,13 +256,7 @@ const Column = (props: ColumnProps) => {
           </ShadowDecorator>
         </OpacityDecorator>
       </ScaleDecorator>
-      )
-   }
-   else{
-    return(
-        <></>
     )
-   }
   }
 
   return (
@@ -284,8 +269,6 @@ const Column = (props: ColumnProps) => {
       flexDirection: 'column',
       }}>
         <Text style={{color: props.theme=='dark' ? 'white' : 'black', fontSize: 18}}>{props.name}</Text>
-
-        <TouchableOpacity onPress={()=>{console.log(props.tasks_schema)}}><Text>dsaidisodso</Text></TouchableOpacity>
 
         <View style={{backgroundColor: props.theme=='dark' ? 'white' : 'black', width: '100%', height: 1, marginVertical: 8}}></View>
 
@@ -302,7 +285,7 @@ const Column = (props: ColumnProps) => {
                     :
                     <DraggableFlatList
                         ref={listRef}
-                        data={tasks}
+                        data={tasks.filter(elem => elem.columnId==props.idServer).sort((a,b)=> [...column1, ...column2, ...column3].findIndex(item => item==a.serverId)>[...column1, ...column2, ...column3].findIndex(item => item==b.serverId) ? 0 : -1)}
                         renderItem={renderItem}
                         keyExtractor={(item) => `draggable-item-${item.id}`}
                         onDragEnd={({ data }) => {

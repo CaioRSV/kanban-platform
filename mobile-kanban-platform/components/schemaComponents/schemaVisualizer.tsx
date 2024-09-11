@@ -47,7 +47,7 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
     const QueryResContainer = ({title, queryString} : {title: string, queryString: string}) => {
       return (
         <View style={{marginBottom: 10, width: '100%'}}>
-          <Text style={{color: 'black', fontSize: 16, marginVertical: 10}}>{title}</Text>
+          <Text style={{color: theme=="dark" ? 'white' : 'black', fontSize: 16, marginVertical: 10}}>{title}</Text>
           <View style={{backgroundColor: 'black', width: '100%', height: 'auto', overflow: 'scroll', padding: 5, borderRadius: 15}}>
             <Text style={{color: 'rgba(0,255,0,1)', fontSize: 13}}>{
               JSON.stringify(JSON.parse(queryString), null, 4)
@@ -79,7 +79,7 @@ const SchemaVisualizer = ({schema, theme} : SchemaVisualizerProps) => {
       <View style={{backgroundColor: 'rgba(0,0,0,0.5)', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         <ScrollView nestedScrollEnabled contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}} style={{width: '100%', height: '90%', overflow: 'scroll', display: 'flex', backgroundColor: theme=='dark' ? 'black' : 'white', borderWidth: 1, borderColor: 'gray', padding: 20, borderRadius: 15}}>
           <View style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>Status da base local GraphQL</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', color: theme=="dark" ? 'white' : 'black'}}>Status da base local GraphQL</Text>
             <View style={{flex: 1}}/>
             <TouchableOpacity onPress={()=>{setOpenModal(false)}} style={{borderWidth: 1, borderColor: 'rgba(0,0,0,0.5)', borderRadius: 10, padding: 5}}>
               <AntDesign name="back" size={24} color={theme=='dark'?'white':'black'} />

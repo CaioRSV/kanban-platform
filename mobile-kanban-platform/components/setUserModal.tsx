@@ -99,18 +99,6 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
 
           // Atualizando localmente as tasks
 
-          // resTasks_Filtered.map(elem => {
-          //   if(true){
-          //     console.log('***')
-          //     console.log(col1)
-          //     console.log('*')
-          //     console.log(elem.id);
-          //     console.log(col1.includes(elem.id).toString());
-          //     console.log(col1.filter(i => i==elem.id));
-          //     console.log('***')
-          //   }
-          // })
-
           const resultingTasks = resTasks_Filtered.map( (item) => ({
             ...item,
             columnId: 
@@ -123,11 +111,10 @@ const SetUserModal = ({theme, schema}: SetUserModalProps) => {
             id: Math.floor(Math.random()*10000),
           })
             ).sort((a,b)=> [...col1, ...col2, ...col3].findIndex(item => item==a.serverId)>[...col1, ...col2, ...col3].findIndex(item => item==b.serverId) ? 0 : -1);
-
-          console.log(resultingTasks)
+          
+          // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
 
           setTasks(resultingTasks)
-          // Acima está garantindo a projeção das tasks recebidas na ordem que as colunas do usuário indicam
         
         }
         setLoadingTasks(false);
