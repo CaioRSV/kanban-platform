@@ -192,7 +192,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
 
           users[userData.id.toString()] = userData;
 
-          return 'Logado com sucesso';
+          return 'Logado com sucesso'; // Apenas para debugging (Por ser uma base local, error handlling não rigorosamente necessário)
         },
         populateTasks: async (_: unknown, { id }: { id: number }): Promise<string> => {
             const userData = await fetchTasks(id);
@@ -205,7 +205,7 @@ const SchemaWrapper: React.FC<SchemaWrapperProps> = ({ children }) => {
                 tasks[elem.id] = elem
             })
 
-            return 'Tasks populadas com sucesso';
+            return 'Tasks populadas com sucesso'; // Apenas para debugging (Por ser uma base local, error handlling não rigorosamente necessário)
           },
         updateTask: (_: unknown, { id, attribute, value }: { id: number, attribute: string, value: string}): Task | null => {
           const foundTask = tasks[id.toString()];

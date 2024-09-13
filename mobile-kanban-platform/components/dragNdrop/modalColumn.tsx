@@ -172,79 +172,79 @@ const ModalColumn = (props: ColumnProps) => {
                     </View>
                     
                     <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
-                            <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Nome</Text>
-                            <TextInput onChangeText={(e)=>{setTempName(e)}}
-                                placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).name : ''}
-                                placeholderTextColor={'gray'}
-                                style={{
-                                    backgroundColor: props.theme=='dark' ? 'black' : 'white',
-                                    color: props.theme=='light' ? 'black' : 'white',
-                                    borderWidth: 1,
-                                    borderColor: 'gray',
-                                    width: '100%',
-                                    padding: 10,
-                                    borderRadius: 15
-                                }}    
-                            />
+                        <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Nome</Text>
+                        <TextInput onChangeText={(e)=>{setTempName(e)}}
+                            placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).name : ''}
+                            placeholderTextColor={'gray'}
+                            style={{
+                                backgroundColor: props.theme=='dark' ? 'black' : 'white',
+                                color: props.theme=='light' ? 'black' : 'white',
+                                borderWidth: 1,
+                                borderColor: 'gray',
+                                width: '100%',
+                                padding: 10,
+                                borderRadius: 15
+                            }}    
+                        />
 
-                        </View>
+                    </View>
 
-                        <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
-                            <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Descrição</Text>
-                            <TextInput onChangeText={(e)=>{setTempDesc(e)}}
-                                placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).description : ''}
-                                placeholderTextColor={'gray'}
+                    <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
+                        <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Descrição</Text>
+                        <TextInput onChangeText={(e)=>{setTempDesc(e)}}
+                            placeholder={tasks.find(item => item.id == editingTask.id) ? tasks.find(item => item.id == editingTask.id).description : ''}
+                            placeholderTextColor={'gray'}
+                            style={{
+                                backgroundColor: props.theme=='dark' ? 'black' : 'white',
+                                color: props.theme=='light' ? 'black' : 'white',
+                                borderWidth: 1,
+                                borderColor: 'gray',
+                                width: '100%',
+                                padding: 10,
+                                borderRadius: 15
+                            }}
+                        />
+                    </View>
+
+                    <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
+                        <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Prioridade</Text>
+                        <View style={{borderWidth: 1, borderColor: 'gray', borderRadius: 15, overflow: 'hidden'}}>
+                            <Picker
+                                selectedValue={tempColor}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setTempColor(itemValue)
+                                }
+                                dropdownIconColor={props.theme=='dark'?'white':'black'}
                                 style={{
-                                    backgroundColor: props.theme=='dark' ? 'black' : 'white',
-                                    color: props.theme=='light' ? 'black' : 'white',
-                                    borderWidth: 1,
-                                    borderColor: 'gray',
-                                    width: '100%',
-                                    padding: 10,
-                                    borderRadius: 15
+                                    color: props.theme=='dark'? 'white' : 'black',
                                 }}
-                            />
+                            >
+                                <Picker.Item style={{backgroundColor: 'rgb(254,240,138)'}} label="Não prioritária" value={'rgb(254,240,138)'} />
+                                <Picker.Item style={{backgroundColor: 'rgb(134,239,172)'}} label="Comum" value={'rgb(134,239,172)'} />
+                                <Picker.Item style={{backgroundColor: 'rgb(34,197,94)'}} label="Média" value={'rgb(34,197,94)'} />
+                                <Picker.Item style={{backgroundColor: 'rgb(249,115,22)'}} label="Importante" value={'rgb(249,115,22)'} />
+                                <Picker.Item style={{backgroundColor: 'rgb(239,68,68)'}} label="Prioritária" value={'rgb(239,68,68)'} />
+                            </Picker>
                         </View>
+                    </View>
 
-                        <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
-                            <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Prioridade</Text>
-                            <View style={{borderWidth: 1, borderColor: 'gray', borderRadius: 15, overflow: 'hidden'}}>
-                                <Picker
-                                    selectedValue={tempColor}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                        setTempColor(itemValue)
-                                    }
-                                    dropdownIconColor={props.theme=='dark'?'white':'black'}
-                                    style={{
-                                        color: props.theme=='dark'? 'white' : 'black',
-                                    }}
-                                >
-                                    <Picker.Item style={{backgroundColor: 'rgb(254,240,138)'}} label="Não prioritária" value={'rgb(254,240,138)'} />
-                                    <Picker.Item style={{backgroundColor: 'rgb(134,239,172)'}} label="Comum" value={'rgb(134,239,172)'} />
-                                    <Picker.Item style={{backgroundColor: 'rgb(34,197,94)'}} label="Média" value={'rgb(34,197,94)'} />
-                                    <Picker.Item style={{backgroundColor: 'rgb(249,115,22)'}} label="Importante" value={'rgb(249,115,22)'} />
-                                    <Picker.Item style={{backgroundColor: 'rgb(239,68,68)'}} label="Prioritária" value={'rgb(239,68,68)'} />
-                                </Picker>
-                            </View>
+                    <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
+                        <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Coluna</Text>
+                        <View style={{borderWidth: 1, borderColor: 'gray', borderRadius: 15, overflow: 'hidden'}}>
+                            <Picker
+                                selectedValue={tempCol}
+                                onValueChange={(e)=>{setTempCol(e)}}
+                                dropdownIconColor={props.theme=='dark'?'white':'black'}
+                                style={{
+                                    color: props.theme=='dark' ? 'white' : 'black'
+                                }}
+                            >
+                                <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 1" value={1} />
+                                <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 2" value={2} />
+                                <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 3" value={3} />
+                            </Picker>
                         </View>
-
-                        <View style={{flex: 1, width: '100%', display: 'flex', gap: 5}}>
-                            <Text onPress={()=>{setEdit(false)}} style={{color: props.theme=='dark'?'white':'black'}}>Coluna</Text>
-                            <View style={{borderWidth: 1, borderColor: 'gray', borderRadius: 15, overflow: 'hidden'}}>
-                                <Picker
-                                    selectedValue={tempCol}
-                                    onValueChange={(e)=>{setTempCol(e)}}
-                                    dropdownIconColor={props.theme=='dark'?'white':'black'}
-                                    style={{
-                                        color: props.theme=='dark' ? 'white' : 'black'
-                                    }}
-                                >
-                                    <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 1" value={1} />
-                                    <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 2" value={2} />
-                                    <Picker.Item style={{backgroundColor: props.theme=='dark'?'black':'white', color: props.theme=='dark'?'white':'black'}} label="Coluna 3" value={3} />
-                                </Picker>
-                            </View>
-                        </View>
+                    </View>
 
                     <View style={{marginTop:25, flex: 1, gap: 5,  display:'flex', flexDirection:'row', justifyContent: 'center', alignItems: 'center', width: '100%', paddingHorizontal: 10}}>
                         

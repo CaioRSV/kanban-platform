@@ -7,13 +7,13 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
     if(schema){
       const query = `query AllTasks {
         tasks(id: ${id},done: ${done}){
-      id,
-      name,
-      description,
-      color,
-      done,
-      enddate,
-      }
+        id,
+        name,
+        description,
+        color,
+        done,
+        enddate,
+        }
       }`
         const result: ExecutionResult = await graphql({
             schema,

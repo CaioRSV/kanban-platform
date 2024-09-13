@@ -7,20 +7,18 @@ export const getTasksFunction_GQL = async (id: number, done: boolean, schema?: G
     if(schema){
       const query = `query AllTasks {
         tasks(id: ${id},done: ${done}){
-      id,
-      name,
-      description,
-      color,
-      done,
-      enddate,
-      }
+        id,
+        name,
+        description,
+        color,
+        done,
+        enddate,
+        }
       }`
         const result: ExecutionResult = await graphql({
             schema,
             source: query
         })
-
-        console.log(result);
         
         if (result.data && result.data.tasks) {
           const tasks: Task[] = result.data.tasks as Task[];
