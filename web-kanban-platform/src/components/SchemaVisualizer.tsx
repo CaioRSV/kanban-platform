@@ -92,7 +92,7 @@ const SchemaVisualizer = ({schema} : WorkspaceProps) => {
 }`
 
   const query_tasks_open = `query CurrentTasks {
-  tasks(id: ${id}, done: true){
+  tasks(id: ${id}, done: false){
     id,
     name,
     description,
